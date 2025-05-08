@@ -1,0 +1,97 @@
+'use server'
+import prisma from '@/prisma/db'
+import { createClient } from '@/utils/supabase/server'
+
+export async function fetchUser() {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+
+    const email = data.user?.email;
+    if (!email) throw new Error("No email found in user data");
+
+    const dbUser = await getUserByEmail(email);
+    if (!dbUser) throw new Error('User not found in the database');
+
+    return dbUser;
+  } catch (error) {
+    console.error('Error in fetchUser:', error);
+    return null;
+  }
+}
+
+export async function saveUser(formData: FormData) {
+  await prisma.user.create({
+    data: {
+      fullName: formData.get("fullName") as string,
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+      role: formData.get("role") as "PATIENT",
+      contactNumber: formData.get("contactNumber") as string | null,
+      dateOfBirth: formData.get("dateOfBirth")
+        ? new Date(formData.get("dateOfBirth") as string)
+        : null,
+      gender: formData.get("gender") as string | null,
+      address: formData.get("address") as string | null,
+    },
+  });
+}
+
+export async function getUserByEmail(email: string) {
+  return await prisma.user.findUnique({
+    where: { email },
+    include: {
+      patient: true,
+      doctor: true,
+      admin: true,
+    },
+  });
+}
+
+export async function getUserById(id: string) {
+  return await prisma.user.findUnique({
+    where: { id },
+    include: {
+      patient: true,
+      doctor: true,
+      admin: true,
+    },
+  });
+}
+
+export async function updateUser(id: string, formData: FormData) {
+  await prisma.user.update({
+    where: { id },
+    data: {
+      fullName: formData.get("fullName") as string,
+      email: formData.get("email") as string,
+      contactNumber: formData.get("contactNumber") as string | null,
+      dateOfBirth: formData.get("dateOfBirth")
+        ? new Date(formData.get("dateOfBirth") as string)
+        : null,
+      gender: formData.get("gender") as string | null,
+      address: formData.get("address") as string | null,
+    },
+  });
+}
+
+export async function deleteUser(id: string) {
+  await prisma.user.delete({
+    where: { id },
+  });
+}
+
+export async function getUserInfo(id: string) {
+  return await prisma.user.findUnique({
+    where: { id },
+    select: {
+      fullName: true,
+      email: true,
+      contactNumber: true,
+      dateOfBirth: true,
+      gender: true,
+      address: true,
+      role: true,
+    },
+  });
+}
