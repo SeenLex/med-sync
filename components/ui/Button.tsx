@@ -1,50 +1,44 @@
-import React from "react";
-import Link from "next/link";
+import React, { ButtonHTMLAttributes } from "react";
 
-interface ButtonProps {
-  children: React.ReactNode;
-  href?: string;
-  variant?: "primary" | "secondary" | "outline";
-  className?: string;
-  onClick?: () => void;
-  type?: "button" | "submit" | "reset";
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "outline" | "danger";
+  size?: "sm" | "md" | "lg";
+  fullWidth?: boolean;
 }
 
-export default function Button({
+const Button: React.FC<ButtonProps> = ({
   children,
-  href,
   variant = "primary",
+  size = "md",
+  fullWidth = false,
   className = "",
-  onClick,
-  type = "button",
   ...props
-}: ButtonProps) {
-  const baseStyles = "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md";
+}) => {
+  const baseClasses = "inline-flex items-center justify-center rounded-md font-medium focus:outline-none transition-colors";
   
-  const variantStyles = {
-    primary: "shadow-sm text-white bg-emerald-600 hover:bg-emerald-700",
-    secondary: "text-emerald-600 bg-white hover:bg-gray-50 border-emerald-600",
-    outline: "border-gray-300 text-gray-700 bg-white hover:bg-gray-50",
+  const variantClasses = {
+    primary: "bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+    secondary: "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+    outline: "border border-emerald-600 text-emerald-600 hover:bg-emerald-50 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+    danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
   };
   
-  const buttonStyles = `${baseStyles} ${variantStyles[variant]} ${className}`;
-
-  if (href) {
-    return (
-      <Link href={href} className={buttonStyles} {...props}>
-        {children}
-      </Link>
-    );
-  }
-
+  const sizeClasses = {
+    sm: "px-3 py-1.5 text-sm",
+    md: "px-4 py-2 text-base",
+    lg: "px-6 py-3 text-lg",
+  };
+  
+  const widthClass = fullWidth ? "w-full" : "";
+  
   return (
     <button
-      type={type}
-      className={buttonStyles}
-      onClick={onClick}
+      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${widthClass} ${className}`}
       {...props}
     >
       {children}
     </button>
   );
-}
+};
+
+export default Button;

@@ -37,57 +37,55 @@ export async function register(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
-  const name = formData.get('name') as string;
-  const surname = formData.get('surname') as string;
+  const fullName = formData.get('fullName') as string;
 
 
-  if (
-    !email ||
-    !/^[a-zA-Z0-9]+@[a-zA-Z]+\.(com|net|org)$/.test(email) ||
-    !/(yahoo|gmail|outlook)\.com$/.test(email)
-  ) {
-    throw new Error('Invalid e-mail address!');
+  // Email validation
+  if (!email) {
+    throw new Error('Email is required!');
   }
 
-  if (!name || !/^[a-zA-Z]+$/.test(name)) {
-    {
-      throw new Error('Invalid name!');
-    }
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@(yahoo|gmail|outlook)\.com$/;
+  if (!emailRegex.test(email)) {
+    throw new Error('Email must be from yahoo, gmail, or outlook and end in .com');
   }
 
-  if (!surname || !/^[a-zA-Z]+$/.test(surname)) {
-    {
-      throw new Error('Invalid surname!');
-    }
+  // Name validation
+  if (!fullName) {
+    throw new Error('Full name is required!');
+  }
+  const nameRegex = /^[a-zA-Z\s]+$/;
+  if (!nameRegex.test(fullName)) {
+    throw new Error('Full name must contain only letters and spaces!');
   }
 
-  if (
-    !password ||
-    password.length < 6 ||
-    !/[A-Z]/.test(password) ||
-    !/[a-z]/.test(password) ||
-    !/[0-9]/.test(password) ||
-    !/[^a-zA-Z0-9]/.test(password)
-  ) 
-    {
-      throw new Error('Invalid password!');
-    }
-  
+  // Password validation
+  const passwordErrors = [];
+  if (!password) passwordErrors.push('Password is required!');
+  if (password.length < 6) passwordErrors.push('Password must be at least 6 characters!');
+  if (!/[A-Z]/.test(password)) passwordErrors.push('Password must include an uppercase letter!');
+  if (!/[a-z]/.test(password)) passwordErrors.push('Password must include a lowercase letter!');
+  if (!/[0-9]/.test(password)) passwordErrors.push('Password must include a digit!');
+  if (!/[^a-zA-Z0-9]/.test(password)) passwordErrors.push('Password must include a special character!');
+
+  if (passwordErrors.length > 0) {
+    throw new Error(passwordErrors.join(' '));
+  }
 
   if (password !== confirmPassword) {
-    throw new Error('Invalid password!');
+    throw new Error('Passwords do not match!');
   }
-  
-  const data = { email, password };
-  const { error } = await supabase.auth.signUp(data);
+
+  const { error } = await supabase.auth.signUp({ email, password });
 
   if (error) {
-    throw new Error('Invalid credentials!');
+    throw new Error(error.message || 'Failed to register!');
   }
 
   revalidatePath('/', 'layout');
   redirect('/');
 }
+
 
 
 

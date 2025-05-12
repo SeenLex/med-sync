@@ -59,7 +59,7 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-sm">
-      <div className="max-w mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -89,9 +89,11 @@ export default function Header() {
               Contact: 021 9268
             </Link>
 
-            <Button href="/appointment" variant="primary">
-              Book Appointment
-            </Button>
+            <Link href="/appointment">
+              <Button variant="primary">
+                Book Appointment
+              </Button>
+            </Link>
 
             <Link 
               href="/results"

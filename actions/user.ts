@@ -21,12 +21,14 @@ export async function fetchUser() {
 }
 
 export async function saveUser(formData: FormData) {
+  const role = formData.get("role") as "PATIENT" | "DOCTOR" | "ADMIN";
+
   await prisma.user.create({
     data: {
       fullName: formData.get("fullName") as string,
       email: formData.get("email") as string,
       password: formData.get("password") as string,
-      role: formData.get("role") as "PATIENT",
+      role: role,
       contactNumber: formData.get("contactNumber") as string | null,
       dateOfBirth: formData.get("dateOfBirth")
         ? new Date(formData.get("dateOfBirth") as string)
@@ -36,6 +38,7 @@ export async function saveUser(formData: FormData) {
     },
   });
 }
+
 
 export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({
