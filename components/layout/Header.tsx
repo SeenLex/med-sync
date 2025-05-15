@@ -61,14 +61,12 @@ export default function Header() {
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="text-3xl font-bold text-emerald-600">
               MedSync
             </Link>
           </div>
 
-          {/* Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navItems.map((item) => (
               <NavItem
@@ -80,7 +78,6 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Right side buttons */}
           <div className="flex items-center space-x-4">
             <Link 
               href="/contact" 

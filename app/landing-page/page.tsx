@@ -54,36 +54,6 @@ const LandingPage: React.FC = () => {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-extrabold sm:text-5xl md:text-6xl">
-              Your Health, Seamlessly Connected
-            </h1>
-            <p className="mt-6 text-xl max-w-3xl mx-auto">
-              Access healthcare services anytime, anywhere. Schedule appointments, consult with
-              doctors, and manage your medical records all in one place.
-            </p>
-            <div className="mt-10 flex justify-center">
-              <Link href="/appointments/new">
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  className="mr-4 font-semibold shadow-lg"
-                >
-                  Book Appointment
-                </Button>
-              </Link>
-              <Link href="/doctors">
-                <Button variant="outline" size="lg" className="bg-white font-semibold shadow-lg">
-                  Find a Doctor
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Quick Actions */}
       <section className="py-12 bg-gray-50">
@@ -273,50 +243,6 @@ const LandingPage: React.FC = () => {
                   <p className="text-center text-gray-500 py-4">No new notifications.</p>
                 )}
               </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Why Choose MedSync?</h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-              Our platform offers a comprehensive suite of features designed to make healthcare
-              more accessible and convenient for everyone.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="mx-auto bg-emerald-100 rounded-full p-3 w-16 h-16 flex items-center justify-center">
-                <Calendar className="h-8 w-8 text-emerald-600" />
-              </div>
-              <h3 className="mt-4 text-xl font-medium text-gray-900">Easy Scheduling</h3>
-              <p className="mt-2 text-gray-600">
-                Book appointments with your preferred healthcare providers in just a few clicks.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="mx-auto bg-emerald-100 rounded-full p-3 w-16 h-16 flex items-center justify-center">
-                <Video className="h-8 w-8 text-emerald-600" />
-              </div>
-              <h3 className="mt-4 text-xl font-medium text-gray-900">Virtual Consultations</h3>
-              <p className="mt-2 text-gray-600">
-                Connect with healthcare professionals from the comfort of your home through secure
-                video calls.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="mx-auto bg-emerald-100 rounded-full p-3 w-16 h-16 flex items-center justify-center">
-                <FileText className="h-8 w-8 text-emerald-600" />
-              </div>
-              <h3 className="mt-4 text-xl font-medium text-gray-900">Medical Records</h3>
-              <p className="mt-2 text-gray-600">
-                Access your complete medical history and share it securely with your healthcare
-                providers.
-              </p>
             </div>
           </div>
         </div>

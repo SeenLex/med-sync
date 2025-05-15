@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from "react";
-import { User, Calendar, FileText, Clock, Video, MapPin, Edit, Camera, Shield, Bell, LogOut } from "lucide-react";
+import { User, Calendar, FileText, Clock, Video, MapPin, Edit, Camera, Shield, Bell } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -9,7 +9,6 @@ import Card from "@/components/ui/Card";
 const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("profile");
 
-  // Mock user data
   const user = {
     id: "1",
     fullName: "John Doe",
@@ -23,7 +22,6 @@ const ProfilePage: React.FC = () => {
     emergencyContact: "Jane Doe, +1 (555) 987-6543 (Spouse)",
   };
 
-  // Mock appointments data
   const appointments = [
     {
       id: "1",
@@ -56,7 +54,6 @@ const ProfilePage: React.FC = () => {
     },
   ];
 
-  // Mock medical records data
   const medicalRecords = [
     {
       id: "1",
@@ -81,7 +78,6 @@ const ProfilePage: React.FC = () => {
     },
   ];
 
-  // Function to get record type label and color
   const getRecordTypeInfo = (type: string) => {
     switch (type) {
       case "LAB_RESULT":
@@ -107,15 +103,10 @@ const ProfilePage: React.FC = () => {
               <Bell className="h-5 w-5 mr-2" />
               Notifications
             </Button>
-            <Button variant="danger" className="flex items-center">
-              <LogOut className="h-5 w-5 mr-2" />
-              Logout
-            </Button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <Card className="p-6 mb-6">
               <div className="flex flex-col items-center">
@@ -188,9 +179,7 @@ const ProfilePage: React.FC = () => {
             </Card>
           </div>
 
-          {/* Main Content */}
           <div className="lg:col-span-3">
-            {/* Personal Information */}
             {activeTab === "profile" && (
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-6">
@@ -244,7 +233,6 @@ const ProfilePage: React.FC = () => {
               </Card>
             )}
 
-            {/* Appointments */}
             {activeTab === "appointments" && (
               <div>
                 <div className="flex items-center justify-between mb-6">
@@ -375,7 +363,6 @@ const ProfilePage: React.FC = () => {
               </div>
             )}
 
-            {/* Medical Records */}
             {activeTab === "records" && (
               <div>
                 <div className="flex items-center justify-between mb-6">
@@ -438,7 +425,6 @@ const ProfilePage: React.FC = () => {
               </div>
             )}
 
-            {/* Security */}
             {activeTab === "security" && (
               <Card className="p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">Security Settings</h2>

@@ -19,7 +19,6 @@ const MedicalRecords: React.FC = () => {
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Mock data for medical records
   const medicalRecords = [
     {
       id: "1",
@@ -76,7 +75,6 @@ const MedicalRecords: React.FC = () => {
     },
   ];
 
-  // Filter medical records based on selected filter and search query
   const filteredRecords = medicalRecords.filter((record) => {
     const matchesFilter =
       filter === "all" ||
@@ -94,7 +92,6 @@ const MedicalRecords: React.FC = () => {
     return matchesFilter && matchesSearch;
   });
 
-  // Function to get record type label and color
   const getRecordTypeInfo = (type: string) => {
     switch (type) {
       case "LAB_RESULT":
@@ -126,7 +123,6 @@ const MedicalRecords: React.FC = () => {
           My Medical Records
         </h1>
 
-        {/* Filters and Search */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2">
@@ -202,7 +198,6 @@ const MedicalRecords: React.FC = () => {
           </div>
         </div>
 
-        {/* Medical Records List */}
         <div className="space-y-4">
           {filteredRecords.length > 0 ? (
             filteredRecords.map((record) => {
@@ -274,7 +269,6 @@ const MedicalRecords: React.FC = () => {
           )}
         </div>
 
-        {/* Upload Section */}
         <div className="mt-8">
           <Card className="p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">

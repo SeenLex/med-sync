@@ -10,7 +10,7 @@ import ServiceItem from "../ui/ServiceItem";
 export default function TestResultsSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
+    // submission logic here
     console.log("Form submitted");
   };
 
