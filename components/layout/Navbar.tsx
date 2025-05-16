@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X, User, Calendar, FileText, Home, LogOut } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { logout } from "@/actions/auth";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,10 +70,12 @@ const Navbar: React.FC = () => {
                   <span>Profile</span>
                 </div>
               </Link>
+              <form action={logout}>
               <Button variant="primary" size="sm">
                 <LogOut className="h-4 w-4 mr-2"/>
                 <span>Logout</span>
               </Button>
+              </form>
             </div>
           </div>
           
@@ -114,10 +117,12 @@ const Navbar: React.FC = () => {
                 <span>Profile</span>
               </div>
             </Link>
+            <form action={logout}>
             <Button className="flex w-full items-center px-3 py-2 rounded-md text-gray-700 hover:text-red-600 hover:bg-gray-100">
               <LogOut className="h-4 w-4 mr-2" />
               <span>Logout</span>
             </Button>
+            </form>
           </div>
         </div>
       )}
