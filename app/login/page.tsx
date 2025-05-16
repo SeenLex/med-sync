@@ -5,11 +5,17 @@ import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Button from "@/components/ui/Button";
 import InputField from "@/components/auth-components/InputField";
+import ForgotPasswordModal from "@/components/auth-components/ForgotPasswordModal";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState<boolean>(false);
+
+  const handlePasswordReset = async () => {
+    //password reset logic
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -29,12 +35,12 @@ const Login: React.FC = () => {
           </p>
         </div>
 
-        <div className="mt-8 bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
+        <div className="mt-8 bg-white text-gray-800 py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
           <form className="space-y-6">
             <InputField
               id="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="Enter your mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               icon={<Mail className="h-5 w-5 text-gray-400" />}
@@ -42,10 +48,7 @@ const Login: React.FC = () => {
             />
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="password" className="block text-sm font-medium">
                 Password
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
@@ -61,7 +64,7 @@ const Login: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                    className="text-gray-600 hover:text-gray-500 focus:outline-none"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -89,11 +92,18 @@ const Login: React.FC = () => {
                 </label>
               </div>
               <div className="text-sm">
-                <Link href="/forgot-password">
-                  <span className="font-medium text-emerald-600 hover:text-emerald-500 cursor-pointer">
-                    Forgot your password?
-                  </span>
-                </Link>
+                <button
+                  className="text-emerald-600 hover:text-emerald-500"
+                  onClick={() => setShowForgotPasswordModal(true)}
+                >
+                  Forgot Password?
+                </button>
+
+                <ForgotPasswordModal
+                  isOpen={showForgotPasswordModal}
+                  onClose={() => setShowForgotPasswordModal(false)}
+                  onSubmit={handlePasswordReset}
+                />
               </div>
             </div>
 

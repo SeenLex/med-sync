@@ -12,7 +12,6 @@ const FindDoctor: React.FC = () => {
   const [availability, setAvailability] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
-  // Mock data for doctors
   const doctors = [
     {
       id: "1",
@@ -81,7 +80,6 @@ const FindDoctor: React.FC = () => {
     },
   ];
 
-  // Mock data for specialties
   const specialties = [
     "All Specialties",
     "Cardiologist",
@@ -96,7 +94,6 @@ const FindDoctor: React.FC = () => {
     "Endocrinologist",
   ];
 
-  // Filter doctors based on search query and filters
   const filteredDoctors = doctors.filter((doctor) => {
     const matchesSearch =
       searchQuery === "" ||
@@ -118,7 +115,6 @@ const FindDoctor: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">Find a Doctor</h1>
 
-        {/* Search and Filters */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col space-y-4">
             <div className="relative">
@@ -170,7 +166,6 @@ const FindDoctor: React.FC = () => {
               </div>
             </div>
 
-            {/* Advanced Filters */}
             {showFilters && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200 mt-4">
                 <div>
@@ -214,7 +209,6 @@ const FindDoctor: React.FC = () => {
           </div>
         </div>
 
-        {/* Results */}
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <p className="text-gray-600">

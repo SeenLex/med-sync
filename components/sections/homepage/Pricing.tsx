@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 
 const Pricing: React.FC = () => {
   return (
-    <div id="pricing" className="py-12 bg-gray-100">
+    <div id="pricing" className="py-14 bg-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="lg:text-center">
           <h2 className="text-base text-emerald-600 font-semibold tracking-wide uppercase">

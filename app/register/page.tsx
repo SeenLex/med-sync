@@ -53,11 +53,11 @@ const Register: React.FC = () => {
           </p>
         </div>
 
-        <div className="mt-8 bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
+        <div className="mt-8 bg-white text-gray-800 py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleRegister}>
             <InputField
               id="fullName"
-              placeholder="John Doe"
+              placeholder="Enter your full name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               icon={<User className="h-5 w-5 text-gray-400" />}
@@ -67,7 +67,7 @@ const Register: React.FC = () => {
             <InputField
               id="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="Enter your mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               icon={<Mail className="h-5 w-5 text-gray-400" />}
@@ -76,7 +76,7 @@ const Register: React.FC = () => {
 
             <InputField
               id="phone"
-              placeholder="+1 (555) 123-4567"
+              placeholder="Enter your phone number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               icon={<Phone className="h-5 w-5 text-gray-400" />}

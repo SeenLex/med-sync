@@ -1,32 +1,54 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
-import Button from "@/components/ui/Button";  
+import { useEffect, useState } from "react";
+import { Menu, X, Star, MessageSquare, DollarSign, LogIn, UserPlus, Wrench } from "lucide-react";
+import Button from "@/components/ui/Button";
 import Link from "next/link";
-import { Link as ScrollLink } from "react-scroll";
+import { Link as ScrollLink, animateScroll } from "react-scroll";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const handleLinkClick = () => {
     setIsMenuOpen(false);
   };
 
+  const handleLogoClick = () => {
+    animateScroll.scrollToTop({ duration: 500 });
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY) {
+        setIsNavbarVisible(false);
+      } else {
+        setIsNavbarVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
+
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav
+      className={`bg-white shadow-md sticky top-0 z-50 transition-transform duration-300 ${
+        isNavbarVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <ScrollLink
-              to="top"
-              smooth={true}
-              duration={500}
-              className="cursor-pointer flex items-center"
-              onClick={handleLinkClick}
-            >
-              <span className="text-emerald-600 font-bold text-2xl">MedSync</span>
-            </ScrollLink>
+          <div className="flex items-center cursor-pointer" onClick={handleLogoClick}>
+            <span className="text-emerald-600 font-bold text-2xl">MedSync</span>
           </div>
 
           <div className="hidden md:flex items-center space-x-4 gap-4">
@@ -34,51 +56,44 @@ const Navbar: React.FC = () => {
               to="features"
               smooth={true}
               duration={500}
-              className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
-              onClick={handleLinkClick}
+              className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
             >
-              Features
+              <Star className="h-4 w-4 mr-2" /> Features
             </ScrollLink>
             <ScrollLink
               to="how-it-works"
               smooth={true}
               duration={500}
-              className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
-              onClick={handleLinkClick}
+              className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
             >
-              How It Works
+              <Wrench className="h-4 w-4 mr-2" /> How It Works
             </ScrollLink>
             <ScrollLink
               to="testimonials"
               smooth={true}
               duration={500}
-              className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
-              onClick={handleLinkClick}
+              className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
             >
-              Testimonials
+              <MessageSquare className="h-4 w-4 mr-2" /> Testimonials
             </ScrollLink>
             <ScrollLink
               to="pricing"
               smooth={true}
               duration={500}
-              className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
-              onClick={handleLinkClick}
+              className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
             >
-              Pricing
+              <DollarSign className="h-4 w-4 mr-2" /> Pricing
             </ScrollLink>
             <div className="flex items-center ml-4 pl-4 border-l border-gray-300 gap-4">
-              <ScrollLink
-                to="login"
-                smooth={true}
-                duration={500}
-                className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
-                onClick={handleLinkClick}
+              <Link
+                href="/login"
+                className="px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
               >
-                Login
-              </ScrollLink>
+                <LogIn className="h-4 w-4 mr-2" /> Login
+              </Link>
               <Link href="/register" passHref>
-                <Button variant="primary" size="sm" onClick={handleLinkClick}>
-                  Sign Up
+                <Button variant="primary" size="sm" onClick={handleLinkClick} className="flex items-center">
+                  <UserPlus className="h-4 w-4 mr-2" /> Sign Up
                 </Button>
               </Link>
             </div>
@@ -106,53 +121,51 @@ const Navbar: React.FC = () => {
               to="features"
               smooth={true}
               duration={500}
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
               onClick={handleLinkClick}
             >
-              Features
+              <Star className="h-4 w-4 mr-2" /> Features
             </ScrollLink>
             <ScrollLink
               to="how-it-works"
               smooth={true}
               duration={500}
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
               onClick={handleLinkClick}
             >
-              How It Works
+              <Wrench className="h-4 w-4 mr-2" /> How It Works
             </ScrollLink>
             <ScrollLink
               to="testimonials"
               smooth={true}
               duration={500}
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
               onClick={handleLinkClick}
             >
-              Testimonials
+              <MessageSquare className="h-4 w-4 mr-2" /> Testimonials
             </ScrollLink>
             <ScrollLink
               to="pricing"
               smooth={true}
               duration={500}
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
               onClick={handleLinkClick}
             >
-              Pricing
+              <DollarSign className="h-4 w-4 mr-2" /> Pricing
             </ScrollLink>
-            <ScrollLink
-              to="login"
-              smooth={true}
-              duration={500}
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer"
+            <Link
+              href="/login"
+              className="block px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 cursor-pointer flex items-center"
               onClick={handleLinkClick}
             >
-              Login
-            </ScrollLink>
-            <Link href="/register" passHref>
+              <LogIn className="h-4 w-4 mr-2" /> Login
+            </Link>
+            <Link href="/register">
               <div
-                className="block px-3 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer"
+                className="block px-3 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer flex items-center"
                 onClick={handleLinkClick}
               >
-                Sign Up
+                <UserPlus className="h-4 w-4 mr-2" /> Sign Up
               </div>
             </Link>
           </div>

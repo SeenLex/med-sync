@@ -115,7 +115,6 @@ const NewAppointment: React.FC = () => {
     "03:30 PM",
   ];
 
-  // Filter doctors based on search query, specialty, and appointment type
   const filteredDoctors = doctors.filter((doctor) => {
     const matchesSearch =
       searchQuery === "" ||
@@ -130,7 +129,6 @@ const NewAppointment: React.FC = () => {
     return matchesSearch && matchesSpecialty && matchesType;
   });
 
-  // Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -141,7 +139,6 @@ const NewAppointment: React.FC = () => {
     });
   };
 
-  // Handle next step
   const handleNextStep = () => {
     if (step === 1 && appointmentType) {
       setStep(2);
@@ -152,7 +149,6 @@ const NewAppointment: React.FC = () => {
     }
   };
 
-  // Handle previous step
   const handlePrevStep = () => {
     if (step > 1) {
       setStep(step - 1);
@@ -166,7 +162,6 @@ const NewAppointment: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Book an Appointment</h1>
         </div>
 
-        {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -260,7 +255,6 @@ const NewAppointment: React.FC = () => {
         </div>
 
         <Card className="p-6">
-          {/* Step 1: Appointment Type */}
           {step === 1 && (
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-6">
@@ -311,7 +305,6 @@ const NewAppointment: React.FC = () => {
             </div>
           )}
 
-          {/* Step 2: Select Doctor */}
           {step === 2 && (
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Select a Doctor</h2>
@@ -414,7 +407,6 @@ const NewAppointment: React.FC = () => {
             </div>
           )}
 
-          {/* Step 3: Select Date and Time */}
           {step === 3 && (
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-6">
@@ -469,7 +461,6 @@ const NewAppointment: React.FC = () => {
             </div>
           )}
 
-          {/* Step 4: Confirm Appointment */}
           {step === 4 && (
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-6">
@@ -548,7 +539,6 @@ const NewAppointment: React.FC = () => {
             </div>
           )}
 
-          {/* Navigation Buttons */}
           <div className="flex justify-between mt-8">
             <Button
               variant="outline"

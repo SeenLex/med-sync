@@ -1,4 +1,3 @@
-// pages/index.tsx
 import React from "react";
 import Link from "next/link";
 import { Calendar, FileText, Video, Bell, Clock, Search } from "lucide-react";
@@ -54,8 +53,6 @@ const LandingPage: React.FC = () => {
 
   return (
     <Layout>
-
-      {/* Quick Actions */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-8">Quick Actions</h2>
@@ -116,11 +113,9 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Dashboard Content */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Upcoming Appointments */}
             <div className="lg:col-span-2">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">Upcoming Appointments</h2>
@@ -193,7 +188,6 @@ const LandingPage: React.FC = () => {
               )}
             </div>
 
-            {/* Notifications */}
             <div>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">Notifications</h2>

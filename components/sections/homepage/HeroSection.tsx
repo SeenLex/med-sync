@@ -1,7 +1,9 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
-//import { Link as ScrollLink } from "react-scroll";
+import { Link as ScrollLink } from "react-scroll";
 
 const HeroSection: React.FC = () => {
   return (
@@ -30,13 +32,8 @@ const HeroSection: React.FC = () => {
                   </Link>
                 </div>
                 <div className="mt-3 sm:mt-0 sm:ml-3 ">
-                  <Link href="#how-it-works">
-                    <Button variant="outline" size="lg" className="w-full">
-                      Learn More
-                    </Button>
-                  </Link>
-                  {/* <ScrollLink
-                    to="how"
+                  <ScrollLink
+                    to="how-it-works"
                     smooth={true}
                     duration={500}
                     className="cursor-pointer flex items-center"
@@ -44,7 +41,7 @@ const HeroSection: React.FC = () => {
                     <Button variant="outline" size="lg" className="w-full">
                       Learn More
                     </Button>
-                  </ScrollLink> */}
+                  </ScrollLink>
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { User, Calendar, FileText, Clock, Video, MapPin, Edit, Camera, Shield, Bell } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
@@ -8,7 +8,10 @@ import Card from "@/components/ui/Card";
 
 const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("profile");
-
+  const [formattedDate, setFormattedDate] = useState<string | null>(null);
+  useEffect(() => {
+  setFormattedDate(new Date(user.dateOfBirth).toLocaleDateString());
+}, []);
   const user = {
     id: "1",
     fullName: "John Doe",
@@ -205,7 +208,7 @@ const ProfilePage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">Date of Birth</h3>
-                    <p className="text-gray-900">{new Date(user.dateOfBirth).toLocaleDateString()}</p>
+                    <p className="text-gray-900">{formattedDate ?? "Loading..."}</p>  
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">Gender</h3>
@@ -235,7 +238,7 @@ const ProfilePage: React.FC = () => {
 
             {activeTab === "appointments" && (
               <div>
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-6 ">
                   <h2 className="text-xl font-semibold text-gray-900">My Appointments</h2>
                   <Button variant="primary" size="sm" className="flex items-center">
                     <Calendar className="h-4 w-4 mr-2" />
