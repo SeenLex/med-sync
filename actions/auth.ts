@@ -10,12 +10,9 @@ export async function login(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  if (
-    !email ||
-    !/^[a-zA-Z0-9]+@[a-zA-Z]+\.(com|net|org)$/.test(email) ||
-    !/(yahoo|gmail|outlook)\.com$/.test(email)
-  ) {
-    throw new Error('Invalid e-mail address!');
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@(yahoo|gmail|outlook)\.com$/;
+  if (!emailRegex.test(email)) {
+    throw new Error('Email must be from yahoo, gmail, or outlook and end in .com');
   }
 
   if (!password) {
@@ -28,8 +25,8 @@ export async function login(formData: FormData) {
     throw new Error('Authentication failed! Incorrect e-mail address or password!');
   }
 
-  revalidatePath('/');
-  redirect('/');
+  revalidatePath('/', 'layout');
+  redirect('/landing-page');
 }
 
 export async function register(formData: FormData) {
