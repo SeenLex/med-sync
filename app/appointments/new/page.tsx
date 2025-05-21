@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { Video, MapPin, Search, ChevronLeft, ChevronRight } from "lucide-react";
@@ -8,7 +8,10 @@ import Button from "@/components/ui/Button";
 
 const NewAppointment: React.FC = () => {
   const [step, setStep] = useState(1);
-  const [appointmentType, setAppointmentType] = useState<"IN_PERSON" | "VIRTUAL" | null>(null);
+  const [appointmentType, setAppointmentType] = useState<
+    "IN_PERSON" | "VIRTUAL" | null
+  >(null);
+
   interface Doctor {
     id: string;
     name: string;
@@ -26,7 +29,7 @@ const NewAppointment: React.FC = () => {
   const [specialty, setSpecialty] = useState("");
 
   // Mock data for doctors
-  const doctors = [
+  const doctors: Doctor[] = [
     {
       id: "1",
       name: "Dr. Sarah Johnson",
@@ -34,7 +37,7 @@ const NewAppointment: React.FC = () => {
       rating: 4.9,
       reviewCount: 124,
       image: "https://randomuser.me/api/portraits/women/45.jpg",
-      availableFor: ["IN_PERSON" as const, "VIRTUAL" as const],
+      availableFor: ["IN_PERSON", "VIRTUAL"],
     },
     {
       id: "2",
@@ -43,7 +46,7 @@ const NewAppointment: React.FC = () => {
       rating: 4.8,
       reviewCount: 98,
       image: "https://randomuser.me/api/portraits/men/32.jpg",
-      availableFor: ["IN_PERSON" as const, "VIRTUAL" as const],
+      availableFor: ["IN_PERSON", "VIRTUAL"],
     },
     {
       id: "3",
@@ -52,7 +55,7 @@ const NewAppointment: React.FC = () => {
       rating: 4.7,
       reviewCount: 87,
       image: "https://randomuser.me/api/portraits/women/33.jpg",
-      availableFor: ["VIRTUAL" as const],
+      availableFor: ["VIRTUAL"],
     },
     {
       id: "4",
@@ -61,7 +64,7 @@ const NewAppointment: React.FC = () => {
       rating: 4.9,
       reviewCount: 156,
       image: "https://randomuser.me/api/portraits/men/46.jpg",
-      availableFor: ["VIRTUAL" as const],
+      availableFor: ["VIRTUAL"],
     },
     {
       id: "5",
@@ -70,7 +73,7 @@ const NewAppointment: React.FC = () => {
       rating: 4.6,
       reviewCount: 72,
       image: "https://randomuser.me/api/portraits/women/22.jpg",
-      availableFor: ["IN_PERSON" as const],
+      availableFor: ["IN_PERSON"],
     },
   ];
 
@@ -120,12 +123,9 @@ const NewAppointment: React.FC = () => {
       searchQuery === "" ||
       doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
-
     const matchesSpecialty = specialty === "" || doctor.specialty === specialty;
-
     const matchesType =
       appointmentType === null || doctor.availableFor.includes(appointmentType);
-
     return matchesSearch && matchesSpecialty && matchesType;
   });
 
@@ -155,138 +155,104 @@ const NewAppointment: React.FC = () => {
     }
   };
 
+  const stepLabels = [
+    "Appointment Type",
+    "Select Doctor",
+    "Date & Time",
+    "Confirm",
+  ];
+
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Book an Appointment</h1>
-        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Book an Appointment
+        </h1>
 
-        <div className="mb-8">
+        {/* full tracker on md+ */}
+        <div className="hidden md:block mb-8">
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div
-                className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                  step >= 1 ? "bg-emerald-600 text-white" : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                1
-              </div>
-              <div className="ml-2">
-                <p
-                  className={`text-sm font-medium ${
-                    step >= 1 ? "text-gray-900" : "text-gray-500"
-                  }`}
-                >
-                  Appointment Type
-                </p>
-              </div>
-            </div>
-            <div
-              className={`flex-1 h-1 mx-4 ${
-                step > 1 ? "bg-emerald-600" : "bg-gray-200"
-              }`}
-            ></div>
-            <div className="flex items-center">
-              <div
-                className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                  step >= 2 ? "bg-emerald-600 text-white" : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                2
-              </div>
-              <div className="ml-2">
-                <p
-                  className={`text-sm font-medium ${
-                    step >= 2 ? "text-gray-900" : "text-gray-500"
-                  }`}
-                >
-                  Select Doctor
-                </p>
-              </div>
-            </div>
-            <div
-              className={`flex-1 h-1 mx-4 ${
-                step > 2 ? "bg-emerald-600" : "bg-gray-200"
-              }`}
-            ></div>
-            <div className="flex items-center">
-              <div
-                className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                  step >= 3 ? "bg-emerald-600 text-white" : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                3
-              </div>
-              <div className="ml-2">
-                <p
-                  className={`text-sm font-medium ${
-                    step >= 3 ? "text-gray-900" : "text-gray-500"
-                  }`}
-                >
-                  Date & Time
-                </p>
-              </div>
-            </div>
-            <div
-              className={`flex-1 h-1 mx-4 ${
-                step > 3 ? "bg-emerald-600" : "bg-gray-200"
-              }`}
-            ></div>
-            <div className="flex items-center">
-              <div
-                className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                  step >= 4 ? "bg-emerald-600 text-white" : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                4
-              </div>
-              <div className="ml-2">
-                <p
-                  className={`text-sm font-medium ${
-                    step >= 4 ? "text-gray-900" : "text-gray-500"
-                  }`}
-                >
-                  Confirm
-                </p>
-              </div>
-            </div>
+            {[1, 2, 3, 4].map((n) => (
+              <React.Fragment key={n}>
+                <div className="flex items-center">
+                  <div
+                    className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                      step >= n
+                        ? "bg-emerald-600 text-white"
+                        : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    {n}
+                  </div>
+                  <p
+                    className={`ml-2 text-sm font-medium ${
+                      step >= n ? "text-gray-900" : "text-gray-500"
+                    }`}
+                  >
+                    {stepLabels[n - 1]}
+                  </p>
+                </div>
+                {n < 4 && (
+                  <div
+                    className={`flex-1 h-1 mx-4 ${
+                      step > n ? "bg-emerald-600" : "bg-gray-200"
+                    }`}
+                  />
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
 
-        <Card className="p-6">
+        {/* simple label on xs–sm */}
+        <div className="md:hidden flex items-center mb-6">
+          <div
+            className="flex items-center justify-center w-9 h-8 rounded-full
+               bg-emerald-600 text-white flex-shrink-0 text-sm font-medium"
+          >
+            {step}/{stepLabels.length}
+          </div>
+          <span className="ml-2 text-sm font-medium text-gray-900">
+            {stepLabels[step - 1]}
+          </span>
+        </div>
+
+        <Card className="w-full p-4 sm:p-6">
           {step === 1 && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              <h2 className="text-xl font-semibold mb-6 text-gray-900">
                 Select Appointment Type
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div
+                  onClick={() => setAppointmentType("IN_PERSON")}
                   className={`border rounded-lg p-6 cursor-pointer transition-all ${
                     appointmentType === "IN_PERSON"
                       ? "border-emerald-500 bg-emerald-50"
                       : "border-gray-300 hover:border-emerald-300 hover:bg-gray-50"
                   }`}
-                  onClick={() => setAppointmentType("IN_PERSON")}
                 >
                   <div className="flex items-center mb-4">
                     <div className="bg-emerald-100 p-3 rounded-full">
                       <MapPin className="h-6 w-6 text-emerald-600" />
                     </div>
-                    <h3 className="ml-4 text-lg font-medium text-gray-900">In-Person Visit</h3>
+                    <h3 className="ml-4 text-lg font-medium text-gray-900">
+                      In-Person Visit
+                    </h3>
                   </div>
                   <p className="text-gray-600">
-                    Visit the doctor at their office for a face-to-face consultation. Ideal for
-                    physical examinations and procedures.
+                    Visit the doctor at their office for a face-to-face
+                    consultation. Ideal for physical examinations and
+                    procedures.
                   </p>
                 </div>
                 <div
+                  onClick={() => setAppointmentType("VIRTUAL")}
                   className={`border rounded-lg p-6 cursor-pointer transition-all ${
                     appointmentType === "VIRTUAL"
                       ? "border-emerald-500 bg-emerald-50"
                       : "border-gray-300 hover:border-emerald-300 hover:bg-gray-50"
                   }`}
-                  onClick={() => setAppointmentType("VIRTUAL")}
                 >
                   <div className="flex items-center mb-4">
                     <div className="bg-blue-100 p-3 rounded-full">
@@ -297,8 +263,9 @@ const NewAppointment: React.FC = () => {
                     </h3>
                   </div>
                   <p className="text-gray-600">
-                    Connect with the doctor through a secure video call from the comfort of your
-                    home. Ideal for follow-ups and consultations.
+                    Connect with the doctor through a secure video call from the
+                    comfort of your home. Ideal for follow-ups and
+                    consultations.
                   </p>
                 </div>
               </div>
@@ -307,22 +274,22 @@ const NewAppointment: React.FC = () => {
 
           {step === 2 && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Select a Doctor</h2>
+              <h2 className="text-xl font-semibold mb-6 text-gray-900">Select a Doctor</h2>
               <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                <div className="relative">
+                <div className="relative w-full md:w-80">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-gray-400" />
+                    <Search className="h-5 w-5 text-gray-900" />
                   </div>
                   <input
                     type="text"
                     placeholder="Search by doctor name or specialty"
-                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 w-full md:w-80"
+                    className="pl-10 pr-4 py-2 border rounded-md focus:outline-none text-gray-900 focus:ring-emerald-500 focus:border-emerald-500 w-full"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
                 <select
-                  className="border border-gray-300 rounded-md py-2 pl-3 pr-10 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                  className="border rounded-md py-2 pl-3 pr-10 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   value={specialty}
                   onChange={(e) => setSpecialty(e.target.value)}
                 >
@@ -339,12 +306,12 @@ const NewAppointment: React.FC = () => {
                   filteredDoctors.map((doctor) => (
                     <div
                       key={doctor.id}
+                      onClick={() => setSelectedDoctor(doctor)}
                       className={`border rounded-lg p-4 cursor-pointer transition-all ${
                         selectedDoctor?.id === doctor.id
                           ? "border-emerald-500 bg-emerald-50"
                           : "border-gray-300 hover:border-emerald-300 hover:bg-gray-50"
                       }`}
-                      onClick={() => setSelectedDoctor(doctor)}
                     >
                       <div className="flex items-center">
                         <img
@@ -353,8 +320,12 @@ const NewAppointment: React.FC = () => {
                           className="h-16 w-16 rounded-full object-cover"
                         />
                         <div className="ml-4">
-                          <h3 className="text-lg font-medium text-gray-900">{doctor.name}</h3>
-                          <p className="text-sm text-gray-500">{doctor.specialty}</p>
+                          <h3 className="text-lg font-medium text-gray-900">
+                            {doctor.name}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            {doctor.specialty}
+                          </p>
                           <div className="mt-1 flex items-center">
                             <div className="flex items-center">
                               {[...Array(5)].map((_, i) => (
@@ -370,7 +341,9 @@ const NewAppointment: React.FC = () => {
                                 >
                                   <path
                                     fillRule="evenodd"
-                                    d="M10 15.934l-6.18 3.254 1.18-6.875L.5 7.914l6.902-1.004L10 .686l2.598 6.224 6.902 1.004-4.5 4.399 1.18 6.875z"
+                                    d="M10 15.934l-6.18 3.254 1.18-6.875L.5 7.914l6.902-1.004L10
+                                    .686l2.598 6.224 6.902 1.004-4.5 4.399 1.18
+                                    6.875z"
                                     clipRule="evenodd"
                                   />
                                 </svg>
@@ -399,7 +372,7 @@ const NewAppointment: React.FC = () => {
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-gray-500">
-                      No doctors found matching your criteria. Please try a different search.
+                      No doctors found matching your criteria.
                     </p>
                   </div>
                 )}
@@ -409,48 +382,52 @@ const NewAppointment: React.FC = () => {
 
           {step === 3 && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              <h2 className="text-xl font-semibold mb-6 text-gray-900">
                 Select Date and Time
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Select Date</h3>
+                  <h3 className="text-lg font-medium mb-4 text-gray-900">Select Date</h3>
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                     {availableDates.map((date) => (
                       <div
                         key={date}
+                        onClick={() => setSelectedDate(date)}
                         className={`border rounded-md p-2 text-center cursor-pointer transition-all ${
                           selectedDate === date
                             ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                            : "border-gray-300 hover:border-emerald-300 hover:bg-gray-50"
+                            : "border-gray-300 hover:border-emerald-300 hover:bg-gray-50 text-gray-400"
                         }`}
-                        onClick={() => setSelectedDate(date)}
                       >
                         <div className="text-sm font-medium">
-                          {new Date(date).toLocaleDateString("en-US", { weekday: "short" })}
+                          {new Date(date).toLocaleDateString("en-US", {
+                            weekday: "short",
+                          })}
                         </div>
                         <div className="text-lg font-semibold">
                           {new Date(date).getDate()}
                         </div>
                         <div className="text-xs">
-                          {new Date(date).toLocaleDateString("en-US", { month: "short" })}
+                          {new Date(date).toLocaleDateString("en-US", {
+                            month: "short",
+                          })}
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Select Time</h3>
+                  <h3 className="text-lg font-medium mb-4 text-gray-900">Select Time</h3>
                   <div className="grid grid-cols-3 gap-2">
                     {availableTimeSlots.map((time) => (
                       <div
                         key={time}
+                        onClick={() => setSelectedTime(time)}
                         className={`border rounded-md py-2 px-1 text-center cursor-pointer transition-all ${
                           selectedTime === time
                             ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                            : "border-gray-300 hover:border-emerald-300 hover:bg-gray-50"
+                            : "border-gray-300 hover:border-emerald-300 hover:bg-gray-50 text-gray-400"
                         }`}
-                        onClick={() => setSelectedTime(time)}
                       >
                         <div className="text-sm font-medium">{time}</div>
                       </div>
@@ -463,7 +440,7 @@ const NewAppointment: React.FC = () => {
 
           {step === 4 && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              <h2 className="text-xl font-semibold mb-6 text-gray-900">
                 Confirm Your Appointment
               </h2>
               <div className="bg-gray-50 rounded-lg p-6 mb-6">
@@ -479,20 +456,30 @@ const NewAppointment: React.FC = () => {
                     <h3 className="text-lg font-medium text-gray-900">
                       {selectedDoctor?.name}
                     </h3>
-                    <p className="text-sm text-gray-500">{selectedDoctor?.specialty}</p>
+                    <p className="text-sm text-gray-500">
+                      {selectedDoctor?.specialty}
+                    </p>
                     <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm font-medium text-gray-500">Date</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          Date
+                        </p>
                         <p className="text-base text-gray-900">
                           {selectedDate && formatDate(selectedDate)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-500">Time</p>
-                        <p className="text-base text-gray-900">{selectedTime}</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          Time
+                        </p>
+                        <p className="text-base text-gray-900">
+                          {selectedTime}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-500">Appointment Type</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          Appointment Type
+                        </p>
                         <p className="text-base text-gray-900">
                           {appointmentType === "IN_PERSON"
                             ? "In-Person Visit"
@@ -504,9 +491,9 @@ const NewAppointment: React.FC = () => {
                 </div>
               </div>
               <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Reason for Visit</h3>
+                <h3 className="text-lg font-medium mb-2 text-gray-900">Reason for Visit</h3>
                 <textarea
-                  className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full border rounded-md p-3 focus:outline-none border-gray-400 text-gray-900 focus:ring-emerald-500 focus:border-emerald-500"
                   rows={4}
                   placeholder="Please describe your symptoms or reason for the appointment..."
                 ></textarea>
@@ -522,7 +509,10 @@ const NewAppointment: React.FC = () => {
                     >
                       <path
                         fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1
+                          1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000
+                          2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1
+                          1 0 00-1-1H9z"
                         clipRule="evenodd"
                       />
                     </svg>
@@ -539,12 +529,12 @@ const NewAppointment: React.FC = () => {
             </div>
           )}
 
-          <div className="flex justify-between mt-8">
+          <div className="mt-8 flex flex-col sm:flex-row justify-between gap-3">
             <Button
               variant="outline"
               onClick={handlePrevStep}
               disabled={step === 1}
-              className={step === 1 ? "invisible" : ""}
+              className="w-full sm:w-auto"
             >
               <ChevronLeft className="h-5 w-5 mr-1" />
               Back
@@ -557,12 +547,13 @@ const NewAppointment: React.FC = () => {
                   (step === 2 && !selectedDoctor) ||
                   (step === 3 && (!selectedDate || !selectedTime))
                 }
+                className="w-full sm:w-auto"
               >
                 Next
                 <ChevronRight className="h-5 w-5 ml-1" />
               </Button>
             ) : (
-              <Button>Confirm Appointment</Button>
+              <Button className="w-full sm:w-auto">Confirm Appointment</Button>
             )}
           </div>
         </Card>
