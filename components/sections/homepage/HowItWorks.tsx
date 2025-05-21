@@ -21,68 +21,65 @@ const HowItWorks: React.FC = () => {
         </div>
 
         <div className="mt-10">
-          <div className="relative">
-            <div
-              className="absolute inset-0 flex items-center"
-              aria-hidden="true"
-            >
+
+          <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
+            <div className="text-center">
+              <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
+                1
+              </span>
+              <div className="mt-4 bg-white rounded-lg shadow-md p-6">
+                {" "}
+                <h3 className="text-lg font-medium text-gray-900">
+                  Create an Account
+                </h3>
+                <p className="mt-2 text-sm text-gray-500">
+                  Sign up for MedSync in minutes with your email address.
+                </p>
+              </div>
             </div>
 
-            <div className="relative flex justify-between gap-7">
-              <div className="text-center">
-                <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
-                  1
-                </span>
-                <div className="mt-4 bg-white rounded-lg shadow-md p-4">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    Create an Account
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500">
-                    Sign up for MedSync in minutes with your email address.
-                  </p>
-                </div>
+            <div className="text-center">
+              <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
+                2
+              </span>
+              <div className="mt-4 bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Find a Doctor
+                </h3>
+                <p className="mt-2 text-sm text-gray-500">
+                  Search for healthcare providers by specialty, location, or
+                  availability.
+                </p>
               </div>
-              <div className="text-center">
-                <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
-                  2
-                </span>
-                <div className="mt-4 bg-white rounded-lg shadow-md p-4">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    Find a Doctor
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500">
-                    Search for healthcare providers by specialty, location, or
-                    availability.
-                  </p>
-                </div>
+            </div>
+
+            <div className="text-center">
+              <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
+                3
+              </span>
+              <div className="mt-4 bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Book Appointment
+                </h3>
+                <p className="mt-2 text-sm text-gray-500">
+                  Schedule an in-person visit or virtual consultation at your
+                  convenience.
+                </p>
               </div>
-              <div className="text-center">
-                <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
-                  3
-                </span>
-                <div className="mt-4 bg-white rounded-lg shadow-md p-4">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    Book Appointment
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500">
-                    Schedule an in-person visit or virtual consultation at
-                    your convenience.
-                  </p>
-                </div>
-              </div>
-              <div className="text-center">
-                <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
-                  4
-                </span>
-                <div className="mt-4 bg-white rounded-lg shadow-md p-4">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    Receive Care
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500">
-                    Connect with your doctor and get the care you need, when
-                    you need it.
-                  </p>
-                </div>
+            </div>
+
+            <div className="text-center">
+              <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
+                4
+              </span>
+              <div className="mt-4 bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Receive Care
+                </h3>
+                <p className="mt-2 text-sm text-gray-500">
+                  Connect with your doctor and get the care you need, when you
+                  need it.
+                </p>
               </div>
             </div>
           </div>

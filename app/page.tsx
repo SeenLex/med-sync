@@ -11,7 +11,6 @@ const Homepage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <HomepageLayout>
-        
         <HeroSection />
         <Features />
         <HowItWorks />

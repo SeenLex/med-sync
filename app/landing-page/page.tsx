@@ -1,6 +1,13 @@
 import React from "react";
 import Link from "next/link";
-import { Calendar, FileText, Video, Bell, Clock, Search } from "lucide-react";
+import {
+  Calendar,
+  FileText,
+  Video,
+  Search,
+  Bell,
+  Clock,
+} from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -31,7 +38,8 @@ const LandingPage: React.FC = () => {
     {
       id: "1",
       title: "Appointment Confirmed",
-      message: "Your appointment with Dr. Sarah Johnson has been confirmed.",
+      message:
+        "Your appointment with Dr. Sarah Johnson has been confirmed.",
       time: "2 hours ago",
       type: "APPOINTMENT_CONFIRMED",
     },
@@ -45,127 +53,135 @@ const LandingPage: React.FC = () => {
     {
       id: "3",
       title: "Medical Record Updated",
-      message: "Your medical records have been updated with recent lab results.",
+      message:
+        "Your medical records have been updated with recent lab results.",
       time: "2 days ago",
       type: "MEDICAL_RECORD_UPDATE",
     },
   ];
 
+  // Quick actions configuration
+  const quickActions = [
+    {
+      href: "/appointments/new",
+      Icon: Calendar,
+      title: "Book Appointment",
+      desc: "Schedule an in-person or virtual consultation",
+    },
+    {
+      href: "/medical-records",
+      Icon: FileText,
+      title: "Medical Records",
+      desc: "View and manage your health information",
+    },
+    {
+      href: "/telemedicine",
+      Icon: Video,
+      title: "Telemedicine",
+      desc: "Connect via video consultation",
+    },
+    {
+      href: "/doctors",
+      Icon: Search,
+      title: "Find Doctors",
+      desc: "Search providers by specialty",
+    },
+  ];
+
   return (
     <Layout>
-      <section className="py-12 bg-gray-50">
+      <section className="py-8 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="p-6 hover:shadow-lg transition-shadow">
-              <Link href="/appointments/new">
-                <div className="flex flex-col items-center cursor-pointer">
-                  <div className="bg-emerald-100 p-3 rounded-full">
-                    <Calendar className="h-8 w-8 text-emerald-600" />
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
+            Quick Actions
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
+            {quickActions.map(({ href, Icon, title, desc }) => (
+              <Card
+                key={title}
+                className="p-2 sm:p-4 hover:shadow-lg transition-shadow"
+              >
+                <Link
+                  href={href}
+                  className="flex flex-col items-center text-center"
+                >
+                  <div className="bg-emerald-100 p-2 sm:p-3 rounded-full">
+                    <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-600" />
                   </div>
-                  <h3 className="mt-4 text-lg font-medium text-gray-900">Book Appointment</h3>
-                  <p className="mt-1 text-sm text-gray-500 text-center">
-                    Schedule an in-person or virtual consultation
+                  <h3 className="mt-2 sm:mt-3 text-sm sm:text-base font-medium text-gray-900">
+                    {title}
+                  </h3>
+                  <p className="mt-1 text-xs sm:text-sm text-gray-500 hidden lg:block">
+                    {desc}
                   </p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="p-6 hover:shadow-lg transition-shadow">
-              <Link href="/medical-records">
-                <div className="flex flex-col items-center cursor-pointer">
-                  <div className="bg-emerald-100 p-3 rounded-full">
-                    <FileText className="h-8 w-8 text-emerald-600" />
-                  </div>
-                  <h3 className="mt-4 text-lg font-medium text-gray-900">Medical Records</h3>
-                  <p className="mt-1 text-sm text-gray-500 text-center">
-                    View and manage your health information
-                  </p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="p-6 hover:shadow-lg transition-shadow">
-              <Link href="/telemedicine">
-                <div className="flex flex-col items-center cursor-pointer">
-                  <div className="bg-emerald-100 p-3 rounded-full">
-                    <Video className="h-8 w-8 text-emerald-600" />
-                  </div>
-                  <h3 className="mt-4 text-lg font-medium text-gray-900">Telemedicine</h3>
-                  <p className="mt-1 text-sm text-gray-500 text-center">
-                    Connect with doctors through video consultations
-                  </p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="p-6 hover:shadow-lg transition-shadow">
-              <Link href="/doctors">
-                <div className="flex flex-col items-center cursor-pointer">
-                  <div className="bg-emerald-100 p-3 rounded-full">
-                    <Search className="h-8 w-8 text-emerald-600" />
-                  </div>
-                  <h3 className="mt-4 text-lg font-medium text-gray-900">Find Doctors</h3>
-                  <p className="mt-1 text-sm text-gray-500 text-center">
-                    Search for healthcare providers by specialty
-                  </p>
-                </div>
-              </Link>
-            </Card>
+                </Link>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="py-12">
+      <section className="py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Upcoming Appointments</h2>
-                <Link href="/appointments">
-                  <span className="text-emerald-600 hover:text-emerald-700 text-sm font-medium cursor-pointer">
-                    View All
-                  </span>
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  Upcoming Appointments
+                </h2>
+                <Link
+                  href="/appointments"
+                  className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                >
+                  View All
                 </Link>
               </div>
               {upcomingAppointments.length > 0 ? (
                 <div className="space-y-4">
-                  {upcomingAppointments.map((appointment) => (
-                    <Card key={appointment.id} className="p-4 hover:shadow-md transition-shadow">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start space-x-4">
+                  {upcomingAppointments.map((appt) => (
+                    <Card
+                      key={appt.id}
+                      className="p-3 sm:p-4 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                        <div className="flex items-start space-x-3">
                           <div className="bg-emerald-100 p-2 rounded-full">
-                            {appointment.type === "VIRTUAL" ? (
+                            {appt.type === "VIRTUAL" ? (
                               <Video className="h-6 w-6 text-emerald-600" />
                             ) : (
                               <Calendar className="h-6 w-6 text-emerald-600" />
                             )}
                           </div>
-                          <div>
-                            <h3 className="text-lg font-medium text-gray-900">
-                              {appointment.doctorName}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm sm:text-lg font-medium text-gray-900 truncate">
+                              {appt.doctorName}
                             </h3>
-                            <p className="text-sm text-gray-500">{appointment.specialty}</p>
-                            <div className="mt-2 flex items-center text-sm text-gray-500">
+                            <p className="text-xs sm:text-sm text-gray-500 truncate">
+                              {appt.specialty}
+                            </p>
+                            <div className="mt-1 flex items-center text-xs sm:text-sm text-gray-500">
                               <Clock className="h-4 w-4 mr-1" />
-                              <span>
-                                {appointment.date} at {appointment.time}
+                              <span className="truncate">
+                                {appt.date} at {appt.time}
                               </span>
                             </div>
                             <div className="mt-1">
                               <span
-                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                  appointment.type === "VIRTUAL"
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${
+                                  appt.type === "VIRTUAL"
                                     ? "bg-blue-100 text-blue-800"
                                     : "bg-green-100 text-green-800"
                                 }`}
                               >
-                                {appointment.type === "VIRTUAL"
+                                {appt.type === "VIRTUAL"
                                   ? "Virtual Consultation"
                                   : "In-Person Visit"}
                               </span>
                             </div>
                           </div>
                         </div>
-                        <div className="flex space-x-2">
-                          {appointment.type === "VIRTUAL" && (
+                        <div className="mt-3 sm:mt-0 flex space-x-2">
+                          {appt.type === "VIRTUAL" && (
                             <Button variant="primary" size="sm">
                               Join Call
                             </Button>
@@ -179,62 +195,78 @@ const LandingPage: React.FC = () => {
                   ))}
                 </div>
               ) : (
-                <Card className="p-6 text-center">
-                  <p className="text-gray-500">You have no upcoming appointments.</p>
+                <Card className="p-4 text-center">
+                  <p className="text-gray-500">
+                    You have no upcoming appointments.
+                  </p>
                   <Link href="/appointments/new">
-                    <Button className="mt-4">Book an Appointment</Button>
+                    <Button className="mt-4">
+                      Book an Appointment
+                    </Button>
                   </Link>
                 </Card>
               )}
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Notifications</h2>
-                <Link href="/notifications">
-                  <span className="text-emerald-600 hover:text-emerald-700 text-sm font-medium cursor-pointer">
-                    View All
-                  </span>
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  Notifications
+                </h2>
+                <Link
+                  href="/notifications"
+                  className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                >
+                  View All
                 </Link>
               </div>
-              <Card className="p-4">
+              <Card className="p-3 sm:p-4">
                 {recentNotifications.length > 0 ? (
                   <div className="divide-y divide-gray-200">
-                    {recentNotifications.map((notification) => (
-                      <div key={notification.id} className="py-4 first:pt-0 last:pb-0">
+                    {recentNotifications.map((note) => (
+                      <div
+                        key={note.id}
+                        className="py-3 first:pt-0 last:pb-0"
+                      >
                         <div className="flex items-start space-x-3">
                           <div
                             className={`p-1.5 rounded-full ${
-                              notification.type === "APPOINTMENT_CONFIRMED"
+                              note.type === "APPOINTMENT_CONFIRMED"
                                 ? "bg-green-100"
-                                : notification.type === "NEW_MESSAGE"
+                                : note.type === "NEW_MESSAGE"
                                 ? "bg-blue-100"
                                 : "bg-yellow-100"
                             }`}
                           >
                             <Bell
                               className={`h-5 w-5 ${
-                                notification.type === "APPOINTMENT_CONFIRMED"
+                                note.type === "APPOINTMENT_CONFIRMED"
                                   ? "text-green-600"
-                                  : notification.type === "NEW_MESSAGE"
+                                  : note.type === "NEW_MESSAGE"
                                   ? "text-blue-600"
                                   : "text-yellow-600"
                               }`}
                             />
                           </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-gray-900">
-                              {notification.title}
+                          <div className="min-w-0">
+                            <h4 className="text-sm font-medium text-gray-900 truncate">
+                              {note.title}
                             </h4>
-                            <p className="mt-1 text-sm text-gray-500">{notification.message}</p>
-                            <p className="mt-1 text-xs text-gray-400">{notification.time}</p>
+                            <p className="mt-1 text-xs sm:text-sm text-gray-500 truncate">
+                              {note.message}
+                            </p>
+                            <p className="mt-1 text-[10px] sm:text-xs text-gray-400 truncate">
+                              {note.time}
+                            </p>
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center text-gray-500 py-4">No new notifications.</p>
+                  <p className="text-center text-gray-500 py-4">
+                    No new notifications.
+                  </p>
                 )}
               </Card>
             </div>
