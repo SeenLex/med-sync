@@ -60,7 +60,6 @@ const LandingPage: React.FC = () => {
     },
   ];
 
-  // Quick actions configuration
   const quickActions = [
     {
       href: "/appointments/new",

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import {
@@ -21,13 +21,12 @@ const Navbar: React.FC = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   const handleLinkClick = () => setIsMenuOpen(false);
-  const handleLogoClick = () =>
-    animateScroll.scrollToTop({ duration: 500 });
+  const handleLogoClick = () => animateScroll.scrollToTop({ duration: 500 });
 
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
-      setIsNavbarVisible(currentY <= lastScrollY);
+      setIsNavbarVisible(currentY <= lastScrollY || currentY < 10);
       setLastScrollY(currentY);
     };
     window.addEventListener("scroll", handleScroll);
@@ -43,29 +42,25 @@ const Navbar: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo */}
           <div
             className="flex items-center cursor-pointer"
             onClick={handleLogoClick}
           >
-            <span className="text-emerald-600 font-bold text-2xl">
-              MedSync
-            </span>
+            <span className="text-emerald-600 font-bold text-2xl">MedSync</span>
           </div>
 
-          {/* md+: squeezed text │ lg+: normal text */}
           <div className="hidden md:flex items-center xl:space-x-4 ml-6">
             <ScrollLink
               to="features"
               smooth
               duration={500}
+              offset={-30}
+
               className="flex items-center lg:px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
               onClick={handleLinkClick}
             >
-              <Star
-                className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2"
-              />
+              <Star className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
               <span className="text-xs lg:text-base">Features</span>
             </ScrollLink>
 
@@ -73,13 +68,12 @@ const Navbar: React.FC = () => {
               to="how-it-works"
               smooth
               duration={500}
+              offset={-30}
               className="flex items-center px-2 lg:px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
               onClick={handleLinkClick}
             >
-              <Wrench
-                className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2"
-              />
+              <Wrench className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
               <span className="text-xs lg:text-base">How It Works</span>
             </ScrollLink>
 
@@ -87,13 +81,12 @@ const Navbar: React.FC = () => {
               to="testimonials"
               smooth
               duration={500}
+              offset={-30}
               className="flex items-center px-2 lg:px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
               onClick={handleLinkClick}
             >
-              <MessageSquare
-                className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2"
-              />
+              <MessageSquare className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
               <span className="text-xs lg:text-base">Testimonials</span>
             </ScrollLink>
 
@@ -101,13 +94,12 @@ const Navbar: React.FC = () => {
               to="pricing"
               smooth
               duration={500}
+              offset={-30}
               className="flex items-center px-2 lg:px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
               onClick={handleLinkClick}
             >
-              <DollarSign
-                className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2"
-              />
+              <DollarSign className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
               <span className="text-xs lg:text-base">Pricing</span>
             </ScrollLink>
 
@@ -121,9 +113,7 @@ const Navbar: React.FC = () => {
                            text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
                 onClick={handleLinkClick}
               >
-                <LogIn
-                  className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2"
-                />
+                <LogIn className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
                 <span className="text-xs lg:text-base">Login</span>
               </Link>
 
@@ -134,16 +124,13 @@ const Navbar: React.FC = () => {
                   onClick={handleLinkClick}
                   className="flex items-center px-2 lg:px-3 py-2"
                 >
-                  <UserPlus
-                    className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2"
-                  />
+                  <UserPlus className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
                   <span className="text-xs lg:text-base">Sign Up</span>
                 </Button>
               </Link>
             </div>
           </div>
 
-          {/* mobile */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -162,7 +149,6 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* mobile dropdown */}
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
@@ -170,9 +156,10 @@ const Navbar: React.FC = () => {
               to="features"
               smooth
               duration={500}
+              offset={-30}
               className="block px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 flex items-center"
+                         hover:bg-gray-100 items-center"
               onClick={handleLinkClick}
             >
               <Star className="h-4 w-4 mr-2" />
@@ -182,9 +169,10 @@ const Navbar: React.FC = () => {
               to="how-it-works"
               smooth
               duration={500}
+              offset={-30}
               className="block px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 flex items-center"
+                         hover:bg-gray-100 items-center"
               onClick={handleLinkClick}
             >
               <Wrench className="h-4 w-4 mr-2" />
@@ -194,9 +182,10 @@ const Navbar: React.FC = () => {
               to="testimonials"
               smooth
               duration={500}
+              offset={-30}
               className="block px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 flex items-center"
+                         hover:bg-gray-100 items-center"
               onClick={handleLinkClick}
             >
               <MessageSquare className="h-4 w-4 mr-2" />
@@ -206,9 +195,10 @@ const Navbar: React.FC = () => {
               to="pricing"
               smooth
               duration={500}
+              offset={-30}
               className="block px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 flex items-center"
+                         hover:bg-gray-100 items-center"
               onClick={handleLinkClick}
             >
               <DollarSign className="h-4 w-4 mr-2" />
@@ -218,7 +208,7 @@ const Navbar: React.FC = () => {
               href="/login"
               className="block px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 flex items-center"
+                         hover:bg-gray-100 items-center"
               onClick={handleLinkClick}
             >
               <LogIn className="h-4 w-4 mr-2" />
@@ -228,7 +218,7 @@ const Navbar: React.FC = () => {
               <div
                 className="block px-3 py-2 rounded-md
                            bg-emerald-600 text-white hover:bg-emerald-700
-                           flex items-center"
+                           items-center"
                 onClick={handleLinkClick}
               >
                 <UserPlus className="h-4 w-4 mr-2" />

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FileText,
   Download,
@@ -9,15 +9,21 @@ import {
   Search,
   Calendar,
   User,
-  FileType2,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Layout from "@/components/layout/Layout";
+import Pagination from "@/components/ui/Pagination";
 
 const MedicalRecords: React.FC = () => {
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset to first page when filter or search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, searchQuery]);
 
   const medicalRecords = [
     {
@@ -92,6 +98,14 @@ const MedicalRecords: React.FC = () => {
     return matchesFilter && matchesSearch;
   });
 
+  // Pagination logic
+  const pageSize = 5;
+  const totalPages = Math.ceil(filteredRecords.length / pageSize);
+  const paginatedRecords = filteredRecords.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   const getRecordTypeInfo = (type: string) => {
     switch (type) {
       case "LAB_RESULT":
@@ -131,56 +145,25 @@ const MedicalRecords: React.FC = () => {
                 Filter by:
               </span>
               <div className="flex flex-wrap gap-2">
-                <button
-                  className={`px-3 py-1 text-sm rounded-full ${
-                    filter === "all"
-                      ? "bg-emerald-100 text-emerald-800"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                  onClick={() => setFilter("all")}
-                >
-                  All
-                </button>
-                <button
-                  className={`px-3 py-1 text-sm rounded-full ${
-                    filter === "lab-results"
-                      ? "bg-emerald-100 text-emerald-800"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                  onClick={() => setFilter("lab-results")}
-                >
-                  Lab Results
-                </button>
-                <button
-                  className={`px-3 py-1 text-sm rounded-full ${
-                    filter === "prescriptions"
-                      ? "bg-emerald-100 text-emerald-800"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                  onClick={() => setFilter("prescriptions")}
-                >
-                  Prescriptions
-                </button>
-                <button
-                  className={`px-3 py-1 text-sm rounded-full ${
-                    filter === "visit-summaries"
-                      ? "bg-emerald-100 text-emerald-800"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                  onClick={() => setFilter("visit-summaries")}
-                >
-                  Visit Summaries
-                </button>
-                <button
-                  className={`px-3 py-1 text-sm rounded-full ${
-                    filter === "medical-history"
-                      ? "bg-emerald-100 text-emerald-800"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                  onClick={() => setFilter("medical-history")}
-                >
-                  Medical History
-                </button>
+                {[
+                  { key: "all", label: "All" },
+                  { key: "lab-results", label: "Lab Results" },
+                  { key: "prescriptions", label: "Prescriptions" },
+                  { key: "visit-summaries", label: "Visit Summaries" },
+                  { key: "medical-history", label: "Medical History" },
+                ].map((f) => (
+                  <button
+                    key={f.key}
+                    className={`px-3 py-1 text-sm rounded-full ${
+                      filter === f.key
+                        ? "bg-emerald-100 text-emerald-800"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                    onClick={() => setFilter(f.key)}
+                  >
+                    {f.label}
+                  </button>
+                ))}
               </div>
             </div>
             <div className="relative text-gray-800">
@@ -190,7 +173,9 @@ const MedicalRecords: React.FC = () => {
               <input
                 type="text"
                 placeholder="Search medical records"
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 w-full"
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md 
+                           focus:outline-none focus:ring-emerald-500 
+                           focus:border-emerald-500 w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -199,8 +184,8 @@ const MedicalRecords: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          {filteredRecords.length > 0 ? (
-            filteredRecords.map((record) => {
+          {paginatedRecords.length > 0 ? (
+            paginatedRecords.map((record) => {
               const typeInfo = getRecordTypeInfo(record.type);
               return (
                 <Card
@@ -231,7 +216,8 @@ const MedicalRecords: React.FC = () => {
                         </div>
                         <div className="mt-2">
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${typeInfo.color}`}
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full 
+                                       text-xs font-medium ${typeInfo.color}`}
                           >
                             {typeInfo.label}
                           </span>
@@ -269,41 +255,15 @@ const MedicalRecords: React.FC = () => {
           )}
         </div>
 
-        <div className="mt-8">
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Upload Medical Records
-            </h2>
-            <p className="text-gray-600 mb-4">
-              You can upload your own medical records to keep track of your
-              health information. Supported file formats: PDF, JPG, PNG.
-            </p>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-              <FileType2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-sm text-gray-500 mb-4">
-                Drag and drop your files here, or click to browse
-              </p>
-              <input
-                type="file"
-                id="file-upload"
-                className="hidden"
-                accept=".pdf,.jpg,.jpeg,.png"
-                multiple
-              />
-              <label htmlFor="file-upload">
-                <Button variant="outline" className="mx-auto">
-                  Browse Files
-                </Button>
-              </label>
-              <p className="text-xs text-gray-500 mt-2">
-                Maximum file size: 10MB
-              </p>
-            </div>
-            <div className="mt-4 flex justify-end">
-              <Button variant="primary">Upload Records</Button>
-            </div>
-          </Card>
-        </div>
+        {totalPages > 1 && (
+          <div className="mt-6">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page: number) => setCurrentPage(page)}
+            />
+          </div>
+        )}
       </div>
     </Layout>
   );

@@ -1,16 +1,29 @@
 'use client';
 
-import React, { useState } from "react";
-import { Search, MapPin, Star, Filter, ChevronDown, Calendar, Video, MessageSquare } from "lucide-react";
+import React, { useState, useEffect } from "react"; // Added useEffect
+import {
+  Search,
+  MapPin,
+  Star,
+  Filter,
+  ChevronDown,
+  Calendar,
+  Video,
+  MessageSquare,
+} from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Layout from "@/components/layout/Layout";
+import Pagination from "@/components/ui/Pagination"; // Assuming Pagination is in ui folder
+
+const ITEMS_PER_PAGE = 5; // Define how many doctors to show per page
 
 const FindDoctor: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [availability, setAvailability] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
 
   const doctors = [
     {
@@ -50,7 +63,7 @@ const FindDoctor: React.FC = () => {
       education: "Stanford University",
       experience: "10 years",
       location: "Neurology Center",
-      nextAvailable: "May 15, 2025",
+      nextAvailable: "May 25, 2025", // Updated date
     },
     {
       id: "4",
@@ -63,7 +76,7 @@ const FindDoctor: React.FC = () => {
       education: "Yale University",
       experience: "18 years",
       location: "Mental Health Clinic",
-      nextAvailable: "May 14, 2025",
+      nextAvailable: "May 24, 2025", // Updated date
     },
     {
       id: "5",
@@ -76,7 +89,46 @@ const FindDoctor: React.FC = () => {
       education: "Columbia University",
       experience: "8 years",
       location: "Eye Care Center, Floor 1",
-      nextAvailable: "May 16, 2025",
+      nextAvailable: "May 26, 2025", // Updated date
+    },
+    {
+      id: "6",
+      name: "Dr. Kevin Lee",
+      specialty: "Pediatrician",
+      rating: 4.7,
+      reviewCount: 110,
+      image: "https://randomuser.me/api/portraits/men/50.jpg",
+      availableFor: ["IN_PERSON", "VIRTUAL"],
+      education: "University of Pennsylvania",
+      experience: "9 years",
+      location: "Children's Clinic, Suite A",
+      nextAvailable: "Today",
+    },
+    {
+      id: "7",
+      name: "Dr. Amanda White",
+      specialty: "Gynecologist",
+      rating: 4.8,
+      reviewCount: 130,
+      image: "https://randomuser.me/api/portraits/women/51.jpg",
+      availableFor: ["IN_PERSON"],
+      education: "Cornell University",
+      experience: "11 years",
+      location: "Women's Health Pavilion",
+      nextAvailable: "Tomorrow",
+    },
+    {
+      id: "8",
+      name: "Dr. Brian Green",
+      specialty: "Orthopedist",
+      rating: 4.6,
+      reviewCount: 85,
+      image: "https://randomuser.me/api/portraits/men/52.jpg",
+      availableFor: ["IN_PERSON", "VIRTUAL"],
+      education: "Duke University",
+      experience: "13 years",
+      location: "Sports Medicine Center",
+      nextAvailable: "May 27, 2025",
     },
   ];
 
@@ -100,20 +152,43 @@ const FindDoctor: React.FC = () => {
       doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesSpecialty = specialty === "" || specialty === "All Specialties" || doctor.specialty === specialty;
+    const matchesSpecialty =
+      specialty === "" ||
+      specialty === "All Specialties" ||
+      doctor.specialty === specialty;
 
     const matchesAvailability =
       availability === "" ||
-      (availability === "Virtual" && doctor.availableFor.includes("VIRTUAL")) ||
-      (availability === "In-Person" && doctor.availableFor.includes("IN_PERSON"));
+      (availability === "Virtual" &&
+        doctor.availableFor.includes("VIRTUAL")) ||
+      (availability === "In-Person" &&
+        doctor.availableFor.includes("IN_PERSON"));
 
     return matchesSearch && matchesSpecialty && matchesAvailability;
   });
 
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, specialty, availability]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredDoctors.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentDoctors = filteredDoctors.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0); // Optional: scroll to top on page change
+  };
+
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Find a Doctor</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">
+          Find a Doctor
+        </h1>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col space-y-4">
@@ -137,7 +212,11 @@ const FindDoctor: React.FC = () => {
               >
                 <Filter className="h-5 w-5 mr-2" />
                 Filters
-                <ChevronDown className={`h-5 w-5 ml-2 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  className={`h-5 w-5 ml-2 transition-transform ${
+                    showFilters ? "rotate-180" : ""
+                  }`}
+                />
               </button>
 
               <div className="flex flex-wrap gap-2">
@@ -210,11 +289,12 @@ const FindDoctor: React.FC = () => {
         </div>
 
         <div className="space-y-6">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-gray-600">
-              {filteredDoctors.length} {filteredDoctors.length === 1 ? 'doctor' : 'doctors'} found
+              {filteredDoctors.length}{" "}
+              {filteredDoctors.length === 1 ? "doctor" : "doctors"} found
             </p>
-            <select className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
+            <select className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
               <option>Sort by: Recommended</option>
               <option>Sort by: Rating (high to low)</option>
               <option>Sort by: Availability</option>
@@ -222,9 +302,12 @@ const FindDoctor: React.FC = () => {
             </select>
           </div>
 
-          {filteredDoctors.length > 0 ? (
-            filteredDoctors.map((doctor) => (
-              <Card key={doctor.id} className="p-6 hover:shadow-lg transition-shadow">
+          {currentDoctors.length > 0 ? (
+            currentDoctors.map((doctor) => (
+              <Card
+                key={doctor.id}
+                className="p-6 hover:shadow-lg transition-shadow"
+              >
                 <div className="flex flex-col md:flex-row">
                   <div className="flex flex-col items-center md:items-start md:flex-row md:flex-1">
                     <img
@@ -233,16 +316,20 @@ const FindDoctor: React.FC = () => {
                       className="h-24 w-24 rounded-full object-cover mb-4 md:mb-0 md:mr-6"
                     />
                     <div>
-                      <h2 className="text-xl font-semibold text-gray-900">{doctor.name}</h2>
+                      <h2 className="text-xl font-semibold text-gray-900">
+                        {doctor.name}
+                      </h2>
                       <p className="text-gray-600">{doctor.specialty}</p>
-                      
+
                       <div className="flex items-center mt-2">
                         <div className="flex items-center">
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
                               className={`h-4 w-4 ${
-                                i < Math.floor(doctor.rating) ? "text-yellow-400 fill-current" : "text-gray-300"
+                                i < Math.floor(doctor.rating)
+                                  ? "text-yellow-400 fill-current"
+                                  : "text-gray-300"
                               }`}
                             />
                           ))}
@@ -251,7 +338,7 @@ const FindDoctor: React.FC = () => {
                           {doctor.rating} ({doctor.reviewCount} reviews)
                         </span>
                       </div>
-                      
+
                       <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4">
                         <div className="flex items-center text-sm text-gray-500">
                           <MapPin className="h-4 w-4 mr-1 text-gray-400" />
@@ -266,13 +353,23 @@ const FindDoctor: React.FC = () => {
                           <span>{doctor.experience} experience</span>
                         </div>
                         <div className="flex items-center text-sm text-gray-500">
-                          <svg className="h-4 w-4 mr-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          <svg
+                            className="h-4 w-4 mr-1 text-gray-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            />
                           </svg>
                           <span>{doctor.education}</span>
                         </div>
                       </div>
-                      
+
                       <div className="mt-3 flex flex-wrap gap-2">
                         {doctor.availableFor.includes("IN_PERSON") && (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
@@ -289,16 +386,22 @@ const FindDoctor: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="mt-6 md:mt-0 flex flex-col space-y-2 md:justify-center">
                     <Button variant="primary" className="w-full md:w-auto">
                       Book Appointment
                     </Button>
-                    <Button variant="outline" className="w-full md:w-auto flex items-center justify-center">
+                    <Button
+                      variant="outline"
+                      className="w-full md:w-auto flex items-center justify-center"
+                    >
                       <MessageSquare className="h-4 w-4 mr-2" />
                       Send Message
                     </Button>
-                    <a href={`/doctors/${doctor.id}`} className="text-emerald-600 text-sm text-center hover:text-emerald-700 mt-2">
+                    <a
+                      href={`/doctors/${doctor.id}`}
+                      className="text-emerald-600 text-sm text-center hover:text-emerald-700 mt-2"
+                    >
                       View Full Profile
                     </a>
                   </div>
@@ -307,9 +410,24 @@ const FindDoctor: React.FC = () => {
             ))
           ) : (
             <Card className="p-8 text-center">
-              <p className="text-gray-500 mb-4">No doctors found matching your criteria.</p>
-              <p className="text-gray-500">Try adjusting your filters or search terms.</p>
+              <p className="text-gray-500 mb-4">
+                No doctors found matching your criteria.
+              </p>
+              <p className="text-gray-500">
+                Try adjusting your filters or search terms.
+              </p>
             </Card>
+          )}
+
+          {/* Add Pagination component here */}
+          {totalPages > 1 && (
+            <div className="mt-8">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
           )}
         </div>
       </div>

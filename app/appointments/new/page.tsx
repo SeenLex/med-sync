@@ -278,7 +278,7 @@ const NewAppointment: React.FC = () => {
               <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
                 <div className="relative w-full md:w-80">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-gray-900" />
+                    <Search className="h-5 w-5 text-gray-400" />
                   </div>
                   <input
                     type="text"
