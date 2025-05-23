@@ -1,9 +1,35 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
-import Button from "@/components/ui/Button"; // Assuming this path is correct
+import Button from "@/components/ui/Button";
 import Link from "next/link";
 
 const HowItWorks: React.FC = () => {
+  const steps = [
+    {
+      n: 1,
+      title: "Create an Account",
+      body: "Sign up for MedSync in minutes with your email address.",
+    },
+    {
+      n: 2,
+      title: "Find a Doctor",
+      body:
+        "Search for healthcare providers by specialty, location, or availability.",
+    },
+    {
+      n: 3,
+      title: "Book Appointment",
+      body:
+        "Schedule an in-person visit or virtual consultation at your convenience.",
+    },
+    {
+      n: 4,
+      title: "Receive Care",
+      body:
+        "Connect with your doctor and get the care you need, when you need it.",
+    },
+  ];
+
   return (
     <div id="how-it-works" className="py-12 bg-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,69 +47,22 @@ const HowItWorks: React.FC = () => {
         </div>
 
         <div className="mt-10">
-          <div className="grid grid-cols-2 gap-y-10 gap-x-6 lg:grid-cols-4 lg:gap-x-8">
-            {/* Step 1 */}
-            <div className="text-center">
-              <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
-                1
-              </span>
-              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Create an Account
-                </h3>
-                <p className="mt-2 text-sm text-gray-500 hidden md:block">
-                  Sign up for MedSync in minutes with your email address.
-                </p>
+          <div className="grid grid-cols-2 gap-y-10 gap-x-6 lg:grid-cols-4 lg:gap-x-8 lg:auto-rows-fr">
+            {steps.map(({ n, title, body }) => (
+              <div key={n} className="text-center lg:flex lg:flex-col">
+                <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
+                  {n}
+                </span>
+                <div className="mt-4 bg-white rounded-lg shadow-md p-6 break-words lg:flex-1">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {title}
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-500 hidden md:block">
+                    {body}
+                  </p>
+                </div>
               </div>
-            </div>
-
-            {/* Step 2 */}
-            <div className="text-center">
-              <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
-                2
-              </span>
-              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Find a Doctor
-                </h3>
-                <p className="mt-2 text-sm text-gray-500 hidden md:block">
-                  Search for healthcare providers by specialty, location, or
-                  availability.
-                </p>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="text-center">
-              <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
-                3
-              </span>
-              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Book Appointment
-                </h3>
-                <p className="mt-2 text-sm text-gray-500 hidden md:block">
-                  Schedule an in-person visit or virtual consultation at your
-                  convenience.
-                </p>
-              </div>
-            </div>
-
-            {/* Step 4 */}
-            <div className="text-center">
-              <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
-                4
-              </span>
-              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Receive Care
-                </h3>
-                <p className="mt-2 text-sm text-gray-500 hidden md:block">
-                  Connect with your doctor and get the care you need, when you
-                  need it.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
 
           <div className="mt-12 text-center">

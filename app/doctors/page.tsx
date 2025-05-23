@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react"; // Added useEffect
 import {
@@ -15,6 +15,8 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Layout from "@/components/layout/Layout";
 import Pagination from "@/components/ui/Pagination"; // Assuming Pagination is in ui folder
+import Link from "next/link";
+import { Doctor } from "@/components/doctor/DoctorProfile";
 
 const ITEMS_PER_PAGE = 5; // Define how many doctors to show per page
 
@@ -25,7 +27,7 @@ const FindDoctor: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // State for current page
 
-  const doctors = [
+  const doctors: Doctor[] = [
     {
       id: "1",
       name: "Dr. Sarah Johnson",
@@ -38,6 +40,11 @@ const FindDoctor: React.FC = () => {
       experience: "15 years",
       location: "Medical Center, Floor 3",
       nextAvailable: "Today",
+      bio: "",
+      languages: [],
+      contact: { phone: "", email: "" },
+      services: [],
+      schedule: [],
     },
     {
       id: "2",
@@ -51,6 +58,11 @@ const FindDoctor: React.FC = () => {
       experience: "12 years",
       location: "Dermatology Clinic, Floor 2",
       nextAvailable: "Tomorrow",
+      bio: "",
+      languages: [],
+      contact: { phone: "", email: "" },
+      services: [],
+      schedule: [],
     },
     {
       id: "3",
@@ -64,6 +76,11 @@ const FindDoctor: React.FC = () => {
       experience: "10 years",
       location: "Neurology Center",
       nextAvailable: "May 25, 2025", // Updated date
+      bio: "",
+      languages: [],
+      contact: { phone: "", email: "" },
+      services: [],
+      schedule: [],
     },
     {
       id: "4",
@@ -77,6 +94,11 @@ const FindDoctor: React.FC = () => {
       experience: "18 years",
       location: "Mental Health Clinic",
       nextAvailable: "May 24, 2025", // Updated date
+      bio: "",
+      languages: [],
+      contact: { phone: "", email: "" },
+      services: [],
+      schedule: [],
     },
     {
       id: "5",
@@ -90,6 +112,11 @@ const FindDoctor: React.FC = () => {
       experience: "8 years",
       location: "Eye Care Center, Floor 1",
       nextAvailable: "May 26, 2025", // Updated date
+      bio: "",
+      languages: [],
+      contact: { phone: "", email: "" },
+      services: [],
+      schedule: [],
     },
     {
       id: "6",
@@ -103,6 +130,11 @@ const FindDoctor: React.FC = () => {
       experience: "9 years",
       location: "Children's Clinic, Suite A",
       nextAvailable: "Today",
+      bio: "",
+      languages: [],
+      contact: { phone: "", email: "" },
+      services: [],
+      schedule: [],
     },
     {
       id: "7",
@@ -116,6 +148,11 @@ const FindDoctor: React.FC = () => {
       experience: "11 years",
       location: "Women's Health Pavilion",
       nextAvailable: "Tomorrow",
+      bio: "",
+      languages: [],
+      contact: { phone: "", email: "" },
+      services: [],
+      schedule: [],
     },
     {
       id: "8",
@@ -129,6 +166,11 @@ const FindDoctor: React.FC = () => {
       experience: "13 years",
       location: "Sports Medicine Center",
       nextAvailable: "May 27, 2025",
+      bio: "",
+      languages: [],
+      contact: { phone: "", email: "" },
+      services: [],
+      schedule: [],
     },
   ];
 
@@ -159,8 +201,7 @@ const FindDoctor: React.FC = () => {
 
     const matchesAvailability =
       availability === "" ||
-      (availability === "Virtual" &&
-        doctor.availableFor.includes("VIRTUAL")) ||
+      (availability === "Virtual" && doctor.availableFor.includes("VIRTUAL")) ||
       (availability === "In-Person" &&
         doctor.availableFor.includes("IN_PERSON"));
 
@@ -186,9 +227,7 @@ const FindDoctor: React.FC = () => {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          Find a Doctor
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Find a Doctor</h1>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col space-y-4">
@@ -398,12 +437,12 @@ const FindDoctor: React.FC = () => {
                       <MessageSquare className="h-4 w-4 mr-2" />
                       Send Message
                     </Button>
-                    <a
+                    <Link
                       href={`/doctors/${doctor.id}`}
                       className="text-emerald-600 text-sm text-center hover:text-emerald-700 mt-2"
                     >
                       View Full Profile
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </Card>

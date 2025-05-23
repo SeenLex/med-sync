@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react";
 import DashboardStats from "@/components/doctor/DashboardStats";
 import UpcomingAppointments from "@/components/doctor/UpcomingAppointments";
 import RecentPatients from "@/components/doctor/RecentPatients";
-import DoctorSchedule from "@/components/doctor/DoctorSchedule";
 import Card from "@/components/ui/Card";
-import { Doctor } from "@/types";
 import { Calendar, Users, Clock, FileText } from "lucide-react";
-import Layout from "@/components/layout/Layout";
+import DoctorLayout from "@/components/doctor/DoctorLayout";
+import { Doctor } from "@/types";
+import DoctorSchedule from "@/components/doctor/DoctorSchedule";
 
 const DoctorDashboard: React.FC = () => {
   const [doctorData, setDoctorData] = useState<Doctor | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("appointments");
-  
+
   // Fetch doctor data
   useEffect(() => {
     // In a real app, this would be an API call
@@ -36,9 +36,10 @@ const DoctorDashboard: React.FC = () => {
           },
           specialization: "Cardiologist",
           licenseNumber: "MED12345",
-          biography: "Board-certified cardiologist with over 10 years of experience.",
+          biography:
+            "Board-certified cardiologist with over 10 years of experience.",
         };
-        
+
         setDoctorData(mockDoctor);
       } catch (error) {
         console.error("Error fetching doctor data:", error);
@@ -46,18 +47,22 @@ const DoctorDashboard: React.FC = () => {
         setIsLoading(false);
       }
     };
-    
+
     fetchDoctorData();
   }, []);
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Loading...
+      </div>
+    );
   }
 
   if (!doctorData) {
     return <div>Error loading doctor data</div>;
   }
-  
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "appointments":
@@ -81,7 +86,9 @@ const DoctorDashboard: React.FC = () => {
       case "records":
         return (
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Recent Medical Records</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Recent Medical Records
+            </h2>
             <p className="text-gray-500">Coming soon...</p>
           </Card>
         );
@@ -91,12 +98,14 @@ const DoctorDashboard: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <DoctorLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Doctor Dashboard</h1>
           <div className="text-right">
-            <h2 className="text-xl font-semibold">{doctorData.user.fullName}</h2>
+            <h2 className="text-xl font-semibold">
+              {doctorData.user.fullName}
+            </h2>
             <p className="text-gray-500">{doctorData.specialization}</p>
           </div>
         </div>
@@ -152,13 +161,11 @@ const DoctorDashboard: React.FC = () => {
               </button>
             </nav>
           </div>
-          
-          <div className="mt-6">
-            {renderTabContent()}
-          </div>
+
+          <div className="mt-6">{renderTabContent()}</div>
         </div>
       </div>
-    </Layout>
+    </DoctorLayout>
   );
 };
 
