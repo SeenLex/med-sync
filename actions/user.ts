@@ -27,7 +27,6 @@ export async function saveUser(formData: FormData) {
     data: {
       fullName: formData.get("fullName") as string,
       email: formData.get("email") as string,
-      password: formData.get("password") as string,
       role: role,
       contactNumber: formData.get("contactNumber") as string | null,
       dateOfBirth: formData.get("dateOfBirth")
@@ -38,7 +37,6 @@ export async function saveUser(formData: FormData) {
     },
   });
 }
-
 
 export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({
@@ -53,7 +51,17 @@ export async function getUserByEmail(email: string) {
 
 export async function getUserById(id: string) {
   return await prisma.user.findUnique({
-    where: { id },
+    where: { id: Number(id) },
+    include: {
+      patient: true,
+      doctor: true,
+      admin: true,
+    },
+  });
+}
+
+export async function getAllUsers() {
+  return await prisma.user.findMany({
     include: {
       patient: true,
       doctor: true,
@@ -63,11 +71,14 @@ export async function getUserById(id: string) {
 }
 
 export async function updateUser(id: string, formData: FormData) {
+  const role = formData.get("role") as "PATIENT" | "DOCTOR" | "ADMIN";
+
   await prisma.user.update({
-    where: { id },
+    where: { id: Number(id) },
     data: {
       fullName: formData.get("fullName") as string,
       email: formData.get("email") as string,
+      role: role,
       contactNumber: formData.get("contactNumber") as string | null,
       dateOfBirth: formData.get("dateOfBirth")
         ? new Date(formData.get("dateOfBirth") as string)
@@ -75,26 +86,33 @@ export async function updateUser(id: string, formData: FormData) {
       gender: formData.get("gender") as string | null,
       address: formData.get("address") as string | null,
     },
+    include: {
+      patient: true,
+      doctor: true,
+      admin: true,
+    },
   });
 }
 
 export async function deleteUser(id: string) {
   await prisma.user.delete({
-    where: { id },
+    where: { id: Number(id) },
   });
 }
 
 export async function getUserInfo(id: string) {
-  return await prisma.user.findUnique({
-    where: { id },
-    select: {
-      fullName: true,
-      email: true,
-      contactNumber: true,
-      dateOfBirth: true,
-      gender: true,
-      address: true,
-      role: true,
+  const user = await prisma.user.findUnique({
+    where: { id: Number(id) },
+    include: {
+      patient: true,
+      doctor: true,
+      admin: true,
     },
   });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return user;
 }

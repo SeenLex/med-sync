@@ -77,7 +77,7 @@ export async function register(formData: FormData) {
   }
   saveUser(formData);
   revalidatePath('/', 'layout');
-  redirect('/landing-page');
+  redirect('/');
 }
 
 export async function logout() {
