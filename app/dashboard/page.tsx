@@ -30,7 +30,7 @@ const DoctorDashboard: React.FC = () => {
             email: "dr.smith@example.com",
             fullName: "Dr. Sarah Smith",
             role: "DOCTOR",
-            contactNumber: "+1 (555) 123-4567",
+            phone: "+1 (555) 123-4567",
             createdAt: new Date("2020-01-01"),
             updatedAt: new Date("2022-01-01"),
           },

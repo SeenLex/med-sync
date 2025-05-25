@@ -19,6 +19,7 @@ import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Pagination from "@/components/ui/Pagination";
+import Image from "next/image";
 
 const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -203,9 +204,11 @@ const ProfilePage: React.FC = () => {
             <Card className="p-6">
               <div className="flex flex-col items-center">
                 <div className="relative">
-                  <img
+                  <Image
                     src={user.profileImage}
                     alt={user.fullName}
+                    width={128}
+                    height={128}
                     className="h-32 w-32 rounded-full object-cover"
                   />
                   <button className="absolute bottom-0 right-0 bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700">
@@ -267,7 +270,11 @@ const ProfilePage: React.FC = () => {
                   <div className="w-full flex justify-start space-x-2 md:w-auto">
                     {isEditing ? (
                       <>
-                        <Button variant="primary1" size="sm" onClick={handleSave}>
+                        <Button
+                          variant="primary1"
+                          size="sm"
+                          onClick={handleSave}
+                        >
                           Save
                         </Button>
                         <Button

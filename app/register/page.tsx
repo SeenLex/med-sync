@@ -28,7 +28,7 @@ const Register: React.FC = () => {
     const formData = new FormData();
     formData.append("fullName", fullName);
     formData.append("email", email);
-    formData.append("contactNumber", phone);
+    formData.append("phone", phone);
     formData.append("password", password);
     formData.append("confirmPassword", password);
     formData.append("role", role);

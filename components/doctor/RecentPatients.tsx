@@ -4,7 +4,7 @@ import { Search, User } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 interface RecentPatientsProps {
-  doctorId: string;
+  doctorId: number;
 }
 
 const RecentPatients: React.FC<RecentPatientsProps> = ({ doctorId }) => {
@@ -18,14 +18,14 @@ const RecentPatients: React.FC<RecentPatientsProps> = ({ doctorId }) => {
       try {
         // Mock data - in a real application, this would be fetched from the API
         const mockPatients: Patient[] = Array.from({ length: 15 }, (_, i) => ({
-          id: `patient-${i + 1}`,
-          userId: `user-${i + 1}`,
+          id: i + 1,
+          userId: i + 1,
           user: {
             id: `user-${i + 1}`,
             email: `patient${i + 1}@example.com`,
             fullName: `Patient ${i + 1}`,
             role: "PATIENT",
-            contactNumber: `+1 (555) ${100 + i}-${2000 + i}`,
+            phone: `+1 (555) ${100 + i}-${2000 + i}`,
             dateOfBirth: new Date(1980 + i, i % 12, (i % 28) + 1),
             gender: i % 2 === 0 ? "Male" : "Female",
             createdAt: new Date(2022, 0, i + 1),
@@ -51,7 +51,7 @@ const RecentPatients: React.FC<RecentPatientsProps> = ({ doctorId }) => {
     patient.user.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const calculateAge = (dateOfBirth?: Date) => {
+  const calculateAge = (dateOfBirth?: Date | null) => {
     if (!dateOfBirth) return "N/A";
     const today = new Date();
     let age = today.getFullYear() - dateOfBirth.getFullYear();
@@ -129,7 +129,7 @@ const RecentPatients: React.FC<RecentPatientsProps> = ({ doctorId }) => {
                     <div className="text-sm text-gray-500">{patient.user.gender}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{patient.user.contactNumber}</div>
+                    <div className="text-sm text-gray-900">{patient.user.phone}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {patient.insuranceInfo || "Not provided"}
