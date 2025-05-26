@@ -46,7 +46,7 @@ const ProfileTab: React.FC<Props> = ({
 }) => (
   <Card className="p-6 space-y-6">
     <div className="flex items-center justify-between">
-      <h2 className="text-xl font-semibold text-gray-900">
+      <h2 className="text-xl font-semibold text-gray-900 ">
         Personal Information
       </h2>
       <div className="flex space-x-2">

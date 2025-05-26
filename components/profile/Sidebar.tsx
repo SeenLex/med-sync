@@ -53,14 +53,20 @@ const Sidebar: React.FC<SidebarProps> = ({
       <nav className="space-y-1">
         {tabs.map((tab) => (
           <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-              activeTab === tab.key
-                ? "bg-emerald-100 text-emerald-700"
-                : "text-gray-700 hover:bg-gray-100"
-            }`}
-          >
+        key={tab.key}
+        onClick={() => setActiveTab(tab.key)}
+        className={`
+          w-full 
+          flex items-center 
+          px-3 py-2 
+          rounded-md 
+          text-sm font-medium 
+          whitespace-nowrap 
+          ${activeTab === tab.key
+            ? "bg-emerald-100 text-emerald-700"
+            : "text-gray-700 hover:bg-gray-100"}
+        `}
+      >
             {tab.icon}
             <span className="ml-2">{tab.label}</span>
           </button>

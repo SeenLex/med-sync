@@ -1,14 +1,16 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
 import Sidebar, { UserInfo } from "@/components/profile/Sidebar";
-import AppointmentsTab, { Appointment } from "@/components/profile/AppointmentsTab";
-import RecordsTab, { Record } from "@/components/profile/RecordsTab";
 import ProfileTab, { EditVals, UserFull } from "@/components/profile/ProfileTab";
+import { Appointment } from "@/prisma/generated/prisma";
+import RecordsTab, { Record } from "@/components/profile/RecordsTab";
+import AppointmentsTab from "@/components/profile/AppointmentsTab";
 import SecurityTab from "@/components/profile/SecurityTab";
+
 
 const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -45,28 +47,76 @@ const ProfilePage: React.FC = () => {
     setFormattedDate(new Date(user.dateOfBirth).toLocaleDateString());
   }, [user.dateOfBirth]);
 
-  const handleEdit = () => setIsEditing(true);
-  const handleCancel = () => {
+  const handleEdit = () => {
+    setIsEditing(true);
     setEditValues({
       fullName: user.fullName,
       email: user.email,
       phone: user.phone,
       address: user.address,
     });
-    setIsEditing(false);
   };
+  const handleCancel = () => setIsEditing(false);
   const handleSave = () => {
     setUser({ ...user, ...editValues });
     setIsEditing(false);
   };
 
   const appointments: Appointment[] = [
-    /* same data as before */
+    {
+      id: "1",
+      doctorName: "Dr. Sarah Johnson",
+      specialty: "Cardiologist",
+      date: "May 15, 2025",
+      time: "10:30 AM",
+      type: "VIRTUAL",
+      status: "CONFIRMED",
+    },
+    {
+      id: "2",
+      doctorName: "Dr. Michael Chen",
+      specialty: "Dermatologist",
+      date: "May 20, 2025",
+      time: "2:15 PM",
+      type: "IN_PERSON",
+      status: "PENDING",
+      location: "Medical Center, Floor 3, Room 302",
+    },
+    {
+      id: "3",
+      doctorName: "Dr. Emily Rodriguez",
+      specialty: "Neurologist",
+      date: "April 28, 2025",
+      time: "9:00 AM",
+      type: "IN_PERSON",
+      status: "COMPLETED",
+      location: "Neurology Clinic, Floor 2, Room 215",
+    },
   ];
   const [apptPage, setApptPage] = useState(1);
 
   const medicalRecords: Record[] = [
-    /* same data as before */
+    {
+      id: "1",
+      title: "Annual Physical Examination",
+      doctorName: "Dr. Sarah Johnson",
+      date: "April 15, 2025",
+      type: "VISIT_SUMMARY",
+    },
+    {
+      id: "2",
+      title: "Blood Test Results",
+      doctorName: "Dr. Michael Chen",
+      date: "March 28, 2025",
+      type: "LAB_RESULT",
+    },
+    {
+      id: "3",
+      title: "Hypertension Medication",
+      doctorName: "Dr. Emily Rodriguez",
+      date: "March 10, 2025",
+      type: "PRESCRIPTION",
+    },
   ];
   const [recPage, setRecPage] = useState(1);
 
