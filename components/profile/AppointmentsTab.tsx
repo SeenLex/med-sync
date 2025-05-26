@@ -3,17 +3,8 @@ import { Calendar, Clock, Video, MapPin } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Pagination from "@/components/ui/Pagination";
+import { Appointment } from "@/actions/appointments";
 
-export type Appointment = {
-  id: string;
-  doctorName: string;
-  specialty: string;
-  date: string;
-  time: string;
-  type: "VIRTUAL" | "IN_PERSON";
-  status: "CONFIRMED" | "PENDING" | "COMPLETED";
-  location?: string;
-};
 
 type Props = {
   all: Appointment[];
@@ -57,23 +48,23 @@ const AppointmentsTab: React.FC<Props> = ({ all, page, setPage }) => {
                     </div>
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">
-                        {appt.doctorName}
+                        {appt.doctor.user.fullName}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {appt.specialty}
+                        {appt.doctor.specialization}
                       </p>
                       <div className="mt-2 flex items-center text-sm text-gray-500">
                         <Calendar className="h-4 w-4 mr-1" />
-                        {appt.date}
+                        {appt.startTime.toLocaleDateString()}
                       </div>
                       <div className="mt-1 flex items-center text-sm text-gray-500">
                         <Clock className="h-4 w-4 mr-1" />
-                        {appt.time}
+                        {appt.endTime.toLocaleTimeString()}
                       </div>
-                      {appt.location && (
+                      {appt.type && (
                         <div className="mt-1 flex items-center text-sm text-gray-500">
                           <MapPin className="h-4 w-4 mr-1" />
-                          {appt.location}
+                          {appt.type}
                         </div>
                       )}
                       <div className="mt-2 space-x-2">

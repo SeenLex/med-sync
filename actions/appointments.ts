@@ -12,3 +12,5 @@ export async function fetchAppointments(patientId: number) {
     orderBy: { startTime: "desc" },
   });
 }
+
+export type Appointment = Awaited<ReturnType<typeof fetchAppointments>>[number];

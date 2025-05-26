@@ -1,20 +1,10 @@
-import React from "react";
+'use client';
+
+import React, { useState } from "react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { Edit } from "lucide-react";
-
-export type UserFull = {
-  id: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  dateOfBirth: string;
-  gender: string;
-  address: string;
-  insuranceInfo: string;
-  emergencyContact: string;
-  profileImage: string;
-};
+import { updateUser, UserInfo } from "@/actions/user";
 
 export type EditVals = {
   fullName: string;
@@ -24,26 +14,50 @@ export type EditVals = {
 };
 
 type Props = {
-  user: UserFull;
-  formattedDate: string | null;
-  isEditing: boolean;
-  editValues: EditVals;
-  setEditValues: React.Dispatch<React.SetStateAction<EditVals>>;
-  onEdit: () => void;
-  onCancel: () => void;
-  onSave: () => void;
-};
+  userInfo: UserInfo;
+}
 
-const ProfileTab: React.FC<Props> = ({
-  user,
-  formattedDate,
-  isEditing,
-  editValues,
-  setEditValues,
-  onEdit,
-  onCancel,
-  onSave,
-}) => (
+const ProfileTab: React.FC<Props> = ({userInfo}) => {
+  const [user, setUser] = useState(userInfo);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValues, setEditValues] = useState<EditVals>({
+    fullName: user.fullName,
+    email: user.email,
+    phone: user.phone || "",
+    address: user.address || "",
+  });
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  }
+  const handleSave = async () => {
+    const formData = new FormData();
+    formData.append("fullName", editValues.fullName);
+    formData.append("email", editValues.email);
+    formData.append("phone", editValues.phone);
+    formData.append("address", editValues.address);
+
+    await updateUser(user.id.toString(), formData);
+    setUser((prev) => ({
+      ...prev,
+      fullName: editValues.fullName,
+      email: editValues.email,
+      phone: editValues.phone,
+      address: editValues.address,
+    }));
+    setIsEditing(false);
+  }
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditValues({
+      fullName: user.fullName,
+      email: user.email,
+      phone: user.phone || "",
+      address: user.address || "",
+    });
+  } 
+
+  return (
   <Card className="p-6 space-y-6">
     <div className="flex items-center justify-between">
       <h2 className="text-xl font-semibold text-gray-900 ">
@@ -52,10 +66,10 @@ const ProfileTab: React.FC<Props> = ({
       <div className="flex space-x-2">
         {isEditing ? (
           <>
-            <Button size="sm" variant="primary1" onClick={onSave}>
+            <Button size="sm" variant="primary1" onClick={handleSave}>
               Save
             </Button>
-            <Button size="sm" variant="outline1" onClick={onCancel}>
+            <Button size="sm" variant="outline1" onClick={handleCancel}>
               Cancel
             </Button>
           </>
@@ -64,7 +78,7 @@ const ProfileTab: React.FC<Props> = ({
             size="sm"
             variant="outline1"
             className="flex items-center"
-            onClick={onEdit}
+            onClick={handleEdit}
           >
             <Edit className="h-4 w-4 mr-2" />
             Edit
@@ -95,7 +109,7 @@ const ProfileTab: React.FC<Props> = ({
         },
         {
           label: "Date of Birth",
-          value: formattedDate ?? "Loading...",
+          value: user.dateOfBirth?.toLocaleDateString(),
           key: "dob",
           type: "static",
         },
@@ -141,8 +155,8 @@ const ProfileTab: React.FC<Props> = ({
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          ["Insurance Information", user.insuranceInfo],
-          ["Emergency Contact", user.emergencyContact],
+          ["Insurance Information", user.patient?.insuranceInfo],
+          ["Emergency Contact", user.patient?.emergencyContact],
         ].map(([label, val]) => (
           <div key={label}>
             <h3 className="text-sm font-medium text-gray-500 mb-1">
@@ -154,6 +168,7 @@ const ProfileTab: React.FC<Props> = ({
       </div>
     </div>
   </Card>
-);
+  )
+};
 
 export default ProfileTab;

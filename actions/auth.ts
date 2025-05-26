@@ -36,7 +36,7 @@ export async function register(formData: FormData) {
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
   const fullName = formData.get('fullName') as string;
-
+  
   if (!email) {
     throw new Error('Email is required!');
   }
