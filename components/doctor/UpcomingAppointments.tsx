@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import Pagination from "@/components/ui/Pagination";
 
 interface UpcomingAppointmentsProps {
-  doctorId: string;
+  doctorId: number;
 }
 
 const UpcomingAppointments: React.FC<UpcomingAppointmentsProps> = ({ doctorId }) => {
@@ -20,13 +20,12 @@ const UpcomingAppointments: React.FC<UpcomingAppointmentsProps> = ({ doctorId })
     const fetchAppointments = async () => {
       setIsLoading(true);
       try {
-        // Mock data - in a real app this would be an API call
         const mockPatients: Patient[] = [
           {
-            id: "patient-1",
-            userId: "user-1",
+            id: 1,
+            userId: 11,
             user: {
-              id: "user-1",
+              id: 1,
               email: "john.doe@example.com",
               fullName: "John Doe",
               role: "PATIENT",
@@ -38,10 +37,10 @@ const UpcomingAppointments: React.FC<UpcomingAppointmentsProps> = ({ doctorId })
             },
           },
           {
-            id: "patient-2",
-            userId: "user-2",
+            id: 2,
+            userId: 22,
             user: {
-              id: "user-2",
+              id: 2,
               email: "jane.smith@example.com",
               fullName: "Jane Smith",
               role: "PATIENT",
@@ -53,10 +52,10 @@ const UpcomingAppointments: React.FC<UpcomingAppointmentsProps> = ({ doctorId })
             },
           },
           {
-            id: "patient-3",
-            userId: "user-3",
+            id: 3,
+            userId: 33,
             user: {
-              id: "user-3",
+              id: 3,
               email: "robert.johnson@example.com",
               fullName: "Robert Johnson",
               role: "PATIENT",
@@ -71,9 +70,9 @@ const UpcomingAppointments: React.FC<UpcomingAppointmentsProps> = ({ doctorId })
 
         const mockDoctor: Doctor = {
           id: doctorId,
-          userId: "user-123",
+          userId: 12,
           user: {
-            id: "user-123",
+            id: 12,
             email: "dr.smith@example.com",
             fullName: "Dr. Sarah Smith",
             role: "DOCTOR",
@@ -83,7 +82,6 @@ const UpcomingAppointments: React.FC<UpcomingAppointmentsProps> = ({ doctorId })
           specialization: "Cardiologist",
         };
 
-        // Generate some mock appointments
         const today = new Date();
         const mockAppointments: Appointment[] = [];
         
@@ -96,7 +94,7 @@ const UpcomingAppointments: React.FC<UpcomingAppointmentsProps> = ({ doctorId })
           endTime.setMinutes(startTime.getMinutes() + 30);
           
           mockAppointments.push({
-            id: `appointment-${i}`,
+            id: i,
             patientId: mockPatients[i % 3].id,
             doctorId,
             startTime,

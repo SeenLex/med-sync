@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from "react";
 import {
@@ -30,7 +30,6 @@ const ProfilePage: React.FC = () => {
   const [apptPage, setApptPage] = useState(1);
   const [recPage, setRecPage] = useState(1);
 
-  // Mock user
   const [user, setUser] = useState({
     id: "1",
     fullName: "John Doe",
@@ -120,7 +119,6 @@ const ProfilePage: React.FC = () => {
       status: "COMPLETED",
       location: "Neurology Clinic, Floor 2, Room 215",
     },
-    // ...more if needed
   ];
 
   const medicalRecords = [
@@ -147,7 +145,6 @@ const ProfilePage: React.FC = () => {
     },
   ];
 
-  // Helpers
   const pageSize = 5;
   const totalApptPages = Math.ceil(appointments.length / pageSize);
   const paginatedAppointments = appointments.slice(
@@ -199,7 +196,6 @@ const ProfilePage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             <Card className="p-6">
               <div className="flex flex-col items-center">
@@ -257,9 +253,7 @@ const ProfilePage: React.FC = () => {
             </Card>
           </div>
 
-          {/* Main Content */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Profile Tab */}
             {activeTab === "profile" && (
               <Card className="p-6 space-y-6">
                 <div className="flex flex-col items-start space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
@@ -299,7 +293,6 @@ const ProfilePage: React.FC = () => {
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Full Name (read-only) */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">
                       Full Name
@@ -320,7 +313,6 @@ const ProfilePage: React.FC = () => {
                       <p className="text-gray-900">{user.fullName}</p>
                     )}
                   </div>
-                  {/* Email */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">
                       Email
@@ -341,7 +333,6 @@ const ProfilePage: React.FC = () => {
                       <p className="text-gray-900">{user.email}</p>
                     )}
                   </div>
-                  {/* Phone */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">
                       Phone Number
@@ -362,7 +353,6 @@ const ProfilePage: React.FC = () => {
                       <p className="text-gray-900">{user.phone}</p>
                     )}
                   </div>
-                  {/* Date of Birth (read-only) */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">
                       Date of Birth
@@ -371,14 +361,12 @@ const ProfilePage: React.FC = () => {
                       {formattedDate ?? "Loading..."}
                     </p>
                   </div>
-                  {/* Gender (read-only) */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">
                       Gender
                     </h3>
                     <p className="text-gray-900">{user.gender}</p>
                   </div>
-                  {/* Address */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">
                       Address
@@ -401,7 +389,6 @@ const ProfilePage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Medical Information stays unchanged */}
                 <div className="pt-6 border-t border-gray-200 space-y-6">
                   <h2 className="text-xl font-semibold text-gray-900">
                     Medical Information
@@ -423,7 +410,6 @@ const ProfilePage: React.FC = () => {
               </Card>
             )}
 
-            {/* Appointments Tab */}
             {activeTab === "appointments" && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
@@ -553,7 +539,6 @@ const ProfilePage: React.FC = () => {
               </div>
             )}
 
-            {/* Records Tab */}
             {activeTab === "records" && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
@@ -641,7 +626,6 @@ const ProfilePage: React.FC = () => {
                       Change Password
                     </h3>
                     <div className="space-y-4">
-                      {/* Current Password */}
                       <div>
                         <label
                           htmlFor="current-password"
@@ -670,7 +654,6 @@ const ProfilePage: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* New Password */}
                       <div>
                         <label
                           htmlFor="new-password"
@@ -699,7 +682,6 @@ const ProfilePage: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Confirm New Password */}
                       <div>
                         <label
                           htmlFor="confirm-password"

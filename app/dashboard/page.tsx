@@ -15,18 +15,15 @@ const DoctorDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("appointments");
   
-  // Fetch doctor data
   useEffect(() => {
-    // In a real app, this would be an API call
     const fetchDoctorData = async () => {
       setIsLoading(true);
       try {
-        // Mock data for demonstration
         const mockDoctor: Doctor = {
-          id: "doctor-123",
-          userId: "user-123",
+          id:  1,
+          userId: 11,
           user: {
-            id: "user-123",
+            id: 1,
             email: "dr.smith@example.com",
             fullName: "Dr. Sarah Smith",
             role: "DOCTOR",
@@ -75,7 +72,7 @@ const DoctorDashboard: React.FC = () => {
       case "schedule":
         return (
           <Card className="p-6">
-            <DoctorSchedule doctorId={doctorData.id} />
+            <DoctorSchedule doctorId={doctorData.id.toString()} />
           </Card>
         );
       case "records":
@@ -101,7 +98,7 @@ const DoctorDashboard: React.FC = () => {
           </div>
         </div>
 
-        <DashboardStats doctorId={doctorData.id} />
+        <DashboardStats doctorId={doctorData.id.toString()} />
 
         <div className="mt-8">
           <div className="border-b border-gray-200">

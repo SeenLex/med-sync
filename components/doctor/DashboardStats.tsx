@@ -15,10 +15,8 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ doctorId }) => {
   });
 
   useEffect(() => {
-    // In a real app, this would fetch actual stats from the API
     const fetchStats = async () => {
       try {
-        // Mock data for demonstration
         setStats({
           totalPatients: 147,
           upcomingAppointments: 23,

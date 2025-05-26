@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from "react"; // Added useEffect
+import React, { useState, useEffect } from "react";
 import {
   Search,
   MapPin,
@@ -14,16 +14,16 @@ import {
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Layout from "@/components/layout/Layout";
-import Pagination from "@/components/ui/Pagination"; // Assuming Pagination is in ui folder
+import Pagination from "@/components/ui/Pagination";
 
-const ITEMS_PER_PAGE = 5; // Define how many doctors to show per page
+const ITEMS_PER_PAGE = 5;
 
 const FindDoctor: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [availability, setAvailability] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const [currentPage, setCurrentPage] = useState(1);
 
   const doctors = [
     {
@@ -63,7 +63,7 @@ const FindDoctor: React.FC = () => {
       education: "Stanford University",
       experience: "10 years",
       location: "Neurology Center",
-      nextAvailable: "May 25, 2025", // Updated date
+      nextAvailable: "May 25, 2025",
     },
     {
       id: "4",
@@ -76,7 +76,7 @@ const FindDoctor: React.FC = () => {
       education: "Yale University",
       experience: "18 years",
       location: "Mental Health Clinic",
-      nextAvailable: "May 24, 2025", // Updated date
+      nextAvailable: "May 24, 2025",
     },
     {
       id: "5",
@@ -89,7 +89,7 @@ const FindDoctor: React.FC = () => {
       education: "Columbia University",
       experience: "8 years",
       location: "Eye Care Center, Floor 1",
-      nextAvailable: "May 26, 2025", // Updated date
+      nextAvailable: "May 26, 2025",
     },
     {
       id: "6",
@@ -167,12 +167,10 @@ const FindDoctor: React.FC = () => {
     return matchesSearch && matchesSpecialty && matchesAvailability;
   });
 
-  // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, specialty, availability]);
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredDoctors.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -180,7 +178,7 @@ const FindDoctor: React.FC = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo(0, 0); // Optional: scroll to top on page change
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -313,6 +311,8 @@ const FindDoctor: React.FC = () => {
                     <img
                       src={doctor.image}
                       alt={doctor.name}
+                      width={96}
+                      height={96}
                       className="h-24 w-24 rounded-full object-cover mb-4 md:mb-0 md:mr-6"
                     />
                     <div>
@@ -419,7 +419,6 @@ const FindDoctor: React.FC = () => {
             </Card>
           )}
 
-          {/* Add Pagination component here */}
           {totalPages > 1 && (
             <div className="mt-8">
               <Pagination

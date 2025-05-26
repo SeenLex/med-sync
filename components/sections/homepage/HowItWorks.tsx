@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
-import Button from "@/components/ui/Button"; // Assuming this path is correct
+import Button from "@/components/ui/Button";
 import Link from "next/link";
 
 const HowItWorks: React.FC = () => {
@@ -22,7 +22,6 @@ const HowItWorks: React.FC = () => {
 
         <div className="mt-10">
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 lg:grid-cols-4 lg:gap-x-8">
-            {/* Step 1 */}
             <div className="text-center">
               <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
                 1
@@ -37,7 +36,6 @@ const HowItWorks: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 2 */}
             <div className="text-center">
               <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
                 2
@@ -53,7 +51,6 @@ const HowItWorks: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 3 */}
             <div className="text-center">
               <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
                 3
@@ -69,7 +66,6 @@ const HowItWorks: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 4 */}
             <div className="text-center">
               <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
                 4

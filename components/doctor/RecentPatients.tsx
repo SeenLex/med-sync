@@ -16,7 +16,6 @@ const RecentPatients: React.FC<RecentPatientsProps> = ({ doctorId }) => {
     const fetchPatients = async () => {
       setIsLoading(true);
       try {
-        // Mock data - in a real application, this would be fetched from the API
         const mockPatients: Patient[] = Array.from({ length: 15 }, (_, i) => ({
           id: i + 1,
           userId: i + 1,

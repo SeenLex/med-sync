@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -21,12 +21,10 @@ const Appointments: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Reset to first page when filter or search changes
   useEffect(() => {
     setCurrentPage(1);
   }, [filter, searchQuery]);
 
-  // Mock data for appointments
   const appointments = [
     {
       id: "1",
@@ -78,7 +76,6 @@ const Appointments: React.FC = () => {
       status: "PENDING",
       location: "Eye Care Center, Floor 1, Room 105",
     },
-    // ...add more appointments as needed
   ];
 
   const filteredAppointments = appointments.filter((appointment) => {
@@ -95,9 +92,7 @@ const Appointments: React.FC = () => {
       appointment.doctorName
         .toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
-      appointment.specialty
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      appointment.specialty.toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesFilter && matchesSearch;
   });

@@ -28,7 +28,6 @@ const NewAppointment: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [specialty, setSpecialty] = useState("");
 
-  // Mock data for doctors
   const doctors: Doctor[] = [
     {
       id: "1",
@@ -77,7 +76,6 @@ const NewAppointment: React.FC = () => {
     },
   ];
 
-  // Mock data for specialties
   const specialties = [
     "Cardiologist",
     "Dermatologist",
@@ -91,7 +89,6 @@ const NewAppointment: React.FC = () => {
     "Endocrinologist",
   ];
 
-  // Mock data for available dates
   const availableDates = [
     "2025-05-15",
     "2025-05-16",
@@ -102,7 +99,6 @@ const NewAppointment: React.FC = () => {
     "2025-05-21",
   ];
 
-  // Mock data for available time slots
   const availableTimeSlots = [
     "09:00 AM",
     "09:30 AM",
@@ -169,7 +165,6 @@ const NewAppointment: React.FC = () => {
           Book an Appointment
         </h1>
 
-        {/* full tracker on md+ */}
         <div className="hidden md:block mb-8">
           <div className="flex items-center justify-between">
             {[1, 2, 3, 4].map((n) => (
@@ -204,7 +199,6 @@ const NewAppointment: React.FC = () => {
           </div>
         </div>
 
-        {/* simple label on xs–sm */}
         <div className="md:hidden flex items-center mb-6">
           <div
             className="flex items-center justify-center w-9 h-8 rounded-full
@@ -274,7 +268,9 @@ const NewAppointment: React.FC = () => {
 
           {step === 2 && (
             <div>
-              <h2 className="text-xl font-semibold mb-6 text-gray-900">Select a Doctor</h2>
+              <h2 className="text-xl font-semibold mb-6 text-gray-900">
+                Select a Doctor
+              </h2>
               <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
                 <div className="relative w-full md:w-80">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -387,7 +383,9 @@ const NewAppointment: React.FC = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-lg font-medium mb-4 text-gray-900">Select Date</h3>
+                  <h3 className="text-lg font-medium mb-4 text-gray-900">
+                    Select Date
+                  </h3>
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                     {availableDates.map((date) => (
                       <div
@@ -417,7 +415,9 @@ const NewAppointment: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium mb-4 text-gray-900">Select Time</h3>
+                  <h3 className="text-lg font-medium mb-4 text-gray-900">
+                    Select Time
+                  </h3>
                   <div className="grid grid-cols-3 gap-2">
                     {availableTimeSlots.map((time) => (
                       <div
@@ -491,7 +491,9 @@ const NewAppointment: React.FC = () => {
                 </div>
               </div>
               <div className="mb-6">
-                <h3 className="text-lg font-medium mb-2 text-gray-900">Reason for Visit</h3>
+                <h3 className="text-lg font-medium mb-2 text-gray-900">
+                  Reason for Visit
+                </h3>
                 <textarea
                   className="w-full border rounded-md p-3 focus:outline-none border-gray-400 text-gray-900 focus:ring-emerald-500 focus:border-emerald-500"
                   rows={4}

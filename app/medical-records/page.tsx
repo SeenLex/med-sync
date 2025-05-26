@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from "react";
 import {
@@ -20,7 +20,6 @@ const MedicalRecords: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Reset to first page when filter or search changes
   useEffect(() => {
     setCurrentPage(1);
   }, [filter, searchQuery]);
@@ -98,7 +97,6 @@ const MedicalRecords: React.FC = () => {
     return matchesFilter && matchesSearch;
   });
 
-  // Pagination logic
   const pageSize = 5;
   const totalPages = Math.ceil(filteredRecords.length / pageSize);
   const paginatedRecords = filteredRecords.slice(

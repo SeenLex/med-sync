@@ -1,4 +1,4 @@
-'use server'
+'use server';
 import prisma from '@/prisma/db'
 import { createClient } from '@/utils/supabase/server'
 

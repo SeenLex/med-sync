@@ -13,7 +13,6 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
 const LandingPage: React.FC = () => {
-  // Mock data for upcoming appointments
   const upcomingAppointments = [
     {
       id: "1",
@@ -33,7 +32,6 @@ const LandingPage: React.FC = () => {
     },
   ];
 
-  // Mock data for recent notifications
   const recentNotifications = [
     {
       id: "1",

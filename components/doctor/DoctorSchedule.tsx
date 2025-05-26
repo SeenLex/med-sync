@@ -18,12 +18,11 @@ const DoctorSchedule: React.FC<DoctorScheduleProps> = ({ doctorId }) => {
     const fetchScheduleData = async () => {
       setIsLoading(true);
       try {
-        // Mock data for doctor availability
         const mockAvailability: Availability[] = [
           {
             id: "avail-1",
             doctorId,
-            dayOfWeek: 1, // Monday
+            dayOfWeek: 1,
             startTime: "09:00",
             endTime: "17:00",
             isAvailable: true,
@@ -31,7 +30,7 @@ const DoctorSchedule: React.FC<DoctorScheduleProps> = ({ doctorId }) => {
           {
             id: "avail-2",
             doctorId,
-            dayOfWeek: 2, // Tuesday
+            dayOfWeek: 2,
             startTime: "09:00",
             endTime: "17:00",
             isAvailable: true,
@@ -39,7 +38,7 @@ const DoctorSchedule: React.FC<DoctorScheduleProps> = ({ doctorId }) => {
           {
             id: "avail-3",
             doctorId,
-            dayOfWeek: 3, // Wednesday
+            dayOfWeek: 3,
             startTime: "09:00",
             endTime: "17:00",
             isAvailable: true,
@@ -47,7 +46,7 @@ const DoctorSchedule: React.FC<DoctorScheduleProps> = ({ doctorId }) => {
           {
             id: "avail-4",
             doctorId,
-            dayOfWeek: 4, // Thursday
+            dayOfWeek: 4,
             startTime: "09:00",
             endTime: "17:00",
             isAvailable: true,
@@ -55,19 +54,17 @@ const DoctorSchedule: React.FC<DoctorScheduleProps> = ({ doctorId }) => {
           {
             id: "avail-5",
             doctorId,
-            dayOfWeek: 5, // Friday
+            dayOfWeek: 5,
             startTime: "09:00",
             endTime: "15:00",
             isAvailable: true,
           },
         ];
 
-        // Mock appointments data
         const mockAppointments: Appointment[] = [];
         
-        // Generate some mock appointments for the current week
         for (let i = 0; i < 10; i++) {
-          const dayOfWeek = 1 + (i % 5); // Monday to Friday
+          const dayOfWeek = 1 + (i % 5);
           const appointmentDate = addDays(currentWeekStart, dayOfWeek - 1);
           
           const hour = 9 + Math.floor(i / 2);
@@ -179,7 +176,7 @@ const DoctorSchedule: React.FC<DoctorScheduleProps> = ({ doctorId }) => {
 
       <div className="grid grid-cols-5 gap-4">
         {weekDays.map((day, index) => {
-          const dayNumber = index + 1; // 1-based (Monday = 1)
+          const dayNumber = index + 1;
           const dayAvailability = getAvailabilityForDay(dayNumber);
           const dayAppointments = getAppointmentsForDay(day);
           
