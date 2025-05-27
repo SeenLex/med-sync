@@ -13,4 +13,25 @@ export async function fetchAppointments(patientId: number) {
   });
 }
 
+interface BookAppointment{
+  patientId: number;
+  doctorId: number;
+  startTime: Date;
+  endTime: Date;
+  type: 'IN_PERSON' | 'VIRTUAL';
+  status: 'PENDING';
+}
+
+export async function bookAppointment(input: BookAppointment) {
+  return await prisma.appointment.create({
+    data: {
+      patientId: input.patientId,
+      doctorId: input.doctorId,
+      startTime: input.startTime,
+      endTime: input.endTime,
+      type: input.type,
+    },
+  });
+}
+
 export type Appointment = Awaited<ReturnType<typeof fetchAppointments>>[number];

@@ -5,7 +5,6 @@ import Button from "@/components/ui/Button";
 import Pagination from "@/components/ui/Pagination";
 import { Appointment } from "@/actions/appointments";
 
-
 type Props = {
   all: Appointment[];
   page: number;

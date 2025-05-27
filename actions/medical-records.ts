@@ -12,3 +12,5 @@ export async function fetchMedicalRecords(patientId: number) {
     orderBy: { createdAt: "desc" },
   });
 }
+
+export type MedicalRecord = Awaited<ReturnType<typeof fetchMedicalRecords>>[number];

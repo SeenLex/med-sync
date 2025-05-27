@@ -3,17 +3,10 @@ import { FileText, User, Calendar } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Pagination from "@/components/ui/Pagination";
-
-export type Record = {
-  id: string;
-  title: string;
-  doctorName: string;
-  date: string;
-  type: string;
-};
+import { MedicalRecord } from "@/actions/medical-records";
 
 type Props = {
-  all: Record[];
+  all: MedicalRecord[];
   page: number;
   setPage: (p: number) => void;
   getTypeInfo: (type: string) => { label: string; color: string };
@@ -21,12 +14,7 @@ type Props = {
 
 const PAGE_SIZE = 5;
 
-const RecordsTab: React.FC<Props> = ({
-  all,
-  page,
-  setPage,
-  getTypeInfo,
-}) => {
+const RecordsTab: React.FC<Props> = ({ all, page, setPage, getTypeInfo }) => {
   const total = Math.ceil(all.length / PAGE_SIZE);
   const slice = all.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
@@ -56,11 +44,11 @@ const RecordsTab: React.FC<Props> = ({
                         </h3>
                         <div className="mt-2 flex items-center text-sm text-gray-500">
                           <User className="h-4 w-4 mr-1" />
-                          {rec.doctorName}
+                          {rec.doctor.user.fullName}
                         </div>
                         <div className="mt-1 flex items-center text-sm text-gray-500">
                           <Calendar className="h-4 w-4 mr-1" />
-                          {rec.date}
+                          {rec.createdAt.toLocaleDateString()}
                         </div>
                         <div className="mt-2">
                           <span

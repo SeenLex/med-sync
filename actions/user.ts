@@ -59,6 +59,23 @@ export async function saveUser(formData: FormData) {
       },
     });
   }
+  if (role === "DOCTOR") {
+    const specialization = formData.get("specialization") as string;
+    if (!specialization) throw new Error("specialization is required for doctors");
+    await prisma.doctor.create({
+      data: {
+        userId: createdUser.id,
+        specialization,
+      },
+    });
+  }
+  if(role === "ADMIN") {
+    await prisma.admin.create({
+      data: {
+        userId: createdUser.id
+      },
+    });
+  }
 }
 
 export async function deleteUser(id: string) {

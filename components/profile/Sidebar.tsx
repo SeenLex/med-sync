@@ -10,7 +10,7 @@ import { getUserInfo } from "@/actions/user";
 const links = [
   { href: "/profile", icon: <User />, label: "Personal Information" },
   { href: "/profile/appointments", icon: <Calendar />, label: "Appointments" },
-  { href: "/profile/records", icon: <FileText />, label: "Medical Records" },
+  { href: "/profile/medical-records", icon: <FileText />, label: "Medical Records" },
   { href: "/profile/security", icon: <Shield />, label: "Security" },
 ];
 
@@ -53,7 +53,7 @@ const Sidebar = async () => {
             <Link
               key={link.href}
               href={link.href}
-              className="w-full  flex items-center px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
+              className="w-full  flex items-center px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap text-gray-600"
             >
               {link.icon}
               <span className="ml-2">{link.label}</span>

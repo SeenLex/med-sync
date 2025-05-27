@@ -21,9 +21,8 @@ const page = async () => {
   }
   const appointments = await fetchAppointments(patientId);
     if (!appointments || appointments.length === 0) {
-        return <div>No appointments found.</div>;
+        return <div className="flex justify-center pt-16 text-gray-700 text-xl">No appointments found.</div>;
     }
-  console.log("Appointments:", appointments);
   return <AppointmentsTab all={appointments} page={1} setPage={() => {}} />;
 };
 
