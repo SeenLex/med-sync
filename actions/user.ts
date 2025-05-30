@@ -43,40 +43,38 @@ export async function saveUser(formData: FormData) {
       fullName: formData.get("fullName") as string,
       email: formData.get("email") as string,
       role: role,
-      phone: formData.get("phone") as string | null,
+      phone: formData.get("phone") ? (formData.get("phone") as string) : null,
       dateOfBirth: formData.get("dateOfBirth")
         ? new Date(formData.get("dateOfBirth") as string)
         : null,
-      gender: formData.get("gender") as string | null,
-      address: formData.get("address") as string | null,
+      gender: formData.get("gender") ? (formData.get("gender") as string) : null,
+      address: formData.get("address") ? (formData.get("address") as string) : null,
     },
   });
 
-  if(role === "PATIENT") {
+  if (role === "PATIENT") {
     await prisma.patient.create({
       data: {
-        userId: createdUser.id
+        userId: createdUser.id,
+        pnc: formData.get("pnc") as string,
+        insuranceInfo: formData.get("insuranceInfo") as string | null,
       },
     });
   }
   if (role === "DOCTOR") {
     const specialization = formData.get("specialization") as string;
+    const licenseNumber = formData.get("licenseNumber") as string | null;
     if (!specialization) throw new Error("specialization is required for doctors");
     await prisma.doctor.create({
       data: {
         userId: createdUser.id,
         specialization,
-      },
-    });
-  }
-  if(role === "ADMIN") {
-    await prisma.admin.create({
-      data: {
-        userId: createdUser.id
+        licenseNumber: licenseNumber && licenseNumber !== "" ? licenseNumber : null,
       },
     });
   }
 }
+
 
 export async function deleteUser(id: string) {
   await prisma.user.delete({
@@ -90,7 +88,6 @@ export async function getUserById(id: string) {
     include: {
       patient: true,
       doctor: true,
-      admin: true,
     },
   });
 }
@@ -101,7 +98,6 @@ export async function getUserByEmail(email: string) {
     include: {
       patient: true,
       doctor: true,
-      admin: true,
     },
   });
 }
@@ -111,7 +107,6 @@ export async function getAllUsers() {
     include: {
       patient: true,
       doctor: true,
-      admin: true,
     },
   });
 }
@@ -123,7 +118,6 @@ export async function getUserInfo(email: string) {
     include: {
       patient: true,
       doctor: true,
-      admin: true,
     },
   });
 

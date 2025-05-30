@@ -36,6 +36,10 @@ export async function register(formData: FormData) {
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
   const fullName = formData.get('fullName') as string;
+  const pnc = formData.get('pnc') as string;
+  const gender = formData.get('gender') as string;
+  const address = formData.get('address') as string;
+  const dateOfBirth = formData.get('dateOfBirth') as string;
   
   if (!email) {
     throw new Error('Email is required!');
@@ -53,6 +57,10 @@ export async function register(formData: FormData) {
   if (!nameRegex.test(fullName)) {
     throw new Error('Full name must contain only letters and spaces!');
   }
+  if (!pnc) throw new Error('PNC is required!');
+  if (!gender) throw new Error('Gender is required!');
+  if (!address) throw new Error('Address is required!');
+  if (!dateOfBirth) throw new Error('Date of birth is required!');
 
   const passwordErrors = [];
   if (!password) passwordErrors.push('Password is required!');

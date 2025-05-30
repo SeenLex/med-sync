@@ -21,12 +21,12 @@ const HowItWorks: React.FC = () => {
         </div>
 
         <div className="mt-10">
-          <div className="grid grid-cols-2 gap-y-10 gap-x-6 lg:grid-cols-4 lg:gap-x-8">
+          <div className="grid grid-cols-2 gap-y-10 gap-x-6 lg:grid-cols-4 lg:gap-x-2">
             <div className="text-center">
               <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
                 1
               </span>
-              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28">
+              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28 flex flex-col justify-center text-center md:block">
                 <h3 className="text-lg font-medium text-gray-900">
                   Create an Account
                 </h3>
@@ -40,7 +40,7 @@ const HowItWorks: React.FC = () => {
               <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
                 2
               </span>
-              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28">
+              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28 flex flex-col justify-center text-center md:block">
                 <h3 className="text-lg font-medium text-gray-900">
                   Find a Doctor
                 </h3>
@@ -55,7 +55,7 @@ const HowItWorks: React.FC = () => {
               <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
                 3
               </span>
-              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28">
+              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28 flex flex-col justify-center text-center md:block">
                 <h3 className="text-lg font-medium text-gray-900">
                   Book Appointment
                 </h3>
@@ -70,7 +70,7 @@ const HowItWorks: React.FC = () => {
               <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white mx-auto">
                 4
               </span>
-              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28">
+              <div className="mt-4 bg-white rounded-lg shadow-md p-6 min-h-28 flex flex-col justify-center text-center md:block">
                 <h3 className="text-lg font-medium text-gray-900">
                   Receive Care
                 </h3>

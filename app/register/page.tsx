@@ -1,13 +1,26 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Mail, Lock, User, Phone, Eye, EyeOff } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  User,
+  Phone,
+  Eye,
+  EyeOff,
+  IdCard,
+  MapPin,
+  Calendar,
+  VenusAndMars,
+} from "lucide-react";
 import Button from "@/components/ui/Button";
 import { register } from "@/actions/auth";
 import InputField from "@/components/auth-components/InputField";
 import RoleSelector from "@/components/auth-components/RoleSelector";
 import Checkbox from "@/components/auth-components/Checkbox";
+import DoctorDialog from "@/components/auth-components/DoctorDialog";
+import SelectField from "@/components/auth-components/SelectField";
 
 const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,30 +32,91 @@ const Register: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [pnc, setPnc] = useState("");
+  const [gender, setGender] = useState("");
+  const [address, setAddress] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+
+  // Doctor dialog state
+  const [showDoctorDialog, setShowDoctorDialog] = useState(false);
+  const [specialization, setSpecialization] = useState("");
+  const [licenseNumber, setLicenseNumber] = useState("");
+
+  // Handle role selection
+  const handleRoleChange = (newRole: string) => {
+    setRole(newRole);
+    if (newRole === "DOCTOR") {
+      setShowDoctorDialog(true);
+    }
+  };
+
+  // Handle Doctor dialog save
+  const handleDoctorDialogSave = () => {
+    if (specialization && licenseNumber) {
+      setShowDoctorDialog(false);
+    }
+  };
+
+  // Handle Doctor dialog cancel
+  const handleDoctorDialogCancel = () => {
+    setShowDoctorDialog(false);
+    setRole("PATIENT");
+    setSpecialization("");
+    setLicenseNumber("");
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setIsLoading(true);
 
-    const formData = new FormData();
-    formData.append("fullName", fullName);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("password", password);
-    formData.append("confirmPassword", password);
-    formData.append("role", role);
+    try {
+      const formData = new FormData();
+      formData.append("fullName", fullName);
+      formData.append("email", email);
+      formData.append("phone", phone);
+      formData.append("password", password);
+      formData.append("confirmPassword", password);
+      formData.append("role", role);
+      formData.append("pnc", pnc);
+      formData.append("gender", gender);
+      formData.append("address", address);
+      formData.append("dateOfBirth", dateOfBirth);
 
-    await register(formData);
-    setIsLoading(false);
+      if (role === "DOCTOR") {
+        formData.append("specialization", specialization);
+        formData.append("licenseNumber", licenseNumber);
+      }
+
+      await register(formData);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErrorMessage(err.message || "Registration failed.");
+      } else {
+        setErrorMessage("Registration failed.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <DoctorDialog
+        open={showDoctorDialog}
+        specialization={specialization}
+        setSpecialization={setSpecialization}
+        licenseNumber={licenseNumber}
+        setLicenseNumber={setLicenseNumber}
+        onSave={handleDoctorDialogSave}
+        onCancel={handleDoctorDialogCancel}
+      />
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-extrabold text-emerald-600">MedSync</h1>
-          <h2 className="mt-6 text-2xl font-bold text-gray-900">Create your account</h2>
+          <h2 className="mt-6 text-2xl font-bold text-gray-900">
+            Create your account
+          </h2>
           <p className="mt-2 text-sm text-gray-600">
             Already have an account?{" "}
             <Link href="/login">
@@ -75,6 +149,46 @@ const Register: React.FC = () => {
             />
 
             <InputField
+              id="pnc"
+              placeholder="Enter your PNC"
+              value={pnc}
+              onChange={(e) => setPnc(e.target.value)}
+              icon={<IdCard className="h-5 w-5 text-gray-400" />}
+              required
+            />
+
+            <SelectField
+              id="gender"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              icon={<VenusAndMars className="h-5 w-5 text-gray-400" />}
+              required
+              placeholder="Select gender"
+              options={[
+                { value: "Male", label: "Male" },
+                { value: "Female", label: "Female" },
+              ]}
+            />
+            <InputField
+              id="address"
+              placeholder="Enter your address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              icon={<MapPin className="h-5 w-5 text-gray-400" />}
+              required
+            />
+
+            <InputField
+              id="dateOfBirth"
+              type="date"
+              placeholder="Date of Birth"
+              value={dateOfBirth}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+              icon={<Calendar className="h-5 w-5 text-gray-400" />}
+              required
+            />
+
+            <InputField
               id="phone"
               placeholder="Enter your phone number"
               value={phone}
@@ -84,12 +198,6 @@ const Register: React.FC = () => {
             />
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <InputField
                   id="password"
@@ -120,7 +228,7 @@ const Register: React.FC = () => {
               <label className="block text-sm font-medium text-gray-700">
                 I am a
               </label>
-              <RoleSelector role={role} setRole={setRole} />
+              <RoleSelector role={role} setRole={handleRoleChange} />
             </div>
 
             <Checkbox
@@ -147,7 +255,11 @@ const Register: React.FC = () => {
             />
 
             <div>
-              <Button type="submit" fullWidth disabled={isLoading || !termsAccepted}>
+              <Button
+                type="submit"
+                fullWidth
+                disabled={isLoading || !termsAccepted}
+              >
                 {isLoading ? "Registering..." : "Create Account"}
               </Button>
             </div>

@@ -57,7 +57,6 @@ model User {
   address       String?
   patient       Patient?
   doctor        Doctor?
-  admin         Admin?
   notifications Notification[]
   sentMessages  Message[]
 }
@@ -83,44 +82,24 @@ model Doctor {
   biography      String?
   appointments   Appointment[]
   medicalRecords MedicalRecord[]
-  availability   Availability[]
   chatSessions   ChatSession[]   @relation("DoctorChats")
 }
 
-model Admin {
-  id          Int      @id @default(autoincrement())
-  userId      Int      @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  department  String?
-  permissions String[] @default([])
-}
+model Appointment {
+  id        Int               @id @default(autoincrement())
+  patientId Int
+  doctorId  Int
+  startTime DateTime
+  endTime   DateTime
+  status    AppointmentStatus @default(PENDING)
+  type      AppointmentType
+  notes     String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
 
-  model Appointment {
-    id        Int               @id @default(autoincrement())
-    patientId Int
-    doctorId  Int
-    startTime DateTime
-    endTime   DateTime
-    status    AppointmentStatus @default(PENDING)
-    type      AppointmentType
-    notes     String?
-    createdAt DateTime          @default(now())
-    updatedAt DateTime          @updatedAt
-
-    patient      Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
-    doctor       Doctor        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
-    videoSession VideoSession?
-  }
-
-model Availability {
-  id          Int     @id @default(autoincrement())
-  doctorId    Int
-  dayOfWeek   Int
-  startTime   String
-  endTime     String
-  isAvailable Boolean @default(true)
-
-  doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  patient      Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctor       Doctor        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  videoSession VideoSession?
 }
 
 model MedicalRecord {
