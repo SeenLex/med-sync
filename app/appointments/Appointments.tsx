@@ -1,4 +1,3 @@
-// Appointments.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -64,7 +63,6 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
           </Link>
         </div>
 
-        {/* Filters & Search */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2">
@@ -111,7 +109,6 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
           </div>
         </div>
 
-        {/* Appointment Cards */}
         <div className="space-y-4">
           {filteredAppointments.length > 0 ? (
             filteredAppointments.map((appointment) => (
@@ -120,7 +117,6 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
                 className="p-4 hover:shadow-md transition-shadow"
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                  {/* Left: Info */}
                   <div className="flex items-start space-x-4">
                     <div
                       className={`p-2 rounded-full ${
@@ -188,7 +184,6 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
                     </div>
                   </div>
 
-                  {/* Right: Actions */}
                   <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
                     {appointment.status === "CONFIRMED" && (
                       <>
@@ -201,7 +196,7 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
                           Reschedule
                         </Button>
                         {isUpcomingTab && (
-                          <Button variant="danger" size="sm">
+                          <Button variant="danger" size="sm" /*onClick={handleCancelation}*/>
                             Cancel
                           </Button>
                         )}
