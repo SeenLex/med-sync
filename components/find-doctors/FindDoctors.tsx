@@ -159,7 +159,7 @@ const FindDoctor: React.FC<Props> = ({ doctors }) => {
                         {doctor.doctor?.specialization || "Unknown"}
                       </p>
 
-                      <div className="mt-3 flex flex-wrap gap-2 mt-10">
+                      <div className="mt-3 flex flex-wrap gap-2">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
                           <MapPin className="h-3 w-3 mr-1" />
                           In-Person

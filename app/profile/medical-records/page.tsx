@@ -23,7 +23,7 @@ const page = async () => {
     if (!medicalRecords || medicalRecords.length === 0) {
         return <div>No medical records found.</div>;
     }
-    return <MedicalRecords all={medicalRecords} page={1} setPage={() => {}} getTypeInfo={() => ({ label: '', color: '' })}/>;
+    return <MedicalRecords all={medicalRecords}  getTypeInfo={() => ({ label: '', color: '' })}/>;
 }
 
 export default page

@@ -20,9 +20,13 @@ const page = async () => {
     return <div>No patient information found.</div>;
   }
   const appointments = await fetchAppointments(patientId);
-    if (!appointments || appointments.length === 0) {
-        return <div className="flex justify-center pt-16 text-gray-700 text-xl">No appointments found.</div>;
-    }
+  if (!appointments || appointments.length === 0) {
+    return (
+      <div className="flex justify-center pt-16 text-gray-700 text-xl">
+        No appointments found.
+      </div>
+    );
+  }
   return <AppointmentsTab all={appointments} page={1} setPage={() => {}} />;
 };
 

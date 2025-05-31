@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { saveUser } from './user';
 
+
+
 export async function login(formData: FormData) {
   const supabase = await createClient();
   const email = formData.get('email') as string;
@@ -24,9 +26,21 @@ export async function login(formData: FormData) {
   if (error) {
     throw new Error('Authentication failed! Incorrect e-mail address or password!');
   }
+  const { getUserByEmail } = await import('./user');
+  const dbUser = await getUserByEmail(email);
 
+  if (!dbUser) {
+    throw new Error('User not found in the database!');
+  }
   revalidatePath('/', 'layout');
-  redirect('/');
+
+  if (dbUser.role === 'DOCTOR') {
+    redirect('/dashboard');
+  } else if (dbUser.role === 'ADMIN') {
+    redirect('/admin');
+  } else {
+    redirect('/');
+  }
 }
 
 export async function register(formData: FormData) {
