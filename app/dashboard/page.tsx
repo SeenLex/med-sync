@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import DashboardStats from "@/components/doctor/DashboardStats";
-import UpcomingAppointments from "@/components/doctor/UpcomingAppointments";
-import RecentPatients from "@/components/doctor/RecentPatients";
-import DoctorSchedule from "@/components/doctor/DoctorSchedule";
+import DashboardStats from "@/components/doctor-dashboard/DashboardStats";
+import UpcomingAppointments from "@/components/doctor-dashboard/UpcomingAppointments";
+import RecentPatients from "@/components/doctor-dashboard/RecentPatients";
+import DoctorSchedule from "@/components/doctor-dashboard/DoctorSchedule";
 import Card from "@/components/ui/Card";
 import { Doctor } from "@/types";
 import { Calendar, Users, Clock, FileText } from "lucide-react";

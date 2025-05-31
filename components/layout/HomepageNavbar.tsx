@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import {
@@ -17,7 +17,6 @@ import { Link as ScrollLink, animateScroll } from "react-scroll";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   const handleLinkClick = () => setIsMenuOpen(false);
@@ -26,7 +25,6 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
-      setIsNavbarVisible(currentY <= lastScrollY || currentY < 10);
       setLastScrollY(currentY);
     };
     window.addEventListener("scroll", handleScroll);
@@ -35,10 +33,8 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`bg-white shadow-md sticky top-0 z-50
-         transition-transform duration-300 ${
-           isNavbarVisible ? "translate-y-0" : "-translate-y-full"
-         }`}
+      className="bg-white shadow-md sticky z-200 top-0"
+      
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
@@ -55,7 +51,6 @@ const Navbar: React.FC = () => {
               smooth
               duration={500}
               offset={-30}
-
               className="flex items-center lg:px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
               onClick={handleLinkClick}
@@ -157,12 +152,12 @@ const Navbar: React.FC = () => {
               smooth
               duration={500}
               offset={-30}
-              className="block px-3 py-2 rounded-md
+              className="flex items-center px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 items-center"
+                         hover:bg-gray-100"
               onClick={handleLinkClick}
             >
-              <Star className="h-4 w-4 mr-2" />
+              <Star className="h-4 w-4 mr-2 flex-shrink-0" />
               Features
             </ScrollLink>
             <ScrollLink
@@ -170,12 +165,12 @@ const Navbar: React.FC = () => {
               smooth
               duration={500}
               offset={-30}
-              className="block px-3 py-2 rounded-md
+              className="flex items-center px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 items-center"
+                         hover:bg-gray-100"
               onClick={handleLinkClick}
             >
-              <Wrench className="h-4 w-4 mr-2" />
+              <Wrench className="h-4 w-4 mr-2 flex-shrink-0" />
               How It Works
             </ScrollLink>
             <ScrollLink
@@ -183,12 +178,12 @@ const Navbar: React.FC = () => {
               smooth
               duration={500}
               offset={-30}
-              className="block px-3 py-2 rounded-md
+              className="flex items-center px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 items-center"
+                         hover:bg-gray-100"
               onClick={handleLinkClick}
             >
-              <MessageSquare className="h-4 w-4 mr-2" />
+              <MessageSquare className="h-4 w-4 mr-2 flex-shrink-0" />
               Testimonials
             </ScrollLink>
             <ScrollLink
@@ -196,32 +191,31 @@ const Navbar: React.FC = () => {
               smooth
               duration={500}
               offset={-30}
-              className="block px-3 py-2 rounded-md
+              className="flex items-center px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 items-center"
+                         hover:bg-gray-100"
               onClick={handleLinkClick}
             >
-              <DollarSign className="h-4 w-4 mr-2" />
+              <DollarSign className="h-4 w-4 mr-2 flex-shrink-0" />
               Pricing
             </ScrollLink>
             <Link
               href="/login"
-              className="block px-3 py-2 rounded-md
+              className="flex items-center px-3 py-2 rounded-md
                          text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100 items-center"
+                         hover:bg-gray-100"
               onClick={handleLinkClick}
             >
-              <LogIn className="h-4 w-4 mr-2" />
+              <LogIn className="h-4 w-4 mr-2 flex-shrink-0" />
               Login
             </Link>
             <Link href="/register">
               <div
-                className="block px-3 py-2 rounded-md
-                           bg-emerald-600 text-white hover:bg-emerald-700
-                           items-center"
+                className="flex items-center px-3 py-2 rounded-md
+                           bg-emerald-600 text-white hover:bg-emerald-700"
                 onClick={handleLinkClick}
               >
-                <UserPlus className="h-4 w-4 mr-2" />
+                <UserPlus className="h-4 w-4 mr-2 flex-shrink-0" />
                 Sign Up
               </div>
             </Link>

@@ -128,4 +128,17 @@ export async function getUserInfo(email: string) {
   return user;
 }
 
+export async function getAllDoctors() {
+  return await prisma.user.findMany({
+    where: {
+      role: "DOCTOR",
+    },
+    include: {
+      doctor: true,
+    },
+  });
+}
+
+export type FindDoctor = Awaited<ReturnType<typeof getAllDoctors>>;
 export type UserInfo = Awaited<ReturnType<typeof getUserInfo>>;
+

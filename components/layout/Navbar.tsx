@@ -16,13 +16,11 @@ import { logout } from "@/actions/auth";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
-      setIsNavbarVisible(currentY <= lastScrollY);
       setLastScrollY(currentY);
     };
     window.addEventListener("scroll", handleScroll);
@@ -31,10 +29,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`bg-white shadow-md sticky top-0 z-50
-         transition-transform duration-300 ${
-           isNavbarVisible ? "translate-y-0" : "-translate-y-full"
-         }`}
+      className="bg-white shadow-md sticky top-0 z-200"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16">
         <div className="flex justify-between h-16">
