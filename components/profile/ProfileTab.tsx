@@ -7,8 +7,6 @@ import { Edit } from "lucide-react";
 import { updateUser, UserInfo } from "@/actions/user";
 
 export type EditVals = {
-  fullName: string;
-  email: string;
   phone: string;
   address: string;
 };
@@ -21,8 +19,6 @@ const ProfileTab: React.FC<Props> = ({userInfo}) => {
   const [user, setUser] = useState(userInfo);
   const [isEditing, setIsEditing] = useState(false);
   const [editValues, setEditValues] = useState<EditVals>({
-    fullName: user.fullName,
-    email: user.email,
     phone: user.phone || "",
     address: user.address || "",
   });
@@ -32,16 +28,12 @@ const ProfileTab: React.FC<Props> = ({userInfo}) => {
   }
   const handleSave = async () => {
     const formData = new FormData();
-    formData.append("fullName", editValues.fullName);
-    formData.append("email", editValues.email);
     formData.append("phone", editValues.phone);
     formData.append("address", editValues.address);
 
     await updateUser(user.id.toString(), formData);
     setUser((prev) => ({
       ...prev,
-      fullName: editValues.fullName,
-      email: editValues.email,
       phone: editValues.phone,
       address: editValues.address,
     }));
@@ -50,8 +42,6 @@ const ProfileTab: React.FC<Props> = ({userInfo}) => {
   const handleCancel = () => {
     setIsEditing(false);
     setEditValues({
-      fullName: user.fullName,
-      email: user.email,
       phone: user.phone || "",
       address: user.address || "",
     });
@@ -93,7 +83,7 @@ const ProfileTab: React.FC<Props> = ({userInfo}) => {
           label: "Full Name",
           value: user.fullName,
           key: "fullName",
-          type: "text",
+          type: "static",
         },
         {
           label: "Email",
@@ -130,7 +120,7 @@ const ProfileTab: React.FC<Props> = ({userInfo}) => {
           <h3 className="text-sm font-medium text-gray-500 mb-1">
             {label}
           </h3>
-          {isEditing && (type === "text" || type === "email") ? (
+          {isEditing && (type === "text") ? (
             <input
               type={type}
               className="w-full px-3 py-2 border rounded-md focus:ring-emerald-500 focus:border-emerald-500"
