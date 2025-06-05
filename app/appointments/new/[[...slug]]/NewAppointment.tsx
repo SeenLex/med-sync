@@ -1,4 +1,3 @@
-// app/dashboard/appointments/new/page.tsx (or wherever NewAppointment is located)
 "use client";
 
 import React, { useState } from "react";
@@ -9,38 +8,36 @@ import {
   bookAppointment,
   fetchDoctorAppointmentsForDate,
 } from "@/actions/appointments";
-import { UserInfo, type FindDoctor } from "@/actions/user"; // Assuming FindDoctor is User[]
+import { UserInfo, type FindDoctor } from "@/actions/user";
 import Steps from "@/components/book-appointment/Steps";
 import Step1 from "@/components/book-appointment/Step1";
 import Step2 from "@/components/book-appointment/Step2";
 import Step3 from "@/components/book-appointment/Step3";
 import Step4 from "@/components/book-appointment/Step4";
 import NavigationButtons from "@/components/book-appointment/NavigationButtons";
-// import { useRouter } from "next/navigation"; // If you want to redirect after booking
 
 type Props = {
-  userInfo: UserInfo; // Assuming UserInfo contains patient details
-  doctors: FindDoctor; // This is the array of User objects who are doctors
+  userInfo: UserInfo;
+  doctors: FindDoctor;
+  doctorToReschedule: FindDoctor[number] | null;
+  initialType: "IN_PERSON" | "VIRTUAL" | null;
 };
 
 const NewAppointment: React.FC<Props> = ({
   userInfo,
   doctors: initialDoctors,
+  doctorToReschedule,
+  initialType,
 }) => {
-  // const router = useRouter();
-  const [step, setStep] = useState(1);
-  const [appointmentType, setAppointmentType] = useState<
-    "IN_PERSON" | "VIRTUAL" | null
-  >(null);
-  const [selectedDoctor, setSelectedDoctor] = useState<
-    FindDoctor[number] | null
-  >(null);
+  const [step, setStep] = useState(doctorToReschedule ? 3 : 1);
+  const [appointmentType, setAppointmentType] = useState(initialType);
+  const [selectedDoctor, setSelectedDoctor] = useState(doctorToReschedule);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [specialty, setSpecialty] = useState("");
+  const [notes, setNotes] = useState<string>("");
 
-  // This could be derived or passed if specialties are dynamic
   const specialtiesList = [
     "Cardiologist",
     "Dermatologist",
@@ -57,28 +54,25 @@ const NewAppointment: React.FC<Props> = ({
   const { data: appointments, isLoading: appointmentsLoading } = useQuery({
     queryKey: [
       "fetchDoctorAppointmentsForDate",
-      selectedDoctor?.doctor?.id, // Use the actual Doctor ID
+      selectedDoctor?.doctor?.id,
       selectedDate,
     ],
     queryFn: () => {
       if (!selectedDoctor?.doctor?.id || !selectedDate) {
-        // This should ideally not be reached if 'enabled' is working correctly
-        return Promise.resolve([]); // Or reject, depending on desired behavior
+        return Promise.resolve([]);
       }
       return fetchDoctorAppointmentsForDate(
-        String(selectedDoctor.doctor.id), // Pass the actual Doctor ID
+        String(selectedDoctor.doctor.id),
         selectedDate
       );
     },
-    enabled: !!selectedDoctor?.doctor?.id && !!selectedDate, // Query only if doctor's specific ID and date are selected
+    enabled: !!selectedDoctor?.doctor?.id && !!selectedDate,
   });
 
   const submitAppointment = useMutation({
     mutationFn: bookAppointment,
     onSuccess: () => {
       alert("Appointment booked successfully!");
-      // Optionally reset state or redirect
-      // router.push("/dashboard/appointments");
       setStep(1);
       setAppointmentType(null);
       setSelectedDoctor(null);
@@ -86,6 +80,7 @@ const NewAppointment: React.FC<Props> = ({
       setSelectedTime(null);
       setSearchQuery("");
       setSpecialty("");
+      setNotes("");
     },
     onError: (error: Error) => {
       console.error("Booking error:", error);
@@ -100,7 +95,6 @@ const NewAppointment: React.FC<Props> = ({
     if (step === 1 && appointmentType) {
       setStep(2);
     } else if (step === 2 && selectedDoctor) {
-      // Ensure the selected doctor actually has a doctor profile if that's a requirement
       if (!selectedDoctor.doctor) {
         alert(
           "The selected user is not fully registered as a doctor. Please choose another."
@@ -115,7 +109,13 @@ const NewAppointment: React.FC<Props> = ({
 
   const handlePrevStep = () => {
     if (step > 1) {
-      setStep(step - 1);
+      if (step === 3 && doctorToReschedule) {
+        setStep(1);
+        setSelectedDoctor(null);
+        setAppointmentType(null);
+      } else {
+        setStep(step - 1);
+      }
     }
   };
 
@@ -124,10 +124,10 @@ const NewAppointment: React.FC<Props> = ({
       case 1:
         return !!appointmentType;
       case 2:
-        return !!selectedDoctor && !!selectedDoctor.doctor; // Ensure doctor profile exists
+        return !!selectedDoctor && !!selectedDoctor.doctor;
       case 3:
         return !!selectedDate && !!selectedTime;
-      case 4: // For step 4, canProceed is true as it's the confirmation step
+      case 4:
         return true;
       default:
         return false;
@@ -146,7 +146,7 @@ const NewAppointment: React.FC<Props> = ({
       !selectedDate ||
       !selectedTime ||
       !selectedDoctor ||
-      !selectedDoctor.doctor || // Crucial check for the Doctor's specific ID
+      !selectedDoctor.doctor ||
       !appointmentType ||
       !userInfo.patient?.id
     ) {
@@ -158,36 +158,28 @@ const NewAppointment: React.FC<Props> = ({
 
     const newStartDate = new Date(selectedDate);
     const [hours, minutes] = selectedTime.split(":").map(Number);
-    newStartDate.setHours(hours, minutes, 0, 0); // Set seconds and ms to 0
+    newStartDate.setHours(hours, minutes, 0, 0);
 
     const newEndDate = new Date(newStartDate);
-    newEndDate.setMinutes(newStartDate.getMinutes() + 30); // Assuming 30 min appointments
+    newEndDate.setMinutes(newStartDate.getMinutes() + 30);
 
     const input = {
-      patientId: userInfo.patient.id, // Assumes userInfo.patient.id is valid
-      doctorId: selectedDoctor.doctor.id, // Use the ID from the nested doctor object
+      patientId: userInfo.patient.id,
+      doctorId: selectedDoctor.doctor.id,
       startTime: newStartDate,
       endTime: newEndDate,
       type: appointmentType,
-      // reason: "User provided reason" // If you add a reason field in Step4
+      notes: notes || null,
     };
 
     submitAppointment.mutate(input);
   }
 
-  // Filter doctors based on appointmentType if your doctor data includes availability
-  // This is a simplified example; you might need more robust filtering
-  // const availableDoctorsForType = initialDoctors.filter(doc => {
-  //   if (!appointmentType) return true; // Show all if no type selected yet (or handle in Step 2)
-  //   // Assuming `doc.doctor.availableFor` or similar field exists
-  //   return doc.doctor?.availableFor?.includes(appointmentType);
-  // });
-
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Book an Appointment
+          {doctorToReschedule ? "Reschedule Appointment" : "Book an Appointment"}
         </h1>
 
         <Steps step={step} stepLabels={stepLabels} />
@@ -202,7 +194,7 @@ const NewAppointment: React.FC<Props> = ({
 
           {step === 2 && (
             <Step2
-              doctors={initialDoctors} // Pass the initial list, Step2 will filter
+              doctors={initialDoctors}
               specialities={specialtiesList}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -210,19 +202,19 @@ const NewAppointment: React.FC<Props> = ({
               setSpecialty={setSpecialty}
               selectedDoctor={selectedDoctor}
               setSelectedDoctor={setSelectedDoctor}
-              appointmentType={appointmentType} // Pass for display or further filtering in Step2
+              appointmentType={appointmentType}
             />
           )}
 
           {step === 3 &&
-            selectedDoctor && ( // Ensure selectedDoctor exists for Step3
+            selectedDoctor && (
               <Step3
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
                 selectedTime={selectedTime}
                 setSelectedTime={setSelectedTime}
                 appointmentsLoading={appointmentsLoading}
-                appointments={appointments || []} // Pass empty array if appointments is undefined
+                appointments={appointments || []}
               />
             )}
 
@@ -232,7 +224,8 @@ const NewAppointment: React.FC<Props> = ({
               selectedDate={selectedDate}
               selectedTime={selectedTime}
               appointmentType={appointmentType}
-              // Pass reason if you add a state for it
+              notes={notes}
+              setNotes={setNotes}
             />
           )}
 

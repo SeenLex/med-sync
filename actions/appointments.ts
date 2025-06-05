@@ -29,6 +29,7 @@ interface BookAppointment{
   startTime: Date;
   endTime: Date;
   type: 'IN_PERSON' | 'VIRTUAL';
+  notes?: string | null;
 }
 
 export async function bookAppointment(input: BookAppointment) {
@@ -39,6 +40,7 @@ export async function bookAppointment(input: BookAppointment) {
       startTime: input.startTime,
       endTime: input.endTime,
       type: input.type,
+      notes: input.notes || null,
     },
   });
 }

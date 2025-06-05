@@ -1,4 +1,3 @@
-// components/book-appointment/Step4.tsx
 import type { FindDoctor } from "@/actions/user";
 import React from "react";
 import Image from "next/image";
@@ -8,7 +7,8 @@ type Step4Props = {
   selectedDate: Date | undefined;
   selectedTime: string | null;
   appointmentType: "IN_PERSON" | "VIRTUAL" | null;
-  // reason?: string; // Optional: if you add a reason field
+  notes: string;
+  setNotes: (notes: string) => void;
 };
 
 const Step4: React.FC<Step4Props> = ({
@@ -16,10 +16,10 @@ const Step4: React.FC<Step4Props> = ({
   selectedDate,
   selectedTime,
   appointmentType,
-  // reason,
+  notes,
+  setNotes,
 }) => {
   if (!selectedDoctor || !selectedDate || !selectedTime || !appointmentType) {
-    // This should ideally not happen if navigation is controlled properly
     return (
       <div className="text-red-500">
         Error: Missing appointment details for confirmation.
@@ -36,7 +36,7 @@ const Step4: React.FC<Step4Props> = ({
         <div className="flex items-start space-x-4">
           <Image
             src={
-              selectedDoctor.profileImage || // Use User's profileImage
+              selectedDoctor.profileImage ||
               `https://randomuser.me/api/portraits/lego/${
                 Number(selectedDoctor.id) % 10
               }.jpg`
@@ -78,35 +78,22 @@ const Step4: React.FC<Step4Props> = ({
                     : "Virtual Consultation"}
                 </p>
               </div>
-              {/* {reason && (
-                <div className="sm:col-span-2">
-                  <p className="text-sm font-medium text-gray-500">
-                    Reason for Visit
-                  </p>
-                  <p className="text-base text-gray-900 whitespace-pre-wrap">
-                    {reason}
-                  </p>
-                </div>
-              )} */}
             </div>
           </div>
         </div>
       </div>
-      {/* Removed the textarea for reason from here, as it's usually an input.
-          If you want to capture it, add a state in NewAppointment.tsx and pass it down.
-      */}
-      {/* <div className="mb-6">
+      <div className="mb-6">
         <h3 className="text-lg font-medium mb-2 text-gray-900">
-          Reason for Visit (Optional)
+          Reason for Visit
         </h3>
         <textarea
           className="w-full border rounded-md p-3 focus:outline-none border-gray-400 text-gray-900 focus:ring-emerald-500 focus:border-emerald-500"
           rows={3}
           placeholder="Briefly describe your symptoms or reason..."
-          // value={reasonState}
-          // onChange={(e) => setReasonState(e.target.value)}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
         ></textarea>
-      </div> */}
+      </div>
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
         <div className="flex">
           <div className="flex-shrink-0">

@@ -27,7 +27,7 @@ const page = async () => {
       </div>
     );
   }
-  return <AppointmentsTab all={appointments} page={1} setPage={() => {}} />;
+  return <AppointmentsTab all={appointments} />;
 };
 
 export default page;

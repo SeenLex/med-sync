@@ -92,6 +92,20 @@ export async function getUserById(id: string) {
   });
 }
 
+export async function getDoctorUserByDoctorId(doctorId: string) {
+  const doctorProfile = await prisma.doctor.findUnique({
+    where: {
+      id: Number(doctorId),
+    },
+  });
+
+  if (!doctorProfile) {
+    return null;
+  }
+
+  return getUserById(String(doctorProfile.userId));
+}
+
 export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({
     where: { email },
