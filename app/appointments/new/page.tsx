@@ -1,5 +1,5 @@
 import NewAppointment from "./NewAppointment";
-import { getUserInfo } from "@/actions/user";
+import { getAllDoctors, getUserInfo } from "@/actions/user";
 import { createClient } from "@/utils/supabase/server";
 import React from "react";
 
@@ -11,9 +11,14 @@ const NewAppointmentPage = async () => {
   if (!user?.email) {
     return <div>Please log in to view your profile.</div>;
   }
+
   const userInfo = await getUserInfo(user.email);
+  const doctors = await getAllDoctors();
+  if (!doctors) {
+    return <div>Error: Could not load doctor information.</div>;
+  }
   if (!userInfo?.patient?.id) return;
-  return <NewAppointment userInfo={userInfo} />;
+  return <NewAppointment userInfo={userInfo} doctors={doctors}/>;
 };
 
 export default NewAppointmentPage;

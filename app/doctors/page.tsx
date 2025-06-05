@@ -1,5 +1,5 @@
 import { getAllDoctors } from '@/actions/user';
-import FindDoctor from '@/components/find-doctors/FindDoctors';
+import FindDoctor from '@/app/doctors/FindDoctors';
 import { createClient } from '@/utils/supabase/server';
 import React from 'react';
 

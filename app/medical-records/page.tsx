@@ -2,7 +2,7 @@
 import { fetchMedicalRecords } from '@/actions/medical-records';
 import { createClient } from '@/utils/supabase/server';
 import React from 'react';
-import MedicalRecords from '@/components/medical-records/MedicalRecords';
+import MedicalRecords from '@/app/medical-records/MedicalRecords';
 import { getUserInfo } from '@/actions/user';
 
 

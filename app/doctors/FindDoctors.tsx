@@ -12,10 +12,10 @@ import {
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Layout from "@/components/layout/Layout";
-import type { FindDoctor as FindDoctorType } from "@/actions/user";
+import type { FindDoctor  } from "@/actions/user";
 
 type Props = {
-  doctors: FindDoctorType;
+  doctors: FindDoctor;
 };
 
 const FindDoctor: React.FC<Props> = ({ doctors }) => {

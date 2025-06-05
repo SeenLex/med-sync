@@ -72,32 +72,6 @@ const Navbar: React.FC = () => {
               <span className="text-xs lg:text-base">How It Works</span>
             </ScrollLink>
 
-            <ScrollLink
-              to="testimonials"
-              smooth
-              duration={500}
-              offset={-30}
-              className="flex items-center px-2 lg:px-3 py-2 rounded-md
-                         text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
-              onClick={handleLinkClick}
-            >
-              <MessageSquare className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-              <span className="text-xs lg:text-base">Testimonials</span>
-            </ScrollLink>
-
-            <ScrollLink
-              to="pricing"
-              smooth
-              duration={500}
-              offset={-30}
-              className="flex items-center px-2 lg:px-3 py-2 rounded-md
-                         text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
-              onClick={handleLinkClick}
-            >
-              <DollarSign className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-              <span className="text-xs lg:text-base">Pricing</span>
-            </ScrollLink>
-
             <div
               className="flex items-center ml-2 lg:ml-4 pl-2 lg:pl-4
                          border-l border-gray-300 gap-1 lg:gap-4"

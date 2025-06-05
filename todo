@@ -1,0 +1,32 @@
+remember me: '???'
+
+patient:
+    book appointment:
+        -click Virtual Consultation: send meet link
+        -select doctor: display doctors
+
+    medical records:
+        -view: redirect to medical record info
+        -dowload: download medical record file
+    
+    appointments:
+        -upcoming appointments: cancel button
+        -book an appointment: redirect to book appointment page
+
+    profile:
+        -change password: implement change password functionality
+        -logout button,
+
+
+doctor:
+    dashboard???
+    -display upcoming appointments
+    -display my patients
+    -display 
+
+admin:
+    -manage doctors: 
+        -view doctors: list of doctors with options to edit or delete
+        -delete doctor,
+    -manage patients:
+        -view patients: list of patients with options to edit or delete ???
