@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import {
@@ -13,31 +13,61 @@ import {
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Layout from "@/components/layout/Layout";
-import { MedicalRecord } from "@/actions/medical-records";
+import {
+  MedicalRecord,
+  fetchPaginatedMedicalRecords,
+} from "@/actions/medical-records";
+import { useQuery } from "@tanstack/react-query";
+import PaginationControls from "@/components/ui/PaginationControls";
+import { MEDICAL_RECORDS_PAGE_SIZE } from "@/lib/constants";
 
 type Props = {
-    medicalRecords: MedicalRecord[]
-}
+  initialData: {
+    medicalRecords: MedicalRecord[];
+    totalCount: number;
+  };
+  patientId: number;
+};
 
-const MedicalRecords: React.FC<Props> = ({ medicalRecords }) => {
+const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
+  const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredRecords = medicalRecords.filter((medicalRecord: MedicalRecord) => {
-    const matchesFilter =
-      filter === "all" ||
-      (filter === "lab-results" && medicalRecord.type === "LAB_RESULT") ||
-      (filter === "prescriptions" && medicalRecord.type === "PRESCRIPTION") ||
-      (filter === "visit-summaries" && medicalRecord.type === "VISIT_SUMMARY") ||
-      (filter === "medical-history" && medicalRecord.type === "MEDICAL_HISTORY");
-
-    const matchesSearch =
-      searchQuery === "" ||
-      medicalRecord.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      medicalRecord.doctor.user.fullName.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesFilter && matchesSearch;
+  const { data, isFetching } = useQuery({
+    queryKey: ["medical-records", page],
+    queryFn: () => fetchPaginatedMedicalRecords({ patientId, page }),
+    initialData: page === 1 ? initialData : undefined,
+    placeholderData: (previousData) => previousData,
+    enabled: patientId > 0,
   });
+
+  const totalPages = Math.ceil(
+    (data?.totalCount || 0) / MEDICAL_RECORDS_PAGE_SIZE
+  );
+  const medicalRecords = data?.medicalRecords || [];
+
+  const filteredRecords = medicalRecords.filter(
+    (medicalRecord: MedicalRecord) => {
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "lab-results" && medicalRecord.type === "LAB_RESULT") ||
+        (filter === "prescriptions" && medicalRecord.type === "PRESCRIPTION") ||
+        (filter === "visit-summaries" &&
+          medicalRecord.type === "VISIT_SUMMARY") ||
+        (filter === "medical-history" &&
+          medicalRecord.type === "MEDICAL_HISTORY");
+
+      const matchesSearch =
+        searchQuery === "" ||
+        medicalRecord.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        medicalRecord.doctor.user.fullName
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
+
+      return matchesFilter && matchesSearch;
+    }
+  );
 
   const getRecordTypeInfo = (type: string) => {
     switch (type) {
@@ -116,13 +146,15 @@ const MedicalRecords: React.FC<Props> = ({ medicalRecords }) => {
           </div>
         </div>
 
-        <div className="space-y-4">
-            {filteredRecords.length > 0 ? (
-            filteredRecords.map((medicalRecords: MedicalRecord) => {
-              const typeInfo = getRecordTypeInfo(medicalRecords.type);
+        {isFetching && <div className="text-center p-4">Loading...</div>}
+
+        <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
+          {filteredRecords.length > 0 ? (
+            filteredRecords.map((record: MedicalRecord) => {
+              const typeInfo = getRecordTypeInfo(record.type);
               return (
                 <Card
-                  key={medicalRecords.id}
+                  key={record.id}
                   className="p-4 hover:shadow-md transition-shadow"
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -132,19 +164,22 @@ const MedicalRecords: React.FC<Props> = ({ medicalRecords }) => {
                       </div>
                       <div>
                         <h3 className="text-lg font-medium text-gray-900">
-                          {medicalRecords.title}
+                          {record.title}
                         </h3>
                         <p className="text-sm text-gray-500">
-                          {medicalRecords.description}
+                          {record.description}
                         </p>
                         <div className="mt-2 flex items-center text-sm text-gray-500">
                           <Calendar className="h-4 w-4 mr-1" />
-                          <span>{medicalRecords.createdAt ? new Date(medicalRecords.createdAt).toLocaleDateString() : "No date"}</span>
+                          <span suppressHydrationWarning>
+                            {new Date(record.createdAt).toLocaleDateString()}
+                          </span>
                         </div>
                         <div className="mt-1 flex items-center text-sm text-gray-500">
                           <User className="h-4 w-4 mr-1" />
                           <span>
-                            {medicalRecords.doctor.user.fullName} ({medicalRecords.doctor.specialization})
+                            {record.doctor.user.fullName} -{" "}
+                            {record.doctor.specialization}
                           </span>
                         </div>
                         <div className="mt-2">
@@ -187,6 +222,15 @@ const MedicalRecords: React.FC<Props> = ({ medicalRecords }) => {
             </Card>
           )}
         </div>
+
+        {totalPages > 1 && (
+          <PaginationControls
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            isFetching={isFetching}
+          />
+        )}
       </div>
     </Layout>
   );

@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   Calendar,
@@ -10,14 +12,32 @@ import {
 import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { Appointment } from "@/actions/appointments";
+import {
+  Appointment,
+  fetchPaginatedUpcomingAppointments,
+} from "@/actions/appointments";
+import { useQuery } from "@tanstack/react-query";
+import PaginationControls from "@/components/ui/PaginationControls";
+import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
 
 type Props = {
-  appointments: Appointment[];
+  initialData: {
+    appointments: Appointment[];
+    totalCount: number;
+  };
+  patientId: number;
 };
 
-const LandingPage: React.FC<Props> = ({ appointments }) => {
+const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
+  const [page, setPage] = useState(1);
 
+  const { data, isFetching } = useQuery({
+    queryKey: ["upcoming-appointments", page],
+    queryFn: () => fetchPaginatedUpcomingAppointments({ patientId, page }),
+    initialData: page === 1 ? initialData : undefined,
+    placeholderData: (previousData) => previousData,
+    enabled: patientId > 0,
+  });
 
   const quickActions = [
     {
@@ -45,6 +65,11 @@ const LandingPage: React.FC<Props> = ({ appointments }) => {
       desc: "Search providers by specialty",
     },
   ];
+
+  const totalPages = Math.ceil(
+    (data?.totalCount || 0) / APPOINTMENTS_PAGE_SIZE
+  );
+  const appointments = data?.appointments || [];
 
   return (
     <Layout>
@@ -81,98 +106,130 @@ const LandingPage: React.FC<Props> = ({ appointments }) => {
 
       <section className="py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-            <div className="lg:col-span-2">
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                  Upcoming Appointments
-                </h2>
-                <Link
-                  href="/appointments"
-                  className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
-                >
-                  View All
-                </Link>
-              </div>
+          <div className="lg:col-span-2">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                Upcoming Appointments
+              </h2>
+              <Link
+                href="/appointments"
+                className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+              >
+                View All
+              </Link>
+            </div>
+
+            {isFetching && <div className="text-center p-2">Loading...</div>}
+
+            <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
               {appointments.length > 0 ? (
-                <div className="space-y-4">
-                  {appointments.map((appt: Appointment) => (
-                    <Card
-                      key={appt.id}
-                      className="p-3 sm:p-4 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
-                        <div className="flex items-start space-x-3">
-                          <div className="bg-emerald-100 p-2 rounded-full">
-                            {appt.type === "VIRTUAL" ? (
-                              <Video className="h-6 w-6 text-emerald-600" />
-                            ) : (
-                              <Calendar className="h-6 w-6 text-emerald-600" />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-sm sm:text-lg font-medium text-gray-900 truncate">
-                              {appt.doctor.user.fullName}
-                            </h3>
-                            <p className="text-xs sm:text-sm text-gray-500 truncate">
-                              {appt.doctor.specialization}
-                            </p>
-                            <div className="mt-1 flex items-center text-xs sm:text-sm text-gray-500">
-                              <Clock className="h-4 w-4 mr-1" />
-                              <span className="truncate">
-                                {appt.startTime
-                                  ? new Date(appt.startTime).toLocaleDateString() +
-                                    " at " +
-                                    new Date(appt.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-                                  : "Date/Time not available"}
-                              </span>
-                            </div>
-                            <div className="mt-1">
-                              <span
-                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${
-                                  appt.type === "VIRTUAL"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-green-100 text-green-800"
-                                }`}
-                              >
-                                {appt.type === "VIRTUAL"
-                                  ? "Virtual Consultation"
-                                  : "In-Person Visit"}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-3 sm:mt-0 flex space-x-2">
-                          {appt.type === "VIRTUAL" && (
-                            <Button variant="primary" size="sm">
-                              Join Call
-                            </Button>
+                appointments.map((appt: Appointment) => (
+                  <Card
+                    key={appt.id}
+                    className="p-3 sm:p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex items-start space-x-3">
+                        <div className="bg-emerald-100 p-2 rounded-full">
+                          {appt.type === "VIRTUAL" ? (
+                            <Video className="h-6 w-6 text-emerald-600" />
+                          ) : (
+                            <Calendar className="h-6 w-6 text-emerald-600" />
                           )}
-                          <Button variant="outline" size="sm">
-                            Reschedule
-                          </Button>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-sm sm:text-lg font-medium text-gray-900 truncate">
+                            {appt.doctor.user.fullName}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-gray-500 truncate">
+                            {appt.doctor.specialization}
+                          </p>
+                          <div className="mt-1 flex items-center text-xs sm:text-sm text-gray-500">
+                            <Clock className="h-4 w-4 mr-1" />
+                            <span suppressHydrationWarning className="truncate">
+                              {appt.startTime
+                                ? new Date(
+                                    appt.startTime
+                                  ).toLocaleDateString() +
+                                  " at " +
+                                  new Date(
+                                    appt.startTime
+                                  ).toLocaleTimeString([], {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })
+                                : "Date/Time not available"}
+                            </span>
+                          </div>
+                          <div className="mt-2 space-x-2">
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${
+                                appt.status === "CONFIRMED"
+                                  ? "bg-green-100 text-green-800"
+                                  : appt.status === "PENDING"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : appt.status === "CANCELED"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {appt.status}
+                            </span>
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${
+                                appt.type === "VIRTUAL"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : "bg-emerald-100 text-emerald-800"
+                              }`}
+                            >
+                              {appt.type === "VIRTUAL"
+                                ? "Virtual"
+                                : "In-Person"}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </Card>
-                  ))}
-                </div>
+                      <div className="mt-3 sm:mt-0 flex space-x-2">
+                        {(appt.status === "PENDING" ||
+                          appt.status === "COMPLETED" ||
+                          appt.status === "CANCELED") && (
+                          <Link
+                            href={`/appointments/new/reschedule/${appt.doctorId}?type=${appt.type}`}
+                          >
+                            <Button variant="outline" size="sm">
+                              Reschedule
+                            </Button>
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                ))
               ) : (
                 <Card className="p-4 text-center">
                   <p className="text-gray-500">
                     You have no upcoming appointments.
                   </p>
                   <Link href="/appointments/new">
-                    <Button className="mt-4">
-                      Book an Appointment
-                    </Button>
+                    <Button className="mt-4">Book an Appointment</Button>
                   </Link>
                 </Card>
               )}
             </div>
+
+            {totalPages > 1 && (
+              <PaginationControls
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+                isFetching={isFetching}
+              />
+            )}
           </div>
+        </div>
       </section>
     </Layout>
   );
 };
 
-export default LandingPage;
+export default Homepage;

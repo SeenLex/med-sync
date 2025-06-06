@@ -1,10 +1,10 @@
-import { fetchAppointments } from "@/actions/appointments";
 import { getUserInfo } from "@/actions/user";
-import AppointmentsTab from "@/components/profile/AppointmentsTab";
 import { createClient } from "@/utils/supabase/server";
 import React from "react";
+import { fetchPaginatedAppointments } from "@/actions/appointments";
+import AppointmentsTab from "@/components/profile/AppointmentsTab";
 
-const page = async () => {
+const ProfilePage = async () => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -19,15 +19,10 @@ const page = async () => {
   if (!patientId) {
     return <div>No patient information found.</div>;
   }
-  const appointments = await fetchAppointments(patientId);
-  if (!appointments || appointments.length === 0) {
-    return (
-      <div className="flex justify-center pt-16 text-gray-700 text-xl">
-        No appointments found.
-      </div>
-    );
-  }
-  return <AppointmentsTab all={appointments} />;
+
+  const initialData = await fetchPaginatedAppointments({ patientId, page: 1 });
+
+  return <AppointmentsTab initialData={initialData} patientId={patientId} />;
 };
 
-export default page;
+export default ProfilePage;

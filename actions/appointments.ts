@@ -1,5 +1,177 @@
 'use server';
 import prisma from "@/prisma/db";
+import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
+import { AppointmentStatus } from "@/prisma/generated/prisma";
+
+export async function fetchPaginatedAppointments({
+  patientId,
+  page = 1,
+}: {
+  patientId: number;
+  page: number;
+}) {
+  const [totalCount, appointments] = await prisma.$transaction([
+    prisma.appointment.count({ where: { patientId } }),
+    prisma.appointment.findMany({
+      where: { patientId },
+      include: {
+        doctor: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      orderBy: { startTime: "desc" },
+      take: APPOINTMENTS_PAGE_SIZE,
+      skip: (page - 1) * APPOINTMENTS_PAGE_SIZE,
+    }),
+  ]);
+
+  return { appointments, totalCount };
+}
+
+
+
+
+
+
+
+
+export async function fetchPaginatedDoctorAppointments({
+  doctorId,
+  page = 1,
+}: {
+  doctorId: number;
+  page: number;
+}) {
+  const whereClause = { doctorId };
+
+  const [totalCount, appointments] = await prisma.$transaction([
+    prisma.appointment.count({ where: whereClause }),
+    prisma.appointment.findMany({
+      where: whereClause,
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      // Order by most recent first for a good historical view
+      orderBy: { startTime: "desc" },
+      take: APPOINTMENTS_PAGE_SIZE,
+      skip: (page - 1) * APPOINTMENTS_PAGE_SIZE,
+    }),
+  ]);
+
+  return { appointments, totalCount };
+}
+
+
+
+
+
+
+
+
+
+
+export async function fetchPendingDoctorAppointments({
+  doctorId,
+  page = 1,
+}: {
+  doctorId: number;
+  page: number;
+}) {
+  const whereClause = {
+    doctorId,
+    status: "PENDING" as AppointmentStatus,
+  };
+
+  const [totalCount, appointments] = await prisma.$transaction([
+    prisma.appointment.count({ where: whereClause }),
+    prisma.appointment.findMany({
+      where: whereClause,
+      // We need the patient's info to display it on the dashboard
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      orderBy: { startTime: "asc" },
+      take: APPOINTMENTS_PAGE_SIZE,
+      skip: (page - 1) * APPOINTMENTS_PAGE_SIZE,
+    }),
+  ]);
+
+  return { appointments, totalCount };
+}
+
+// 2. Updates an appointment's status to CONFIRMED.
+export async function confirmAppointment(appointmentId: number) {
+  return await prisma.appointment.update({
+    where: { id: appointmentId },
+    data: { status: "CONFIRMED" },
+  });
+}
+
+// 3. Updates an appointment's status to CANCELED (when a doctor declines).
+export async function declineAppointment(appointmentId: number) {
+  return await prisma.appointment.update({
+    where: { id: appointmentId },
+    data: { status: "CANCELED" },
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+export async function fetchPaginatedUpcomingAppointments({
+  patientId,
+  page = 1,
+}: {
+  patientId: number;
+  page: number;
+}) {
+  const now = new Date();
+
+  const upcomingStatuses: AppointmentStatus[] = ["CONFIRMED"]; 
+
+  const whereClause = {
+    patientId,
+    status: { in: upcomingStatuses },
+    startTime: { gt: now },
+  };
+
+  const [totalCount, appointments] = await prisma.$transaction([
+    prisma.appointment.count({ where: whereClause }),
+    prisma.appointment.findMany({
+      where: whereClause,
+      include: {
+        doctor: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      orderBy: { startTime: "asc" },
+      take: APPOINTMENTS_PAGE_SIZE,
+      skip: (page - 1) * APPOINTMENTS_PAGE_SIZE,
+    }),
+  ]);
+
+  return { appointments, totalCount };
+}
 
 export async function fetchAppointments(patientId: number) {
   return await prisma.appointment.findMany({
@@ -42,6 +214,21 @@ export async function bookAppointment(input: BookAppointment) {
       type: input.type,
       notes: input.notes || null,
     },
+  });
+}
+
+export async function cancelAppointment(appointmentId: number) {
+  return await prisma.appointment.update({
+   where: { id: appointmentId },
+    data: { status: "CANCELED" },
+  
+  include: {
+      doctor: {
+        include: {
+          user: true,
+        },
+      },
+    },  
   });
 }
 

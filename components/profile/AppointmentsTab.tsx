@@ -1,25 +1,53 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Calendar, Clock, Video, MapPin } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
-import { Appointment } from "@/actions/appointments";
+import {
+  Appointment,
+  fetchPaginatedAppointments,
+} from "@/actions/appointments";
+import { useQuery } from "@tanstack/react-query";
+import PaginationControls from "@/components/ui/PaginationControls";
+import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
 
 type Props = {
-  all: Appointment[];
+  initialData: {
+    appointments: Appointment[];
+    totalCount: number;
+  };
+  patientId: number;
 };
 
-const AppointmentsTab: React.FC<Props> = ({ all }) => {
+const AppointmentsTab: React.FC<Props> = ({ initialData, patientId }) => {
+  const [page, setPage] = useState(1);
+
+  const { data, isFetching } = useQuery({
+    queryKey: ["profile-appointments", page],
+    queryFn: () => fetchPaginatedAppointments({ patientId, page }),
+    initialData: page === 1 ? initialData : undefined,
+    placeholderData: (previousData) => previousData,
+    enabled: patientId > 0,
+  });
+
+  const totalPages = Math.ceil(
+    (data?.totalCount || 0) / APPOINTMENTS_PAGE_SIZE
+  );
+  const appointments = data?.appointments || [];
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-900">
         My Appointments
       </h2>
-      {all.length > 0 ? (
-        <div className="space-y-4">
-          {all.map((appt) => (
+
+      {isFetching && <div className="text-center p-2">Loading...</div>}
+
+      <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
+        {appointments.length > 0 ? (
+          appointments.map((appt) => (
             <Card
               key={appt.id}
               className="p-4 hover:shadow-md transition-shadow"
@@ -61,7 +89,6 @@ const AppointmentsTab: React.FC<Props> = ({ all }) => {
                         })}
                       </span>
                     </div>
-                    {/* 2. Updated Status Badge Logic */}
                     <div className="mt-2">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -89,56 +116,39 @@ const AppointmentsTab: React.FC<Props> = ({ all }) => {
                   </div>
                 </div>
 
-                {/* 3. Copied the exact same button logic from Appointments.tsx */}
                 <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-                  {/* Rule 1: If PENDING or CONFIRMED, show Cancel button */}
-                  {(appt.status === "CONFIRMED" ||
-                    appt.status === "PENDING") && (
-                    <>
-                      {appt.status === "CONFIRMED" &&
-                        appt.type === "VIRTUAL" && (
-                          <Button variant="primary" size="sm">
-                            Join Call
-                          </Button>
-                        )}
-                      <Button variant="danger" size="sm">
-                        Cancel
-                      </Button>
-                    </>
-                  )}
-
-                  {/* Rule 2: If CANCELED or COMPLETED, show Reschedule button */}
-                  {(appt.status === "COMPLETED" ||
+                  {(appt.status === "PENDING" ||
+                    appt.status === "COMPLETED" ||
                     appt.status === "CANCELED") && (
-                    <>
-                      {appt.status === "COMPLETED" && (
-                        <Link
-                          href={`/medical-records?appointment=${appt.id}`}
-                        >
-                          <Button variant="secondary" size="sm">
-                            View Records
-                          </Button>
-                        </Link>
-                      )}
-                      <Link
-                        href={`/appointments/new/reschedule/${appt.doctorId}?type=${appt.type}`}
-                      >
-                        <Button variant="outline" size="sm">
-                          Reschedule
-                        </Button>
-                      </Link>
-                    </>
+                    <Link
+                      href={`/appointments/new/reschedule/${appt.doctorId}?type=${appt.type}`}
+                    >
+                      <Button variant="outline" size="sm">
+                        Reschedule
+                      </Button>
+                    </Link>
                   )}
                 </div>
               </div>
             </Card>
-          ))}
-        </div>
-      ) : (
-        <Card className="p-6 text-center">
-          <p className="text-gray-500">You have no appointments.</p>
-          <Button className="mt-4">Book an Appointment</Button>
-        </Card>
+          ))
+        ) : (
+          <Card className="p-6 text-center">
+            <p className="text-gray-500">You have no appointments.</p>
+            <Link href="/appointments/new">
+              <Button className="mt-4">Book an Appointment</Button>
+            </Link>
+          </Card>
+        )}
+      </div>
+
+      {totalPages > 1 && (
+        <PaginationControls
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          isFetching={isFetching}
+        />
       )}
     </div>
   );

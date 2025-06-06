@@ -142,6 +142,8 @@ export async function getUserInfo(email: string) {
   return user;
 }
 
+
+
 export async function getAllDoctors() {
   return await prisma.user.findMany({
     where: {

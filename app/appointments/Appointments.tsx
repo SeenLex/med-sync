@@ -14,24 +14,72 @@ import {
 import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { Appointment } from "@/actions/appointments";
+import {
+  Appointment,
+  cancelAppointment,
+  fetchPaginatedAppointments,
+} from "@/actions/appointments";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import PaginationControls from "@/components/ui/PaginationControls";
+import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
 
 type Props = {
-  appointments: Appointment[];
+  initialData: {
+    appointments: Appointment[];
+    totalCount: number;
+  };
+  patientId: number;
 };
 
-const Appointments: React.FC<Props> = ({ appointments }) => {
+const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
+  const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const isUpcomingTab = filter === "upcoming";
+  const [cancelingId, setCancelingId] = useState<number | null>(null);
 
-  const filteredAppointments = appointments.filter(
-    (appointment: Appointment) => {
+  const queryClient = useQueryClient();
+
+  const { data, isFetching } = useQuery({
+    queryKey: ["appointments", page],
+    queryFn: () => fetchPaginatedAppointments({ patientId, page }),
+    initialData: page === 1 ? initialData : undefined,
+    placeholderData: (previousData) => previousData,
+  });
+
+  const cancelAppointmentMutation = useMutation({
+    mutationFn: cancelAppointment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["appointments", page] });
+      alert("Appointment canceled successfully.");
+    },
+    onError: (error) => {
+      console.error("Failed to cancel appointment:", error);
+      alert("Failed to cancel appointment. Please try again.");
+    },
+    onSettled: () => {
+      setCancelingId(null);
+    },
+  });
+
+  const handleCancel = (appointmentId: number) => {
+    if (window.confirm("Are you sure you want to cancel this appointment?")) {
+      setCancelingId(appointmentId);
+      cancelAppointmentMutation.mutate(appointmentId);
+    }
+  };
+
+  const totalPages = Math.ceil(
+    (data?.totalCount || 0) / APPOINTMENTS_PAGE_SIZE
+  );
+
+  const filteredAppointments =
+    data?.appointments.filter((appointment: Appointment) => {
       const matchesFilter =
         filter === "all" ||
         (filter === "upcoming" &&
           ["CONFIRMED", "PENDING"].includes(appointment.status)) ||
         (filter === "completed" && appointment.status === "COMPLETED") ||
+        (filter === "canceled" && appointment.status === "CANCELED") ||
         (filter === "virtual" && appointment.type === "VIRTUAL") ||
         (filter === "in-person" && appointment.type === "IN_PERSON");
 
@@ -45,8 +93,7 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
           .includes(searchQuery.toLowerCase());
 
       return matchesFilter && matchesSearch;
-    }
-  );
+    }) || [];
 
   return (
     <Layout>
@@ -75,6 +122,7 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
                   "all",
                   "upcoming",
                   "completed",
+                  "canceled",
                   "virtual",
                   "in-person",
                 ].map((f) => (
@@ -109,7 +157,9 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
           </div>
         </div>
 
-        <div className="space-y-4">
+        {isFetching && <div className="text-center p-4">Loading...</div>}
+
+        <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
           {filteredAppointments.length > 0 ? (
             filteredAppointments.map((appointment) => (
               <Card
@@ -140,17 +190,20 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
                       </p>
                       <div className="mt-2 flex items-center text-sm text-gray-500">
                         <Calendar className="h-4 w-4 mr-1" />
-                        <span>
-                          {appointment.createdAt.toLocaleDateString()}
+                        <span suppressHydrationWarning>
+                          {new Date(appointment.startTime).toLocaleDateString()}
                         </span>
                       </div>
                       <div className="mt-1 flex items-center text-sm text-gray-500">
                         <Clock className="h-4 w-4 mr-1" />
-                        <span>
-                          {appointment.createdAt.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                        <span suppressHydrationWarning>
+                          {new Date(appointment.startTime).toLocaleTimeString(
+                            [],
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
                         </span>
                       </div>
                       <div className="mt-2">
@@ -160,14 +213,12 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
                               ? "bg-green-100 text-green-800"
                               : appointment.status === "PENDING"
                               ? "bg-yellow-100 text-yellow-800"
+                              : appointment.status === "CANCELED"
+                              ? "bg-red-100 text-red-800"
                               : "bg-gray-100 text-gray-800"
                           }`}
                         >
-                          {appointment.status === "CONFIRMED"
-                            ? "Confirmed"
-                            : appointment.status === "PENDING"
-                            ? "Pending"
-                            : "Completed"}
+                          {appointment.status}
                         </span>
                         <span
                           className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -185,50 +236,36 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
                   </div>
 
                   <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-                    {appointment.status === "CONFIRMED" && (
+                    {appointment.status === "PENDING" && (
                       <>
-                        {appointment.type === "VIRTUAL" && (
-                          <Button variant="primary" size="sm">
-                            Join Call
+                        <Link
+                          href={`/appointments/new/reschedule/${appointment.doctorId}?type=${appointment.type}`}
+                        >
+                          <Button variant="outline" size="sm">
+                            Reschedule
                           </Button>
-                        )}
+                        </Link>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => handleCancel(appointment.id)}
+                          disabled={cancelingId === appointment.id}
+                        >
+                          {cancelingId === appointment.id
+                            ? "Canceling..."
+                            : "Cancel"}
+                        </Button>
+                      </>
+                    )}
+                    {(appointment.status === "COMPLETED" ||
+                      appointment.status === "CANCELED") && (
+                      <Link
+                        href={`/appointments/new/reschedule/${appointment.doctorId}?type=${appointment.type}`}
+                      >
                         <Button variant="outline" size="sm">
                           Reschedule
                         </Button>
-                        {isUpcomingTab && (
-                          <Button variant="danger" size="sm" /*onClick={handleCancelation}*/>
-                            Cancel
-                          </Button>
-                        )}
-                      </>
-                    )}
-
-                    {appointment.status === "PENDING" && (
-                      <>
-                        <Button variant="primary" size="sm">
-                          Confirm
-                        </Button>
-                        {isUpcomingTab && (
-                          <Button variant="danger" size="sm">
-                            Cancel
-                          </Button>
-                        )}
-                      </>
-                    )}
-
-                    {appointment.status === "COMPLETED" && (
-                      <>
-                        <Link
-                          href={`/medical-records?appointment=${appointment.id}`}
-                        >
-                          <Button variant="secondary" size="sm">
-                            View Records
-                          </Button>
-                        </Link>
-                        <Button variant="outline" size="sm">
-                          Book Follow-up
-                        </Button>
-                      </>
+                      </Link>
                     )}
                   </div>
                 </div>
@@ -245,6 +282,15 @@ const Appointments: React.FC<Props> = ({ appointments }) => {
             </Card>
           )}
         </div>
+
+        {totalPages > 1 && (
+          <PaginationControls
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            isFetching={isFetching}
+          />
+        )}
       </div>
     </Layout>
   );

@@ -1,7 +1,7 @@
 import { getUserInfo } from "@/actions/user";
 import { createClient } from "@/utils/supabase/server";
 import React from "react";
-import { fetchAppointments } from "@/actions/appointments";
+import { fetchPaginatedAppointments } from "@/actions/appointments";
 import Appointments from "./Appointments";
 
 const MyAppointments = async () => {
@@ -20,8 +20,9 @@ const MyAppointments = async () => {
     return <div>No patient information found.</div>;
   }
 
-  const appointments = await fetchAppointments(patientId);
-  if (!appointments || appointments.length === 0) {
+  const initialData = await fetchPaginatedAppointments({ patientId, page: 1 });
+
+  if (!initialData.appointments || initialData.appointments.length === 0) {
     return (
       <div className="flex justify-center pt-16 text-gray-700 text-xl">
         No appointments found.
@@ -29,7 +30,7 @@ const MyAppointments = async () => {
     );
   }
 
-  return <Appointments appointments={appointments} />;
+  return <Appointments initialData={initialData} patientId={patientId} />;
 };
 
 export default MyAppointments;

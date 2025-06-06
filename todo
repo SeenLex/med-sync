@@ -3,17 +3,12 @@ remember me: '???'
 patient:
     book appointment:
         -click Virtual Consultation: send meet link
-        -select doctor: display doctors
 
     medical records:
         -view: redirect to medical record info
         -dowload: download medical record file
-    
-    appointments:
-        -upcoming appointments: cancel button
-        -book an appointment: redirect to book appointment page
 
-    profile:
+    (OPTIONAL)profile:
         -change password: implement change password functionality
         -logout button,
 

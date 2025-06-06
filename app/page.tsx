@@ -1,8 +1,8 @@
-import { fetchAppointments } from "@/actions/appointments";
+import { fetchPaginatedUpcomingAppointments } from "@/actions/appointments";
 import { getUserInfo } from "@/actions/user";
 import { createClient } from "@/utils/supabase/server";
 import React from "react";
-import LandingPage from "./Homepage";
+import Homepage from "./Homepage";
 
 const HomeAppointments = async () => {
   const supabase = await createClient();
@@ -11,25 +11,31 @@ const HomeAppointments = async () => {
   } = await supabase.auth.getUser();
 
   if (!user?.email) {
-    return <div>Please log in to view your profile.</div>;
+    return (
+      <Homepage
+        initialData={{ appointments: [], totalCount: 0 }}
+        patientId={0}
+      />
+    );
   }
 
   const userInfo = await getUserInfo(user.email);
   const patientId = userInfo.patient?.id;
   if (!patientId) {
-    return <div>No patient information found.</div>;
-  }
-
-  const appointments = await fetchAppointments(patientId);
-  if (!appointments || appointments.length === 0) {
     return (
-      <div className="flex justify-center pt-16 text-gray-700 text-xl">
-        No appointments found.
-      </div>
+      <Homepage
+        initialData={{ appointments: [], totalCount: 0 }}
+        patientId={0}
+      />
     );
   }
 
-  return <LandingPage appointments={appointments} />;
+  const initialData = await fetchPaginatedUpcomingAppointments({
+    patientId,
+    page: 1,
+  });
+
+  return <Homepage initialData={initialData} patientId={patientId} />;
 };
 
 export default HomeAppointments;
