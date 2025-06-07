@@ -1,19 +1,18 @@
-// components/book-appointment/Step2.tsx
 "use client";
 
 import React from "react";
 import Image from "next/image";
 import { Search } from "lucide-react";
-import type { FindDoctor } from "@/actions/user"; // Assuming FindDoctor is an array type like User[]
+import type { FindDoctor } from "@/actions/user";
 
 type Step2Props = {
-  doctors: FindDoctor; // This should be FindDoctor (the array of doctors)
+  doctors: FindDoctor;
   specialities: string[];
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   specialty: string;
   setSpecialty: (specialty: string) => void;
-  selectedDoctor: FindDoctor[number] | null; // A single doctor object from the FindDoctor array
+  selectedDoctor: FindDoctor[number] | null;
   setSelectedDoctor: (doctor: FindDoctor[number] | null) => void;
   appointmentType: "IN_PERSON" | "VIRTUAL" | null;
 };
@@ -31,7 +30,6 @@ const Step2: React.FC<Step2Props> = ({
 }) => {
   const filteredDoctors = doctors.filter((doctor) => {
     const name = doctor.fullName.toLowerCase();
-    // Ensure doctor.doctor and doctor.doctor.specialization exist before accessing
     const docSpecialization =
       doctor.doctor?.specialization?.toLowerCase() || "";
 
@@ -42,15 +40,8 @@ const Step2: React.FC<Step2Props> = ({
         docSpecialization.includes(searchQuery.toLowerCase()));
 
     const matchesSpecialty =
-      specialty === "" || // Handles "All Specialties" (empty string value)
+      specialty === "" ||
       (docSpecialization && docSpecialization === specialty.toLowerCase());
-
-    // Add filtering based on appointmentType if your `FindDoctor` type includes availability info
-    // For example, if doctor object has `availableFor: ("IN_PERSON" | "VIRTUAL")[]`
-    // const matchesType =
-    //   appointmentType === null ||
-    //   (doctor.availableFor && doctor.availableFor.includes(appointmentType));
-    // return matchesSearch && matchesSpecialty && matchesType;
 
     return matchesSearch && matchesSpecialty;
   });
@@ -90,7 +81,7 @@ const Step2: React.FC<Step2Props> = ({
         {filteredDoctors.length > 0 ? (
           filteredDoctors.map((doctor) => (
             <div
-              key={doctor.id} // Assuming doctor (User) has a unique ID
+              key={doctor.id}
               onClick={() => setSelectedDoctor(doctor)}
               className={`border rounded-lg p-4 cursor-pointer transition-all flex items-center ${
                 selectedDoctor?.id === doctor.id
@@ -100,11 +91,11 @@ const Step2: React.FC<Step2Props> = ({
             >
               <Image
                 src={
-                  doctor.profileImage || // Use profileImage from User
+                  doctor.profileImage ||
                   `https://randomuser.me/api/portraits/lego/${
                     Number(doctor.id) % 10
                   }.jpg`
-                } // Fallback if no profileImage
+                }
                 alt={doctor.fullName}
                 width={64}
                 height={64}
@@ -117,9 +108,7 @@ const Step2: React.FC<Step2Props> = ({
                 <p className="text-sm text-gray-500">
                   {doctor.doctor?.specialization || "N/A"}
                 </p>
-                {/* Add ratings/reviews if available in FindDoctor type */}
                 <div className="mt-2 flex space-x-2">
-                  {/* This logic might need adjustment based on how doctor.availableFor is structured */}
                   {appointmentType === "IN_PERSON" && (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
                       In-Person
@@ -130,18 +119,6 @@ const Step2: React.FC<Step2Props> = ({
                       Virtual
                     </span>
                   )}
-                  {/* Or, if doctor object has its own availability:
-                  {doctor.availableFor?.includes("IN_PERSON") && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                      In-Person
-                    </span>
-                  )}
-                  {doctor.availableFor?.includes("VIRTUAL") && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      Virtual
-                    </span>
-                  )}
-                  */}
                 </div>
               </div>
             </div>

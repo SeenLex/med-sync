@@ -57,7 +57,6 @@ export async function fetchPaginatedDoctorAppointments({
           },
         },
       },
-      // Order by most recent first for a good historical view
       orderBy: { startTime: "desc" },
       take: APPOINTMENTS_PAGE_SIZE,
       skip: (page - 1) * APPOINTMENTS_PAGE_SIZE,
@@ -92,7 +91,6 @@ export async function fetchPendingDoctorAppointments({
     prisma.appointment.count({ where: whereClause }),
     prisma.appointment.findMany({
       where: whereClause,
-      // We need the patient's info to display it on the dashboard
       include: {
         patient: {
           include: {
@@ -109,7 +107,6 @@ export async function fetchPendingDoctorAppointments({
   return { appointments, totalCount };
 }
 
-// 2. Updates an appointment's status to CONFIRMED.
 export async function confirmAppointment(appointmentId: number) {
   return await prisma.appointment.update({
     where: { id: appointmentId },
@@ -117,7 +114,6 @@ export async function confirmAppointment(appointmentId: number) {
   });
 }
 
-// 3. Updates an appointment's status to CANCELED (when a doctor declines).
 export async function declineAppointment(appointmentId: number) {
   return await prisma.appointment.update({
     where: { id: appointmentId },

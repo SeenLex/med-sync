@@ -11,8 +11,6 @@ import {
   PaginationPrevious,
 } from "@/components/shadcn/pagination";
 
-// This custom hook is the "brain" that calculates the page numbers to display.
-
 const usePagination = ({
   totalPages,
   currentPage,
@@ -65,7 +63,6 @@ const usePagination = ({
   return paginationRange;
 };
 
-// This is the UI component that uses the hook and ShadCN parts.
 type Props = {
   currentPage: number;
   totalPages: number;

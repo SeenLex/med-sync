@@ -98,7 +98,6 @@ const Register: React.FC = () => {
     if (step === 1) {
       isValid = validateStep1();
     } else if (step === 2 && role === "DOCTOR") {
-      // Validate personal details before doctor proceeds to step 3
       isValid = validateStep2();
     }
 
@@ -118,10 +117,8 @@ const Register: React.FC = () => {
     e.preventDefault();
     setErrorMessage(null);
 
-    // Final validation based on role and current step (should be maxSteps)
-    if (!validateStep1()) return; // Email/Password always needed
-    if (!validateStep2()) return; // Personal details always needed
-
+    if (!validateStep1()) return;
+    if (!validateStep2()) return;
     if (role === "DOCTOR") {
       if (!validateStep3_Doctor()) return;
     }
@@ -146,7 +143,7 @@ const Register: React.FC = () => {
       formData.append("address", address);
       formData.append("dateOfBirth", dateOfBirth);
       formData.append("phone", phone);
-      formData.append("confirmPassword", password); // Assuming confirmPassword is same as password
+      formData.append("confirmPassword", password);
 
 
       if (role === "DOCTOR") {
@@ -155,10 +152,7 @@ const Register: React.FC = () => {
       }
 
       await register(formData);
-      alert("Registration successful!"); // Placeholder for success
-      // Reset form or redirect
-      // setStep(1);
-      // ... clear all fields ...
+      alert("Registration successful!");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setErrorMessage(err.message || "Registration failed.");
@@ -238,7 +232,6 @@ const Register: React.FC = () => {
               </>
             )}
 
-            {/* Step 2: Common Personal Details */}
             {step === 2 && (
               <>
                 <InputField

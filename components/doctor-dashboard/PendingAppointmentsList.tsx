@@ -28,7 +28,6 @@ const PendingAppointmentsList: React.FC<Props> = ({ doctorId }) => {
   });
 
   const handleSuccess = () => {
-    // When status is updated, refetch the list to remove the item
     queryClient.invalidateQueries({
       queryKey: ["doctor-pending-appointments"],
     });

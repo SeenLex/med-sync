@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { User, Calendar, FileText, Shield, Camera } from "lucide-react";
+import { User, Calendar, FileText, Camera } from "lucide-react";
 import Card from "@/components/ui/Card";
 import defaultProfilePic from "@/assets/profile.jpg";
 import Link from "next/link";
@@ -11,7 +11,6 @@ const links = [
   { href: "/profile", icon: <User />, label: "Personal Information" },
   { href: "/profile/appointments", icon: <Calendar />, label: "Appointments" },
   { href: "/profile/medical-records", icon: <FileText />, label: "Medical Records" },
-  { href: "/profile/security", icon: <Shield />, label: "Security" },
 ];
 
 const Sidebar = async () => {
