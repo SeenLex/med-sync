@@ -8,12 +8,6 @@ import { createClient } from "@/utils/supabase/server";
 import React from "react";
 import { redirect } from "next/navigation";
 import { FindDoctor } from "@/actions/user";
-
-//
-// THIS IS THE DEFINITIVE FIX to silence the linter warning.
-// It explicitly tells Next.js that this entire page should always be
-// rendered dynamically at request time.
-//
 export const dynamic = "force-dynamic";
 
 const NewAppointmentFlowPage = async ({
@@ -23,7 +17,6 @@ const NewAppointmentFlowPage = async ({
   params: { slug?: string[] };
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  // The rest of your code is perfect and does not need to change.
   const supabase = await createClient();
   const {
     data: { user },
