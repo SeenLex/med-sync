@@ -1,20 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import DashboardStats from "@/components/doctor-dashboard/DashboardStats";
-import DoctorSchedule from "@/components/doctor-dashboard/DoctorSchedule";
 import Card from "@/components/ui/Card";
 import {
   Calendar,
   Users,
-  Clock,
   FileText,
   Bell,
   User,
   Mail,
   Phone,
 } from "lucide-react";
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/layout/DoctorLayout";
 import PendingAppointmentsList from "@/components/doctor-dashboard/PendingAppointmentsList";
 import { type UserInfo } from "@/actions/user";
 import AllDoctorAppointmentsList from "@/components/doctor-dashboard/AllDoctorAppointments";
@@ -24,6 +21,7 @@ import { MEDICAL_RECORDS_PAGE_SIZE } from "@/lib/constants";
 import PaginationControls from "@/components/ui/PaginationControls";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import Sidebar from "@/components/doctor-dashboard/Sidebar";
 
 type MyPatientsListProps = {
   doctorId: number;
@@ -103,9 +101,7 @@ type Props = {
 };
 
 const DoctorDashboard: React.FC<Props> = ({ userInfo }) => {
-  // Default to the new "Pending" tab
-  const [activeTab, setActiveTab] = useState("pending-appointments");
-
+  const [activeTab, setActiveTab] = useState("patients");
   const { doctor } = userInfo;
 
   if (!doctor) {
@@ -118,15 +114,34 @@ const DoctorDashboard: React.FC<Props> = ({ userInfo }) => {
     );
   }
 
+  const navItems = [
+    {
+      id: "pending-appointments",
+      label: "Pending Appointments",
+      icon: Bell,
+    },
+    {
+      id: "all-appointments",
+      label: "All Appointments",
+      icon: Calendar,
+    },
+    { id: "patients", label: "My Patients", icon: Users },
+    {
+      id: "records",
+      label: "Medical Records",
+      icon: FileText,
+    },
+  ];
+
   const renderTabContent = () => {
     switch (activeTab) {
-      case "pending-appointments": // This is the new actionable tab
+      case "pending-appointments":
         return (
           <Card className="p-6">
             <PendingAppointmentsList doctorId={doctor.id} />
           </Card>
         );
-      case "all-appointments": // This is the new historical view
+      case "all-appointments":
         return (
           <Card className="p-6">
             <AllDoctorAppointmentsList doctorId={doctor.id} />
@@ -138,12 +153,7 @@ const DoctorDashboard: React.FC<Props> = ({ userInfo }) => {
             <MyPatientsList doctorId={doctor.id} />
           </Card>
         );
-      case "schedule":
-        return (
-          <Card className="p-6">
-            <DoctorSchedule doctorId={doctor.id.toString()} />
-          </Card>
-        );
+      
       case "records":
         return (
           <Card className="p-6">
@@ -160,84 +170,19 @@ const DoctorDashboard: React.FC<Props> = ({ userInfo }) => {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Doctor Dashboard</h1>
-          <div className="text-right">
-            <h2 className="text-xl font-semibold">{userInfo.fullName}</h2>
-            <p className="text-gray-500">{doctor.specialization}</p>
-          </div>
         </div>
 
-        <DashboardStats doctorId={doctor.id.toString()} />
+        <div className="flex flex-col md:flex-row gap-8 mt-8">
+          <Sidebar
+            navItems={navItems}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
 
-        <div className="mt-8">
-          <div className="border-b border-gray-200">
-            <nav className="flex -mb-px flex-wrap">
-              {/* New "Pending Appointments" Tab */}
-              <button
-                onClick={() => setActiveTab("pending-appointments")}
-                className={`flex items-center gap-2 py-4 px-6 font-medium text-sm ${
-                  activeTab === "pending-appointments"
-                    ? "border-b-2 border-emerald-500 text-emerald-600"
-                    : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                <Bell className="h-4 w-4" />
-                Pending Requests
-              </button>
-
-              {/* New "All Appointments" Tab */}
-              <button
-                onClick={() => setActiveTab("all-appointments")}
-                className={`flex items-center gap-2 py-4 px-6 font-medium text-sm ${
-                  activeTab === "all-appointments"
-                    ? "border-b-2 border-emerald-500 text-emerald-600"
-                    : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                <Calendar className="h-4 w-4" />
-                All Appointments
-              </button>
-
-              {/* Other existing tabs */}
-              <button
-                onClick={() => setActiveTab("patients")}
-                className={`flex items-center gap-2 py-4 px-6 font-medium text-sm ${
-                  activeTab === "patients"
-                    ? "border-b-2 border-emerald-500 text-emerald-600"
-                    : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                <Users className="h-4 w-4" />
-                My Patients
-              </button>
-              <button
-                onClick={() => setActiveTab("schedule")}
-                className={`flex items-center gap-2 py-4 px-6 font-medium text-sm ${
-                  activeTab === "schedule"
-                    ? "border-b-2 border-emerald-500 text-emerald-600"
-                    : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                <Clock className="h-4 w-4" />
-                Schedule
-              </button>
-              <button
-                onClick={() => setActiveTab("records")}
-                className={`flex items-center gap-2 py-4 px-6 font-medium text-sm ${
-                  activeTab === "records"
-                    ? "border-b-2 border-emerald-500 text-emerald-600"
-                    : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                <FileText className="h-4 w-4" />
-                Medical Records
-              </button>
-            </nav>
-          </div>
-
-          <div className="mt-6">{renderTabContent()}</div>
+          <main className="flex-1">{renderTabContent()}</main>
         </div>
       </div>
     </Layout>

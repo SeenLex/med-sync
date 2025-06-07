@@ -1,7 +1,7 @@
 import { getUserInfo } from "@/actions/user";
 import { createClient } from "@/utils/supabase/server";
 import React from "react";
-import DoctorDashboard from "./DoctorDashboard"; // The main client component
+import DoctorDashboard from "./DoctorDashboard";
 import { redirect } from "next/navigation";
 
 const DoctorDashboardPage = async () => {
@@ -16,7 +16,6 @@ const DoctorDashboardPage = async () => {
 
   const userInfo = await getUserInfo(user.email);
 
-  // Ensure the user is a doctor and has a doctor profile
   if (userInfo.role !== "DOCTOR" || !userInfo.doctor) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -25,7 +24,6 @@ const DoctorDashboardPage = async () => {
     );
   }
 
-  // Pass the full user and doctor objects to the client component
   return <DoctorDashboard userInfo={userInfo} />;
 };
 

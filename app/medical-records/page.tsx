@@ -25,14 +25,6 @@ const MedicalRecordsPage = async () => {
     page: 1,
   });
 
-  if (!initialData.medicalRecords || initialData.medicalRecords.length === 0) {
-    return (
-      <div className="flex justify-center pt-16 text-gray-700 text-xl">
-        No medical records found.
-      </div>
-    );
-  }
-
   return <MedicalRecords initialData={initialData} patientId={patientId} />;
 };
 

@@ -22,13 +22,6 @@ const MyAppointments = async () => {
 
   const initialData = await fetchPaginatedAppointments({ patientId, page: 1 });
 
-  if (!initialData.appointments || initialData.appointments.length === 0) {
-    return (
-      <div className="flex justify-center pt-16 text-gray-700 text-xl">
-        No appointments found.
-      </div>
-    );
-  }
 
   return <Appointments initialData={initialData} patientId={patientId} />;
 };

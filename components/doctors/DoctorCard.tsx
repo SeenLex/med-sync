@@ -1,8 +1,6 @@
 import React from "react";
-import Link from "next/link";
-import { MapPin, Video, MessageSquare } from "lucide-react";
+import { MapPin, Video } from "lucide-react";
 import type { FindDoctor } from "@/actions/user";
-import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
 type DoctorCardProps = {
@@ -31,7 +29,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
             <p className="text-gray-600">
               {doctor.doctor?.specialization || "Unknown"}
             </p>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-8 flex flex-between gap-2">
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
                 <MapPin className="h-3 w-3 mr-1" />
                 In-Person
@@ -42,24 +40,6 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
               </span>
             </div>
           </div>
-        </div>
-        <div className="mt-6 md:mt-0 flex flex-col space-y-2 md:justify-center">
-          <Button variant="primary" className="w-full md:w-auto">
-            Book Appointment
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full md:w-auto flex items-center justify-center"
-          >
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Send Message
-          </Button>
-          <Link
-            href={`/doctors/${doctor.id}`}
-            className="text-emerald-600 text-sm text-center hover:text-emerald-700 mt-2"
-          >
-            View Full Profile
-          </Link>
         </div>
       </div>
     </Card>

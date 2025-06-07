@@ -215,11 +215,9 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
               );
             })
           ) : (
-            <Card className="p-6 text-center">
-              <p className="text-gray-500">
-                No medical records found matching your criteria.
-              </p>
-            </Card>
+            <div className="text-center text-gray-500">
+              No medical records found.
+            </div>
           )}
         </div>
 
