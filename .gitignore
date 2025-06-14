@@ -22,7 +22,6 @@
 
 # Prisma
 /prisma/generated/
-/prisma/migrations/
 
 # misc
 .DS_Store
