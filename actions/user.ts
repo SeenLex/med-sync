@@ -1,6 +1,7 @@
 'use server';
 import prisma from '@/prisma/db'
 import { createClient } from '@/utils/supabase/server'
+import { revalidatePath } from 'next/cache';
 
 export async function fetchUser() {
   try {
@@ -76,10 +77,12 @@ export async function saveUser(formData: FormData) {
 }
 
 
-export async function deleteUser(id: string) {
+export async function deleteUser(id: string, withRevalidate: boolean = false, pathName: string = "") {
   await prisma.user.delete({
     where: { id: Number(id) },
   });
+
+  withRevalidate && revalidatePath(pathName);
 }
 
 export async function getUserById(id: string) {

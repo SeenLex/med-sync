@@ -30,12 +30,9 @@ export async function fetchPaginatedAppointments({
   return { appointments, totalCount };
 }
 
-
-
-
-
-
-
+export async function getAllAppointments() {
+  return await prisma.appointment.findMany();
+}
 
 export async function fetchPaginatedDoctorAppointments({
   doctorId,
@@ -65,15 +62,6 @@ export async function fetchPaginatedDoctorAppointments({
 
   return { appointments, totalCount };
 }
-
-
-
-
-
-
-
-
-
 
 export async function fetchPendingDoctorAppointments({
   doctorId,
