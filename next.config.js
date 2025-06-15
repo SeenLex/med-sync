@@ -10,6 +10,11 @@ module.exports = withPWA({
   images: {
     domains: ['randomuser.me'],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
 });
 
 

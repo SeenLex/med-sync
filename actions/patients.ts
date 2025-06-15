@@ -2,6 +2,21 @@
 import prisma from "@/prisma/db";
 import { MEDICAL_RECORDS_PAGE_SIZE } from "@/lib/constants";
 
+export async function getPatient(id: number) {
+  const patient = await prisma.patient.findUnique({
+    where: { id },
+    include: {
+      user: true,
+      medicalRecords: true,
+    },
+  });
+  return patient;
+}
+
+export type Patient = Awaited<
+  ReturnType<typeof getPatient>
+>;
+
 export async function fetchDoctorPatients({
   doctorId,
   page = 1,
@@ -35,10 +50,26 @@ export async function fetchDoctorPatients({
         fullName: "asc",
       },
     },
-    skip: (page - 1) * MEDICAL_RECORDS_PAGE_SIZE,
+    ...(page !== -1 && {
+      skip: (page - 1) * MEDICAL_RECORDS_PAGE_SIZE,
+      take: MEDICAL_RECORDS_PAGE_SIZE,
+    }),
   });
 
   return { patients, totalCount };
+}
+
+export async function fetchPatientDoctors({ patientId }: { patientId: number}) {
+  const doctors = await prisma.doctor.findMany({
+    where: {
+      appointments: { some: { patientId } },
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  return { doctors };
 }
 
 export type DoctorPatient = Awaited<

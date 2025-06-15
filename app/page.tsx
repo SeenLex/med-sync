@@ -1,41 +1,27 @@
-import { fetchPaginatedUpcomingAppointments } from "@/actions/appointments";
-import { getUserInfo } from "@/actions/user";
 import { createClient } from "@/utils/supabase/server";
 import React from "react";
-import Homepage from "./Homepage";
+import PatientDashboardPage from "../components/patients/PatientDashboardPage";
+import LandingPage from "../components/landing/LandingPage";
+import { getUserInfo } from "@/actions/user";
+import { redirect } from "next/navigation";
 
-const HomeAppointments = async () => {
+const Homepage = async () => {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
+  
   if (!user?.email) {
-    return (
-      <Homepage
-        initialData={{ appointments: [], totalCount: 0 }}
-        patientId={0}
-      />
-    );
+    return <LandingPage />;
   }
 
-  const userInfo = await getUserInfo(user.email);
-  const patientId = userInfo.patient?.id;
-  if (!patientId) {
-    return (
-      <Homepage
-        initialData={{ appointments: [], totalCount: 0 }}
-        patientId={0}
-      />
-    );
+  const userInfo = await getUserInfo(user?.email);
+
+  if (userInfo.role === "DOCTOR") {
+    redirect("/dashboard/pending");
   }
 
-  const initialData = await fetchPaginatedUpcomingAppointments({
-    patientId,
-    page: 1,
-  });
-
-  return <Homepage initialData={initialData} patientId={patientId} />;
+  return <PatientDashboardPage />;
 };
 
-export default HomeAppointments;
+export default Homepage;

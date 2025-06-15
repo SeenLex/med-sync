@@ -4,14 +4,15 @@ import DoctorNavbar from "./DoctorNavbar";
 
 interface LayoutProps {
   children: ReactNode;
+  withFooter?: boolean;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, withFooter = true }) => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <DoctorNavbar />
       <main className="flex-grow">{children}</main>
-      <Footer />
+      {withFooter && <Footer />}
     </div>
   );
 };

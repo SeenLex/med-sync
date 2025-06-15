@@ -9,6 +9,7 @@ import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
 import Card from "../ui/Card";
 import { Calendar, Clock } from "lucide-react";
 import PaginationControls from "../ui/PaginationControls";
+import Link from "next/link";
 
 type Props = {
   doctorId: number;
@@ -57,7 +58,7 @@ const AllDoctorAppointmentsList: React.FC<Props> = ({ doctorId }) => {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center mt-4 sm:mt-0">
+                <div className="flex items-center mt-4 sm:mt-0 gap-4">
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       appt.status === "CONFIRMED"
@@ -71,6 +72,11 @@ const AllDoctorAppointmentsList: React.FC<Props> = ({ doctorId }) => {
                   >
                     {appt.status}
                   </span>
+                  {appt.meetingLink && (
+                    <Link target="_blank" href={appt.meetingLink} className="px-3 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600">
+                      Join Meeting
+                    </Link>
+                  )}
                 </div>
               </div>
             </Card>

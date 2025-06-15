@@ -2,6 +2,7 @@
 import prisma from "@/prisma/db";
 import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
 import { AppointmentStatus } from "@/prisma/generated/prisma";
+import { createZoomMeeting } from "@/utils/zoom/meeting";
 
 export async function fetchPaginatedAppointments({
   patientId,
@@ -96,9 +97,24 @@ export async function fetchPendingDoctorAppointments({
 }
 
 export async function confirmAppointment(appointmentId: number) {
-  return await prisma.appointment.update({
+  const zoomMeeting = await createZoomMeeting();
+  console.log({ zoomMeeting })
+
+  const appointment = await prisma.appointment.update({
     where: { id: appointmentId },
-    data: { status: "CONFIRMED" },
+    data: { status: "CONFIRMED", meetingLink: zoomMeeting },
+    include: {
+      doctor: {
+        include: {
+          user: true,
+        },
+      },
+      patient: {
+        include: {
+          user: true,
+        },
+      },
+    }
   });
 }
 
@@ -109,17 +125,6 @@ export async function declineAppointment(appointmentId: number) {
   });
 }
 
-
-
-
-
-
-
-
-
-
-
-
 export async function fetchPaginatedUpcomingAppointments({
   patientId,
   page = 1,
@@ -129,7 +134,7 @@ export async function fetchPaginatedUpcomingAppointments({
 }) {
   const now = new Date();
 
-  const upcomingStatuses: AppointmentStatus[] = ["CONFIRMED"]; 
+  const upcomingStatuses: AppointmentStatus[] = ["CONFIRMED"];
 
   const whereClause = {
     patientId,
@@ -164,6 +169,11 @@ export async function fetchAppointments(patientId: number) {
       doctor: {
         include: { user: true },
       },
+      patient: {
+        include: {
+          user: true,
+        },
+      },
     },
     orderBy: { startTime: "desc" },
   });
@@ -179,7 +189,7 @@ export async function fetchDoctorAppointmentsForDate(doctorId: string, date: Dat
   });
 }
 
-interface BookAppointment{
+interface BookAppointment {
   patientId: number;
   doctorId: number;
   startTime: Date;
@@ -203,16 +213,16 @@ export async function bookAppointment(input: BookAppointment) {
 
 export async function cancelAppointment(appointmentId: number) {
   return await prisma.appointment.update({
-   where: { id: appointmentId },
+    where: { id: appointmentId },
     data: { status: "CANCELED" },
-  
-  include: {
+
+    include: {
       doctor: {
         include: {
           user: true,
         },
       },
-    },  
+    },
   });
 }
 

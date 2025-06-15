@@ -32,15 +32,7 @@ export async function login(formData: FormData) {
   if (!dbUser) {
     throw new Error('User not found in the database!');
   }
-  revalidatePath('/', 'layout');
-
-  if (dbUser.role === 'DOCTOR') {
-    redirect('/doctor');
-  } else if (dbUser.role === 'ADMIN') {
-    redirect('/admin');
-  } else {
-    redirect('/');
-  }
+  redirect('/');
 }
 
 export async function register(formData: FormData) {
@@ -111,6 +103,5 @@ export async function logout() {
     redirect('/error')
   }
 
-  revalidatePath('/' , 'layout')
-  redirect('/landing-page')
+  redirect('/')
 }

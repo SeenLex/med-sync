@@ -27,7 +27,7 @@ type MyPatientsListProps = {
   doctorId: number;
 };
 
-const MyPatientsList: React.FC<MyPatientsListProps> = ({ doctorId }) => {
+export const MyPatientsList: React.FC<MyPatientsListProps> = ({ doctorId }) => {
   const [page, setPage] = useState(1);
 
   const { data, isFetching } = useQuery({
@@ -43,7 +43,6 @@ const MyPatientsList: React.FC<MyPatientsListProps> = ({ doctorId }) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-900">My Patients</h2>
       {isFetching && <div className="text-center p-2">Loading...</div>}
       <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
         {patients.length > 0 ? (
@@ -71,7 +70,7 @@ const MyPatientsList: React.FC<MyPatientsListProps> = ({ doctorId }) => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 mt-4 sm:mt-0">
-                  <Link href={`/patients/${patient.id}/records`}>
+                  <Link href={`/dashboard/patients/${patient.id}`}>
                     <Button size="sm" variant="outline">
                       View Records
                     </Button>

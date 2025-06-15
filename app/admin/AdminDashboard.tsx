@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Users as UsersIcon,
   User as UserIcon,
@@ -22,7 +22,7 @@ import {
   BarElement,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { format, parseISO, startOfDay, differenceInDays, subMonths, isBefore, isAfter, subYears } from 'date-fns';
+import { format, parseISO, subMonths, isBefore, isAfter, subYears } from 'date-fns';
 import Button from "@/components/ui/Button";
 import Layout from "@/components/layout/Layout";
 import { User } from "@/prisma/generated/prisma";
@@ -286,7 +286,9 @@ const AdminDashboard: React.FC<{ allUsers: User[], stats: StatsType, appointment
                         mode="single"
                         selected={customStartDate ? new Date(customStartDate) : undefined}
                         onSelect={(date) => {
-                          date && setCustomStartDate(format(date, 'yyyy-MM-dd'));
+                          if (date) {
+                            setCustomStartDate(format(date, 'yyyy-MM-dd'));
+                          }
                         }}
                         disabled={(date) => 
                           customEndDate ? isAfter(date, new Date(customEndDate)) : false
