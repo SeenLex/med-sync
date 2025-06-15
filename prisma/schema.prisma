@@ -8,6 +8,123 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  email         String         @unique
+  role          Role           @default(PATIENT)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  fullName      String
+  dateOfBirth   DateTime?
+  gender        String?
+  address       String?
+  id            Int            @id @default(autoincrement())
+  phone         String?
+  profileImage  String?
+  doctor        Doctor?
+  sentMessages  Message[]
+  notifications Notification[]
+  patient       Patient?
+}
+
+model Patient {
+  insuranceInfo    String?
+  emergencyContact String?
+  pnc              String?         @unique @db.Char(13)
+  id               Int             @id @default(autoincrement())
+  userId           Int             @unique
+  appointments     Appointment[]
+  chatSessions     ChatSession[]   @relation("PatientChats")
+  medicalRecords   MedicalRecord[]
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Doctor {
+  licenseNumber  String?
+  biography      String?
+  id             Int             @id @default(autoincrement())
+  userId         Int             @unique
+  specialization String
+  appointments   Appointment[]
+  chatSessions   ChatSession[]   @relation("DoctorChats")
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  medicalRecords MedicalRecord[]
+}
+
+model Appointment {
+  startTime      DateTime
+  endTime        DateTime
+  status         AppointmentStatus @default(PENDING)
+  type           AppointmentType
+  notes          String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  id             Int               @id @default(autoincrement())
+  patientId      Int
+  doctorId       Int
+  doctor         Doctor            @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  patient        Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  videoSession   VideoSession?
+  meetingLink    String?
+}
+
+model MedicalRecord {
+  title       String
+  description String
+  fileUrl     String?
+  type        RecordType
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  id          Int        @id @default(autoincrement())
+  patientId   Int
+  doctorId    Int
+  doctor      Doctor     @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  patient     Patient    @relation(fields: [patientId], references: [id], onDelete: Cascade)
+}
+
+model VideoSession {
+  sessionToken  String      @unique
+  startedAt     DateTime?
+  endedAt       DateTime?
+  id            Int         @id @default(autoincrement())
+  appointmentId Int         @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model ChatSession {
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  id        Int       @id @default(autoincrement())
+  patientId Int
+  doctorId  Int
+  doctor    Doctor    @relation("DoctorChats", fields: [doctorId], references: [id], onDelete: Cascade)
+  patient   Patient   @relation("PatientChats", fields: [patientId], references: [id], onDelete: Cascade)
+  messages  Message[]
+}
+
+model Message {
+  senderRole    Role
+  content       String
+  fileUrl       String?
+  readAt        DateTime?
+  createdAt     DateTime    @default(now())
+  id            Int         @id @default(autoincrement())
+  chatSessionId Int
+  senderId      Int
+  chatSession   ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
+  sender        User        @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  title     String
+  message   String
+  type      NotificationType
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  id        Int              @id @default(autoincrement())
+  userId    Int
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 enum Role {
   PATIENT
   DOCTOR
@@ -41,125 +158,4 @@ enum NotificationType {
   NEW_MESSAGE
   MEDICAL_RECORD_UPDATE
   SYSTEM
-}
-
-model User {
-  id            Int            @id @default(autoincrement())
-  email         String         @unique
-  role          Role           @default(PATIENT)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  fullName      String
-  profileImage  String?
-  phone         String?
-  dateOfBirth   DateTime?
-  gender        String?
-  address       String?
-  patient       Patient?
-  doctor        Doctor?
-  notifications Notification[]
-  sentMessages  Message[]
-}
-
-model Patient {
-  id               Int             @id @default(autoincrement())
-  userId           Int             @unique
-  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  pnc              String?         @unique @db.Char(13)
-  insuranceInfo    String?
-  emergencyContact String?
-  appointments     Appointment[]
-  medicalRecords   MedicalRecord[]
-  chatSessions     ChatSession[]   @relation("PatientChats")
-}
-
-model Doctor {
-  id             Int             @id @default(autoincrement())
-  userId         Int             @unique
-  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  specialization String
-  licenseNumber  String?
-  biography      String?
-  appointments   Appointment[]
-  medicalRecords MedicalRecord[]
-  chatSessions   ChatSession[]   @relation("DoctorChats")
-}
-
-model Appointment {
-  id        Int               @id @default(autoincrement())
-  patientId Int
-  doctorId  Int
-  startTime DateTime
-  endTime   DateTime
-  status    AppointmentStatus @default(PENDING)
-  type      AppointmentType
-  notes     String?
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  patient      Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  doctor       Doctor        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
-  videoSession VideoSession?
-}
-
-model MedicalRecord {
-  id          Int        @id @default(autoincrement())
-  patientId   Int
-  doctorId    Int
-  title       String
-  description String
-  fileUrl     String?
-  type        RecordType
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
-}
-
-model VideoSession {
-  id            Int       @id @default(autoincrement())
-  appointmentId Int       @unique
-  sessionToken  String    @unique
-  startedAt     DateTime?
-  endedAt       DateTime?
-
-  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
-}
-
-model ChatSession {
-  id        Int      @id @default(autoincrement())
-  patientId Int
-  doctorId  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  patient  Patient   @relation("PatientChats", fields: [patientId], references: [id], onDelete: Cascade)
-  doctor   Doctor    @relation("DoctorChats", fields: [doctorId], references: [id], onDelete: Cascade)
-  messages Message[]
-}
-
-model Message {
-  id            Int       @id @default(autoincrement())
-  chatSessionId Int
-  senderId      Int
-  senderRole    Role
-  content       String
-  fileUrl       String?
-  readAt        DateTime?
-  createdAt     DateTime  @default(now())
-
-  chatSession ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
-  sender      User        @relation(fields: [senderId], references: [id], onDelete: Cascade)
-}
-
-model Notification {
-  id        Int              @id @default(autoincrement())
-  userId    Int
-  title     String
-  message   String
-  type      NotificationType
-  isRead    Boolean          @default(false)
-  createdAt DateTime         @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
