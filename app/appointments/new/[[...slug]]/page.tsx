@@ -3,6 +3,7 @@ import {
   getAllDoctors,
   getUserInfo,
   getDoctorUserByDoctorId,
+  getAllSpecializations,
 } from "@/actions/user";
 import { createClient } from "@/utils/supabase/server";
 import React from "react";
@@ -28,6 +29,7 @@ const NewAppointmentFlowPage = async ({
 
   const userInfo = await getUserInfo(user.email);
   const doctors = await getAllDoctors();
+  const specialties = await getAllSpecializations();
 
   if (!doctors || !userInfo?.patient?.id) {
     return <div>Error loading page data.</div>;
@@ -51,6 +53,7 @@ const NewAppointmentFlowPage = async ({
       doctors={doctors}
       doctorToReschedule={doctorToReschedule}
       initialType={initialType}
+      specialties={specialties}
     />
   );
 };

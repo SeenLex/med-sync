@@ -161,3 +161,14 @@ export async function getAllDoctors() {
 export type FindDoctor = Awaited<ReturnType<typeof getAllDoctors>>;
 export type UserInfo = Awaited<ReturnType<typeof getUserInfo>>;
 
+// Fetch all unique doctor specializations
+export async function getAllSpecializations() {
+  const specializations = await prisma.doctor.findMany({
+    select: { specialization: true },
+    distinct: ["specialization"],
+    orderBy: { specialization: "asc" },
+  });
+  // Return as array of strings
+  return specializations.map((s) => s.specialization);
+}
+

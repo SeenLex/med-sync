@@ -21,6 +21,7 @@ type Props = {
   doctors: FindDoctor;
   doctorToReschedule: FindDoctor[number] | null;
   initialType: "IN_PERSON" | "VIRTUAL" | null;
+  specialties: string[];
 };
 
 const NewAppointment: React.FC<Props> = ({
@@ -28,6 +29,7 @@ const NewAppointment: React.FC<Props> = ({
   doctors: initialDoctors,
   doctorToReschedule,
   initialType,
+  specialties,
 }) => {
   const [step, setStep] = useState(doctorToReschedule ? 3 : 1);
   const [appointmentType, setAppointmentType] = useState(initialType);
@@ -38,18 +40,7 @@ const NewAppointment: React.FC<Props> = ({
   const [specialty, setSpecialty] = useState("");
   const [notes, setNotes] = useState<string>("");
 
-  const specialtiesList = [
-    "Cardiologist",
-    "Dermatologist",
-    "Neurologist",
-    "Psychiatrist",
-    "Ophthalmologist",
-    "Pediatrician",
-    "Orthopedist",
-    "Gynecologist",
-    "Urologist",
-    "Endocrinologist",
-  ];
+  const specialtiesList = specialties;
 
   const { data: appointments, isLoading: appointmentsLoading } = useQuery({
     queryKey: [
@@ -195,7 +186,7 @@ const NewAppointment: React.FC<Props> = ({
           {step === 2 && (
             <Step2
               doctors={initialDoctors}
-              specialities={specialtiesList}
+              specialties={specialtiesList}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               specialty={specialty}

@@ -7,7 +7,7 @@ import type { FindDoctor } from "@/actions/user";
 
 type Step2Props = {
   doctors: FindDoctor;
-  specialities: string[];
+  specialties: string[];
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   specialty: string;
@@ -19,7 +19,7 @@ type Step2Props = {
 
 const Step2: React.FC<Step2Props> = ({
   doctors,
-  specialities,
+  specialties,
   searchQuery,
   setSearchQuery,
   specialty,
@@ -70,7 +70,7 @@ const Step2: React.FC<Step2Props> = ({
           onChange={(e) => setSpecialty(e.target.value)}
         >
           <option value="">All Specialties</option>
-          {specialities.map((spec) => (
+          {specialties.map((spec) => (
             <option key={spec} value={spec}>
               {spec}
             </option>

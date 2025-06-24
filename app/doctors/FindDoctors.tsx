@@ -6,26 +6,14 @@ import type { FindDoctor } from "@/actions/user";
 import Card from "@/components/ui/Card";
 import DoctorFilters from "@/components/doctors/DoctorFilters";
 import DoctorCard from "@/components/doctors/DoctorCard";
+import { getAllSpecializations } from "@/actions/user";
 
 type Props = {
   doctors: FindDoctor;
+  specialties: string[];
 };
 
-const specialties = [
-  "All Specialties",
-  "Cardiologist",
-  "Dermatologist",
-  "Neurologist",
-  "Psychiatrist",
-  "Ophthalmologist",
-  "Pediatrician",
-  "Orthopedist",
-  "Gynecologist",
-  "Urologist",
-  "Endocrinologist",
-];
-
-const FindDoctorPage: React.FC<Props> = ({ doctors }) => {
+const FindDoctorPage: React.FC<Props> = ({ doctors, specialties }) => {
   const [filters, setFilters] = useState({
     searchQuery: "",
     specialty: "All Specialties",
@@ -94,4 +82,9 @@ const FindDoctorPage: React.FC<Props> = ({ doctors }) => {
   );
 };
 
-export default FindDoctorPage;
+export default async function FindDoctorPageWrapper() {
+  const doctors = await (await import("@/actions/user")).getAllDoctors();
+  let specialties = await getAllSpecializations();
+  specialties = ["All Specialties", ...specialties];
+  return <FindDoctorPage doctors={doctors} specialties={specialties} />;
+}
