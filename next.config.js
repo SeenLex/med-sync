@@ -8,7 +8,16 @@ const withPWA = require("next-pwa")({
 
 module.exports = withPWA({
   images: {
-    domains: ['randomuser.me', 'your-project-ref.supabase.co'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "randomuser.me",
+      },
+      {
+        protocol: "https",
+        hostname: "eptkbyeboinawsvsvivj.supabase.co",
+      },
+    ],
   },
   experimental: {
     serverActions: {

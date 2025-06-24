@@ -1,5 +1,3 @@
-
-import { Calendar, Bell, Users } from "lucide-react";
 import { type ReactNode } from "react";
 import Layout from "@/components/layout/DoctorLayout";
 import { getUserInfo } from "@/actions/user";

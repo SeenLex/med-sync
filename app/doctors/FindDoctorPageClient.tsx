@@ -8,13 +8,13 @@ import DoctorCard from "@/components/doctors/DoctorCard";
 
 type Props = {
   doctors: FindDoctor;
-  specialties: string[];
+  specialties: { value: string, label: string }[];
 };
 
 const FindDoctorPage: React.FC<Props> = ({ doctors, specialties }) => {
   const [filters, setFilters] = useState({
     searchQuery: "",
-    specialty: "All Specialties",
+    specialtyId: "",
     availability: "Any Availability",
   });
 
@@ -28,16 +28,17 @@ const FindDoctorPage: React.FC<Props> = ({ doctors, specialties }) => {
   const filteredDoctors = useMemo(() => {
     return doctors.filter((doctor) => {
       const name = doctor.fullName.toLowerCase();
-      const spec = doctor.doctor?.specialization?.toLowerCase() || "";
+      const specialtyName = doctor.doctor?.specialty?.name?.toLowerCase() || "";
+      const specialtyId = doctor.doctor?.specialtyId?.toString() || "";
 
       const matchesSearch =
         filters.searchQuery === "" ||
         name.includes(filters.searchQuery.toLowerCase()) ||
-        spec.includes(filters.searchQuery.toLowerCase());
+        specialtyName.includes(filters.searchQuery.toLowerCase());
 
       const matchesSpecialty =
-        filters.specialty === "All Specialties" ||
-        spec === filters.specialty.toLowerCase();
+        filters.specialtyId === "" ||
+        specialtyId === filters.specialtyId;
 
       return matchesSearch && matchesSpecialty;
     });

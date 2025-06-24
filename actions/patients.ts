@@ -66,6 +66,7 @@ export async function fetchPatientDoctors({ patientId }: { patientId: number}) {
     },
     include: {
       user: true,
+      specialty: true,
     },
   });
 

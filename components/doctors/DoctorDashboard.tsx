@@ -10,6 +10,8 @@ import {
   User,
   Mail,
   Phone,
+  MessageSquare,
+  UserCircle,
 } from "lucide-react";
 import Layout from "@/components/layout/DoctorLayout";
 import PendingAppointmentsList from "@/components/doctor-dashboard/PendingAppointmentsList";
@@ -22,6 +24,8 @@ import PaginationControls from "@/components/ui/PaginationControls";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
 import Sidebar from "@/components/doctor-dashboard/Sidebar";
+import DoctorProfile from "@/components/doctor-dashboard/DoctorProfile";
+import { useRouter } from "next/navigation";
 
 type MyPatientsListProps = {
   doctorId: number;
@@ -102,6 +106,7 @@ type Props = {
 const DoctorDashboard: React.FC<Props> = ({ userInfo }) => {
   const [activeTab, setActiveTab] = useState("patients");
   const { doctor } = userInfo;
+  const router = useRouter();
 
   if (!doctor) {
     return (
@@ -130,7 +135,25 @@ const DoctorDashboard: React.FC<Props> = ({ userInfo }) => {
       label: "Medical Records",
       icon: FileText,
     },
+    {
+      id: "profile",
+      label: "Profile",
+      icon: UserCircle,
+    },
+    {
+      id: "messages",
+      label: "My Messages",
+      icon: MessageSquare,
+    },
   ];
+
+  const handleTabChange = (id: string) => {
+    if (id === "messages") {
+      router.push("/messages");
+      return;
+    }
+    setActiveTab(id);
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -152,7 +175,8 @@ const DoctorDashboard: React.FC<Props> = ({ userInfo }) => {
             <MyPatientsList doctorId={doctor.id} />
           </Card>
         );
-      
+      case "profile":
+        return <DoctorProfile userInfo={userInfo} />;
       case "records":
         return (
           <Card className="p-6">
@@ -178,7 +202,7 @@ const DoctorDashboard: React.FC<Props> = ({ userInfo }) => {
           <Sidebar
             navItems={navItems}
             activeTab={activeTab}
-            setActiveTab={setActiveTab}
+            setActiveTab={handleTabChange}
           />
 
           <main className="flex-1">{renderTabContent()}</main>

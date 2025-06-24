@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Bell, Users } from "lucide-react";
+import { Calendar, Bell, Users, MessageSquare, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,6 +19,16 @@ const navItems = [
     href: "/dashboard/patients",
     label: "My Patients",
     icon: Users,
+  },
+  {
+    href: "/dashboard/profile",
+    label: "Profile",
+    icon: User,
+  },
+  {
+    href: "/messages",
+    label: "My Messages",
+    icon: MessageSquare,
   },
 ];
 

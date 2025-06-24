@@ -50,6 +50,7 @@ export async function saveUser(formData: FormData) {
         : null,
       gender: formData.get("gender") ? (formData.get("gender") as string) : null,
       address: formData.get("address") ? (formData.get("address") as string) : null,
+      profileImage: formData.get("profileImage") ? (formData.get("profileImage") as string) : null,
     },
   });
 
@@ -63,13 +64,13 @@ export async function saveUser(formData: FormData) {
     });
   }
   if (role === "DOCTOR") {
-    const specialization = formData.get("specialization") as string;
+    const specialtyId = Number(formData.get("specialtyId"));
     const licenseNumber = formData.get("licenseNumber") as string | null;
-    if (!specialization) throw new Error("specialization is required for doctors");
+    if (!specialtyId) throw new Error("specialtyId is required for doctors");
     await prisma.doctor.create({
       data: {
         userId: createdUser.id,
-        specialization,
+        specialtyId,
         licenseNumber: licenseNumber && licenseNumber !== "" ? licenseNumber : null,
       },
     });
@@ -153,7 +154,9 @@ export async function getAllDoctors() {
       role: "DOCTOR",
     },
     include: {
-      doctor: true,
+      doctor: {
+        include: { specialty: true },
+      },
     },
   });
 }
@@ -161,15 +164,20 @@ export async function getAllDoctors() {
 export type FindDoctor = Awaited<ReturnType<typeof getAllDoctors>>;
 export type UserInfo = Awaited<ReturnType<typeof getUserInfo>>;
 
-// Fetch all unique doctor specializations
+// Fetch all specialties from the Specialty table
 export async function getAllSpecializations() {
-  const specializations = await prisma.doctor.findMany({
-    select: { specialization: true },
-    distinct: ["specialization"],
-    orderBy: { specialization: "asc" },
+  const specialties: { name: string }[] = await prisma.specialty.findMany({
+    orderBy: { name: "asc" },
   });
-  // Return as array of strings
-  return specializations.map((s) => s.specialization);
+  return specialties.map((s) => s.name);
+}
+
+// Fetch all specialties as { value, label } for dropdowns
+export async function getAllSpecialtyOptions() {
+  const specialties: { id: number, name: string }[] = await prisma.specialty.findMany({
+    orderBy: { name: "asc" },
+  });
+  return specialties.map((s) => ({ value: s.id.toString(), label: s.name }));
 }
 
 export async function uploadProfilePicture(file: File, userId: string) {
@@ -242,6 +250,20 @@ export async function deleteProfilePicture(userId: string) {
         throw new Error(`Failed to delete profile picture: ${error.message}`);
       }
     }
+  }
+}
+
+export async function updateUserProfileImage(id: string, imageUrl: string) {
+  try {
+    console.log('Updating user profile image:', { id, imageUrl });
+    await prisma.user.update({
+      where: { id: Number(id) },
+      data: { profileImage: imageUrl },
+    });
+    console.log('Profile image updated successfully');
+  } catch (error) {
+    console.error('Failed to update user profile image:', error);
+    throw error;
   }
 }
 

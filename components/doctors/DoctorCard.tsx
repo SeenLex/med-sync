@@ -43,7 +43,7 @@ const DoctorCard: React.FC<{ doctor: FindDoctor[number] }> = ({ doctor }) => {
                   {doctor.fullName}
                 </h2>
                 <p className="text-gray-600">
-                  {doctor.doctor?.specialization || "Unknown"}
+                  {doctor.doctor?.specialty?.name || "Unknown"}
                 </p>
               </div>
             </div>

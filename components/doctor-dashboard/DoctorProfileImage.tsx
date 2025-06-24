@@ -1,20 +1,18 @@
-"use client";
+'use client';
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
-import { User, Calendar, FileText, Camera, Upload, X, Loader2 } from "lucide-react";
-import Card from "@/components/ui/Card";
 import defaultProfilePic from "@/assets/profile.jpg";
-import Link from "next/link";
 import { uploadProfilePicture, getProfilePictureUrl, updateUserProfileImage } from "@/actions/user";
+import { Camera, Loader2, Upload, X } from "lucide-react";
+import { UserInfo } from "@/actions/user";
+import Card from "@/components/ui/Card";
 
-const links = [
-  { href: "/profile", icon: <User />, label: "Personal Information" },
-  { href: "/profile/appointments", icon: <Calendar />, label: "Appointments" },
-  { href: "/profile/medical-records", icon: <FileText />, label: "Medical Records" },
-];
+type Props = {
+  userInfo: UserInfo;
+};
 
-const Sidebar = ({ userInfo }: { userInfo: any }) => {
+const DoctorProfileImage: React.FC<Props> = ({ userInfo }) => {
   const [profileImageUrl, setProfileImageUrl] = useState(userInfo.profileImage || null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -79,38 +77,32 @@ const Sidebar = ({ userInfo }: { userInfo: any }) => {
   };
 
   return (
-    <div className="space-y-6 lg:col-span-1">
-      <Card className="p-6">
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <Image
-              src={profileImageUrl || defaultProfilePic}
-              alt={userInfo.fullName}
-              width={128}
-              height={128}
-              className="h-32 w-32 rounded-full object-cover"
-              unoptimized
-            />
-            <button
-              type="button"
-              onClick={handleCameraClick}
-              disabled={isUploading}
-              className="absolute bottom-0 right-0 bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/jpg,image/png"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-          </div>
-          <h2 className="mt-4 text-xl font-semibold text-gray-900">
-            {userInfo.fullName}
-          </h2>
-          <p className="text-gray-500">{userInfo.email}</p>
+    <div className="space-y-6 w-full flex flex-col items-center">
+      <Card className="p-6 flex flex-col items-center">
+        <div className="relative">
+          <Image
+            src={profileImageUrl || defaultProfilePic}
+            alt={userInfo.fullName}
+            width={128}
+            height={128}
+            className="h-32 w-32 rounded-full object-cover"
+            unoptimized
+          />
+          <button
+            type="button"
+            onClick={handleCameraClick}
+            disabled={isUploading}
+            className="absolute bottom-0 right-0 bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg"
+          >
+            {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/jpg,image/png"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
         </div>
       </Card>
 
@@ -170,23 +162,8 @@ const Sidebar = ({ userInfo }: { userInfo: any }) => {
           </div>
         </div>
       )}
-
-      <Card className="p-4">
-        <nav className="space-y-1">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="w-full  flex items-center px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap text-gray-600"
-            >
-              {link.icon}
-              <span className="ml-2">{link.label}</span>
-            </Link>
-          ))}
-        </nav>
-      </Card>
     </div>
   );
 };
 
-export default Sidebar;
+export default DoctorProfileImage; 

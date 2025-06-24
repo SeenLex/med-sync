@@ -1,8 +1,8 @@
 import RegisterClient from "./RegisterClient";
-import { getAllSpecializations } from "@/actions/user";
+import { getAllSpecialtyOptions } from "@/actions/user";
 
 const RegisterPage = async () => {
-  const specialties = await getAllSpecializations();
+  const specialties = await getAllSpecialtyOptions();
   return <RegisterClient specialties={specialties} />;
 };
 

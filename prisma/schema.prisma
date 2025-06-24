@@ -38,12 +38,19 @@ model Patient {
   user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Specialty {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  doctors   Doctor[]
+}
+
 model Doctor {
   licenseNumber  String?
   biography      String?
   id             Int             @id @default(autoincrement())
-  userId         Int             @unique
-  specialization String
+  userId         Int             @unique   
+  specialtyId    Int?
+  specialty      Specialty?      @relation(fields: [specialtyId], references: [id])
   appointments   Appointment[]
   chatSessions   ChatSession[]   @relation("DoctorChats")
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)

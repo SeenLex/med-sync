@@ -22,8 +22,9 @@ import InputField from "@/components/auth-components/InputField";
 import RoleSelector from "@/components/auth-components/RoleSelector";
 import Checkbox from "@/components/auth-components/Checkbox";
 import SelectField from "@/components/auth-components/SelectField";
+import { uploadProfilePicture } from "@/actions/user";
 
-const Register: React.FC<{ specialties: string[] }> = ({ specialties }) => {
+const Register: React.FC<{ specialties: { value: string, label: string }[] }> = ({ specialties }) => {
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -38,8 +39,9 @@ const Register: React.FC<{ specialties: string[] }> = ({ specialties }) => {
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [specialization, setSpecialization] = useState("");
+  const [specialtyId, setSpecialtyId] = useState("");
   const [licenseNumber, setLicenseNumber] = useState("");
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const maxSteps = role === "DOCTOR" ? 3 : 2;
 
   const handleRoleChange = (newRole: string) => {
@@ -49,7 +51,7 @@ const Register: React.FC<{ specialties: string[] }> = ({ specialties }) => {
       setStep(newMaxSteps);
     }
     if (newRole !== "DOCTOR") {
-      setSpecialization("");
+      setSpecialtyId("");
       setLicenseNumber("");
     }
   };
@@ -71,8 +73,12 @@ const Register: React.FC<{ specialties: string[] }> = ({ specialties }) => {
   };
 
   const validateStep3_Doctor = () => {
-    if (!specialization || !licenseNumber) {
+    if (!specialtyId || !licenseNumber) {
       setErrorMessage("Please fill in all required doctor details.");
+      return false;
+    }
+    if (!profilePicture) {
+      setErrorMessage("Profile picture is required.");
       return false;
     }
     return true;
@@ -126,8 +132,12 @@ const Register: React.FC<{ specialties: string[] }> = ({ specialties }) => {
       formData.append("phone", phone);
       formData.append("confirmPassword", password);
       if (role === "DOCTOR") {
-        formData.append("specialization", specialization);
+        formData.append("specialtyId", specialtyId);
         formData.append("licenseNumber", licenseNumber);
+        if (profilePicture) {
+          const url = await uploadProfilePicture(profilePicture, email);
+          formData.append("profileImage", url);
+        }
       }
       await register(formData);
       alert("Registration successful!");
@@ -266,13 +276,13 @@ const Register: React.FC<{ specialties: string[] }> = ({ specialties }) => {
             {step === 3 && role === "DOCTOR" && (
               <>
                 <SelectField
-                  id="specialization"
-                  value={specialization}
-                  onChange={(e) => setSpecialization(e.target.value)}
+                  id="specialtyId"
+                  value={specialtyId}
+                  onChange={(e) => setSpecialtyId(e.target.value)}
                   icon={<Stethoscope className="h-5 w-5 text-gray-400" />}
                   required
-                  placeholder="Select specialization"
-                  options={specialties.map((s) => ({ value: s, label: s }))}
+                  placeholder="Select specialty"
+                  options={specialties}
                 />
                 <InputField
                   id="licenseNumber"
@@ -282,6 +292,15 @@ const Register: React.FC<{ specialties: string[] }> = ({ specialties }) => {
                   icon={<BadgeCheck className="h-5 w-5 text-gray-400" />}
                   required
                 />
+                <input
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png"
+                  onChange={e => setProfilePicture(e.target.files?.[0] || null)}
+                  required
+                />
+                {errorMessage && !profilePicture && (
+                  <div className="text-red-500 text-sm mt-1">Profile picture is required.</div>
+                )}
               </>
             )}
             {step === maxSteps && (

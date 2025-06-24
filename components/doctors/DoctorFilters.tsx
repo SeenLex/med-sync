@@ -6,14 +6,14 @@ import { Search } from "lucide-react";
 type DoctorFiltersProps = {
   filters: {
     searchQuery: string;
-    specialty: string;
+    specialtyId: string;
     availability: string;
   };
   onFilterChange: (
     name: keyof DoctorFiltersProps["filters"],
     value: string
   ) => void;
-  specialties: string[];
+  specialties: { value: string, label: string }[];
 };
 
 const DoctorFilters: React.FC<DoctorFiltersProps> = ({
@@ -27,12 +27,12 @@ const DoctorFilters: React.FC<DoctorFiltersProps> = ({
         <div className="flex w-full md:w-auto gap-4">
           <select
             className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
-            value={filters.specialty}
-            onChange={(e) => onFilterChange("specialty", e.target.value)}
+            value={filters.specialtyId}
+            onChange={(e) => onFilterChange("specialtyId", e.target.value)}
           >
             {specialties.map((spec) => (
-              <option key={spec} value={spec}>
-                {spec}
+              <option key={spec.value} value={spec.value}>
+                {spec.label}
               </option>
             ))}
           </select>

@@ -1,20 +1,18 @@
-"use client";
+'use client';
 
 import React, { useRef, useState } from "react";
-import Image from "next/image";
-import { User, Calendar, FileText, Camera, Upload, X, Loader2 } from "lucide-react";
 import Card from "@/components/ui/Card";
+import { UserInfo, updateUserProfileImage } from "@/actions/user";
+import Image from "next/image";
 import defaultProfilePic from "@/assets/profile.jpg";
-import Link from "next/link";
-import { uploadProfilePicture, getProfilePictureUrl, updateUserProfileImage } from "@/actions/user";
+import { uploadProfilePicture, getProfilePictureUrl } from "@/actions/user";
+import { Camera, Loader2, Upload, X } from "lucide-react";
 
-const links = [
-  { href: "/profile", icon: <User />, label: "Personal Information" },
-  { href: "/profile/appointments", icon: <Calendar />, label: "Appointments" },
-  { href: "/profile/medical-records", icon: <FileText />, label: "Medical Records" },
-];
+type Props = {
+  userInfo: UserInfo;
+};
 
-const Sidebar = ({ userInfo }: { userInfo: any }) => {
+const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
   const [profileImageUrl, setProfileImageUrl] = useState(userInfo.profileImage || null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -79,40 +77,38 @@ const Sidebar = ({ userInfo }: { userInfo: any }) => {
   };
 
   return (
-    <div className="space-y-6 lg:col-span-1">
-      <Card className="p-6">
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <Image
-              src={profileImageUrl || defaultProfilePic}
-              alt={userInfo.fullName}
-              width={128}
-              height={128}
-              className="h-32 w-32 rounded-full object-cover"
-              unoptimized
-            />
-            <button
-              type="button"
-              onClick={handleCameraClick}
-              disabled={isUploading}
-              className="absolute bottom-0 right-0 bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/jpg,image/png"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-          </div>
-          <h2 className="mt-4 text-xl font-semibold text-gray-900">
-            {userInfo.fullName}
-          </h2>
-          <p className="text-gray-500">{userInfo.email}</p>
+    <Card className="p-6 space-y-6">
+      <div className="flex flex-col items-center">
+        <div className="relative">
+          <Image
+            src={profileImageUrl || defaultProfilePic}
+            alt={userInfo.fullName}
+            width={128}
+            height={128}
+            className="h-32 w-32 rounded-full object-cover"
+            unoptimized
+          />
+          <button
+            type="button"
+            onClick={handleCameraClick}
+            disabled={isUploading}
+            className="absolute bottom-0 right-0 bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/jpg,image/png"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
         </div>
-      </Card>
+        <h2 className="mt-4 text-xl font-semibold text-gray-900">
+          {userInfo.fullName}
+        </h2>
+        <p className="text-gray-500">{userInfo.email}</p>
+      </div>
 
       {/* Preview Modal */}
       {showPreview && previewFile && (
@@ -171,22 +167,43 @@ const Sidebar = ({ userInfo }: { userInfo: any }) => {
         </div>
       )}
 
-      <Card className="p-4">
-        <nav className="space-y-1">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="w-full  flex items-center px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap text-gray-600"
-            >
-              {link.icon}
-              <span className="ml-2">{link.label}</span>
-            </Link>
+      {/* Personal and Professional Info (read-only) */}
+      <div className="pt-6 space-y-6">
+        <h2 className="text-xl font-semibold text-gray-900 ">Personal Information</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            { label: "Full Name", value: userInfo.fullName, key: "fullName" },
+            { label: "Email", value: userInfo.email, key: "email" },
+            { label: "Phone Number", value: userInfo.phone, key: "phone" },
+            { label: "Date of Birth", value: userInfo.dateOfBirth ? userInfo.dateOfBirth.toLocaleDateString('en-GB') : undefined, key: "dob" },
+            { label: "Gender", value: userInfo.gender, key: "gender" },
+            { label: "Address", value: userInfo.address, key: "address" },
+          ].map(({ label, value, key }) => (
+            <div key={key}>
+              <h3 className="text-sm font-medium text-gray-500 mb-1">{label}</h3>
+              <p className="text-gray-900">{value || "Not specified"}</p>
+            </div>
           ))}
-        </nav>
-      </Card>
-    </div>
+        </div>
+      </div>
+
+      <div className="pt-6 border-t border-gray-200 space-y-6">
+        <h2 className="text-xl font-semibold text-gray-900">Professional Information</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            ["License Number", userInfo.doctor?.licenseNumber],
+            ["Specialization", userInfo.doctor?.specialization],
+            ["Biography", userInfo.doctor?.biography],
+          ].map(([label, val]) => (
+            <div key={label}>
+              <h3 className="text-sm font-medium text-gray-500 mb-1">{label}</h3>
+              <p className="text-gray-900">{val || "Not specified"}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Card>
   );
 };
 
-export default Sidebar;
+export default DoctorProfile; 

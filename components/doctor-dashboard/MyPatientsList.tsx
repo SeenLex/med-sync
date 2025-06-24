@@ -9,6 +9,8 @@ import { User, Mail, Phone, MessageCircle } from "lucide-react";
 import PaginationControls from "../ui/PaginationControls";
 import Button from "../ui/Button";
 import Link from "next/link";
+import Image from "next/image";
+import defaultProfilePic from "@/assets/profile.jpg";
 
 type Props = {
   doctorId: number;
@@ -39,7 +41,14 @@ const MyPatientsList: React.FC<Props> = ({ doctorId }) => {
               <div className="flex flex-col sm:flex-row justify-between">
                 <div className="flex items-center space-x-4">
                   <div className="bg-gray-100 p-3 rounded-full">
-                    <User className="h-6 w-6 text-gray-600" />
+                    <Image
+                      src={patient.user.profileImage || defaultProfilePic}
+                      alt={patient.user.fullName}
+                      width={48}
+                      height={48}
+                      className="h-12 w-12 rounded-full object-cover"
+                      unoptimized
+                    />
                   </div>
                   <div>
                     <p className="text-lg font-semibold text-gray-900">
