@@ -172,3 +172,76 @@ export async function getAllSpecializations() {
   return specializations.map((s) => s.specialization);
 }
 
+export async function uploadProfilePicture(file: File, userId: string) {
+  const supabase = await createClient();
+  const fileExtension = file.name.split('.').pop();
+  const fileName = `${userId}/profile.${fileExtension}`;
+  
+  const { data, error } = await supabase.storage
+    .from('profile-pictures')
+    .upload(fileName, file, {
+      upsert: true // This will replace existing profile picture
+    });
+  
+  if (error) {
+    console.error('Profile picture upload error:', error);
+    throw new Error(`Failed to upload profile picture: ${error.message}`);
+  }
+  
+  if (!data?.path) {
+    throw new Error('Upload succeeded but no file path returned');
+  }
+
+  return data.path;
+}
+
+export async function getProfilePictureUrl(userId: string): Promise<string | null> {
+  const supabase = await createClient();
+  
+  // Try to get the profile picture URL
+  const { data } = await supabase.storage
+    .from('profile-pictures')
+    .list(userId);
+  
+  if (data && data.length > 0) {
+    // Find the profile picture file (should be named 'profile.*')
+    const profileFile = data.find(file => file.name.startsWith('profile.'));
+    if (profileFile) {
+      const { data: urlData } = await supabase.storage
+        .from('profile-pictures')
+        .getPublicUrl(`${userId}/${profileFile.name}`);
+      
+      return urlData.publicUrl;
+    }
+  }
+  
+  return null;
+}
+
+export async function deleteProfilePicture(userId: string) {
+  const supabase = await createClient();
+  
+  // List files in user's folder
+  const { data } = await supabase.storage
+    .from('profile-pictures')
+    .list(userId);
+  
+  if (data && data.length > 0) {
+    // Delete all profile picture files for this user
+    const filesToDelete = data
+      .filter(file => file.name.startsWith('profile.'))
+      .map(file => `${userId}/${file.name}`);
+    
+    if (filesToDelete.length > 0) {
+      const { error } = await supabase.storage
+        .from('profile-pictures')
+        .remove(filesToDelete);
+      
+      if (error) {
+        console.error('Profile picture deletion error:', error);
+        throw new Error(`Failed to delete profile picture: ${error.message}`);
+      }
+    }
+  }
+}
+

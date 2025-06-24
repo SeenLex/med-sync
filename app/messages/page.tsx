@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/DoctorLayout";
+import Navbar from "@/components/layout/Navbar";
 import { getUserInfo } from "@/actions/user";
 import { createClient } from "@/utils/supabase/server";
 import MessageDashboard from "./MessageDashboard";
@@ -20,10 +21,18 @@ export default async function MessagesPage() {
         return <div>Please log in to view your profile.</div>;
     }
 
+    if (userInfo.role === "PATIENT") {
+        return (
+            <>
+                <Navbar />
+                <MessageDashboard userInfo={userInfo} />
+            </>
+        );
+    }
 
     return (
         <Layout withFooter={false}>
             <MessageDashboard userInfo={userInfo} />
         </Layout>
-    )
+    );
 }

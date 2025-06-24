@@ -46,13 +46,6 @@ const DoctorCard: React.FC<{ doctor: FindDoctor[number] }> = ({ doctor }) => {
                   {doctor.doctor?.specialization || "Unknown"}
                 </p>
               </div>
-              <div className="flex items-center gap-2 mt-8">
-                <Link href={`/appointments/new/${doctor.id}?step=3&doctorId=${doctor.id}`}>
-                  <Button size="sm" variant="primary">
-                    Book Appointment
-                  </Button>
-                </Link>
-              </div>
             </div>
             <div className="mt-8 flex flex-between gap-2">
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">

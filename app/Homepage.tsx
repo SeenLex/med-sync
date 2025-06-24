@@ -123,7 +123,7 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
 
             <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
               {appointments.length > 0 ? (
-                appointments.map((appt: Appointment) => (
+                appointments.map((appt) => (
                   <Card
                     key={appt.id}
                     className="p-3 sm:p-4 hover:shadow-md transition-shadow"
@@ -139,10 +139,10 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-sm sm:text-lg font-medium text-gray-900 truncate">
-                            {appt.doctor.user.fullName}
+                            {appt.doctor?.user?.fullName}
                           </h3>
                           <p className="text-xs sm:text-sm text-gray-500 truncate">
-                            {appt.doctor.specialization}
+                            {appt.doctor?.specialization}
                           </p>
                           <div className="mt-1 flex items-center text-xs sm:text-sm text-gray-500">
                             <Clock className="h-4 w-4 mr-1" />
@@ -194,7 +194,7 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
                           appt.status === "COMPLETED" ||
                           appt.status === "CANCELED") && (
                           <Link
-                            href={`/appointments/new/reschedule/${appt.doctorId}?type=${appt.type}`}
+                            href={`/appointments/new/reschedule/${appt.doctorId ?? appt.doctor?.id}?type=${appt.type}`}
                           >
                             <Button variant="outline" size="sm">
                               Reschedule

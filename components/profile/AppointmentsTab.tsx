@@ -117,6 +117,13 @@ const AppointmentsTab: React.FC<Props> = ({ initialData, patientId }) => {
                 </div>
 
                 <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
+                  {appt.status === "CONFIRMED" && appt.type === "VIRTUAL" && appt.meetingLink && (
+                    <Link target="_blank" href={appt.meetingLink}>
+                      <Button variant="primary" size="sm">
+                        Join Meeting
+                      </Button>
+                    </Link>
+                  )}
                   {(appt.status === "PENDING" ||
                     appt.status === "COMPLETED" ||
                     appt.status === "CANCELED") && (

@@ -8,7 +8,7 @@ const withPWA = require("next-pwa")({
 
 module.exports = withPWA({
   images: {
-    domains: ['randomuser.me'],
+    domains: ['randomuser.me', 'your-project-ref.supabase.co'],
   },
   experimental: {
     serverActions: {

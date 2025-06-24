@@ -97,76 +97,70 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4 md:mb-0">
-            My Appointments
-          </h1>
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2 md:mb-0">My Appointments</h1>
           <Link href="/appointments/new">
-            <Button className="flex items-center">
+            <Button className="flex items-center shadow-md hover:shadow-lg transition-shadow">
               <Plus className="h-5 w-5 mr-2" />
               Book New Appointment
             </Button>
           </Link>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-2">
-              <Filter className="h-5 w-5 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">
-                Filter by:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  "all",
-                  "upcoming",
-                  "completed",
-                  "canceled",
-                  "virtual",
-                  "in-person",
-                ].map((f) => (
-                  <button
-                    key={f}
-                    className={`px-3 py-1 text-sm rounded-full ${
-                      filter === f
-                        ? "bg-emerald-100 text-emerald-800"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                    onClick={() => setFilter(f)}
-                  >
-                    {f.charAt(0).toUpperCase() + f.slice(1)}
-                  </button>
-                ))}
-              </div>
+        <div className="sticky top-0 z-10 bg-white rounded-lg shadow-lg p-4 mb-6 border border-gray-100 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Filter className="h-5 w-5 text-emerald-500" />
+            <span className="text-sm font-semibold text-gray-800 mr-2">Filter by:</span>
+            <div className="flex flex-wrap gap-2">
+              {[
+                "all",
+                "upcoming",
+                "completed",
+                "canceled",
+                "virtual",
+                "in-person",
+              ].map((f) => (
+                <button
+                  key={f}
+                  className={`px-3 py-1 text-sm rounded-full border transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-emerald-400
+                    ${filter === f
+                      ? "bg-emerald-600 text-white border-emerald-600 shadow"
+                      : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-emerald-50 hover:text-emerald-700"}
+                  `}
+                  onClick={() => setFilter(f)}
+                >
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </button>
+              ))}
             </div>
-            <div className="relative text-gray-800">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search by doctor or specialty"
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md
-                           focus:outline-none focus:ring-emerald-500
-                           focus:border-emerald-500 w-full"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+          </div>
+          <div className="relative w-full md:w-64">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
             </div>
+            <input
+              type="text"
+              placeholder="Search by doctor or specialty"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 w-full bg-gray-50"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
         </div>
 
+        <hr className="mb-6 border-gray-200" />
+
         {isFetching && <div className="text-center p-4">Loading...</div>}
 
-        <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
+        <div className={`grid gap-4 ${isFetching ? "opacity-50" : ""} grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3`}> 
           {filteredAppointments.length > 0 ? (
             filteredAppointments.map((appointment) => (
               <Card
                 key={appointment.id}
-                className="p-4 hover:shadow-md transition-shadow"
+                className="p-4 hover:shadow-lg transition-shadow border border-gray-100 flex flex-col justify-between min-h-[220px]"
               >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-start space-x-4">
                     <div
                       className={`p-2 rounded-full ${
@@ -182,7 +176,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                       )}
                     </div>
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900">
+                      <h3 className="text-lg font-semibold text-gray-900">
                         {appointment.doctor.user.fullName}
                       </h3>
                       <p className="text-sm text-gray-500">
@@ -206,7 +200,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                           )}
                         </span>
                       </div>
-                      <div className="mt-2">
+                      <div className="mt-2 flex flex-wrap gap-2">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             appointment.status === "CONFIRMED"
@@ -221,7 +215,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                           {appointment.status}
                         </span>
                         <span
-                          className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             appointment.type === "VIRTUAL"
                               ? "bg-blue-100 text-blue-800"
                               : "bg-emerald-100 text-emerald-800"
@@ -234,14 +228,20 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                       </div>
                     </div>
                   </div>
-
-                  <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
+                  <div className="flex flex-wrap gap-2 mt-4 md:mt-0 justify-end">
+                    {appointment.status === "CONFIRMED" && appointment.type === "VIRTUAL" && appointment.meetingLink && (
+                      <Link target="_blank" href={appointment.meetingLink}>
+                        <Button variant="primary" size="sm" className="shadow hover:shadow-md focus:ring-2 focus:ring-blue-400">
+                          Join Meeting
+                        </Button>
+                      </Link>
+                    )}
                     {appointment.status === "PENDING" && (
                       <>
                         <Link
                           href={`/appointments/new/reschedule/${appointment.doctorId}?type=${appointment.type}`}
                         >
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="hover:bg-emerald-50 focus:ring-2 focus:ring-emerald-400">
                             Reschedule
                           </Button>
                         </Link>
@@ -250,6 +250,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                           size="sm"
                           onClick={() => handleCancel(appointment.id)}
                           disabled={cancelingId === appointment.id}
+                          className="hover:bg-red-200 focus:ring-2 focus:ring-red-400"
                         >
                           {cancelingId === appointment.id
                             ? "Canceling..."
@@ -262,7 +263,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                       <Link
                         href={`/appointments/new/reschedule/${appointment.doctorId}?type=${appointment.type}`}
                       >
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="hover:bg-emerald-50 focus:ring-2 focus:ring-emerald-400">
                           Reschedule
                         </Button>
                       </Link>
@@ -284,12 +285,14 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
         </div>
 
         {totalPages > 1 && (
-          <PaginationControls
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-            isFetching={isFetching}
-          />
+          <div className="mt-8">
+            <PaginationControls
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              isFetching={isFetching}
+            />
+          </div>
         )}
       </div>
     </Layout>
