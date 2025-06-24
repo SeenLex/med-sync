@@ -9,7 +9,8 @@ import {
   Calendar,
   FileText,
   Home,
-  LogOut
+  LogOut,
+  MessageCircle
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { logout } from "@/actions/auth";
@@ -31,7 +32,7 @@ const Navbar: React.FC = () => {
     <nav
       className="bg-white shadow-md sticky top-0 z-200"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16">
+      <div className="w-full md:max-w-7xl md:mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/">
@@ -69,6 +70,13 @@ const Navbar: React.FC = () => {
                 <span className="text-s lg:text-base">
                   Medical Records
                 </span>
+              </div>
+            </Link>
+
+            <Link href="/messages">
+              <div className="flex items-center px-2 lg:px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100">
+                <MessageCircle className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
+                <span className="text-s lg:text-base">Messages</span>
               </div>
             </Link>
 
@@ -122,8 +130,8 @@ const Navbar: React.FC = () => {
       </div>
 
       {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="md:hidden w-full">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 w-full">
             <Link href="/">
               <div className="flex items-center px-3 py-2 rounded-md
                               text-gray-700 hover:text-emerald-600 hover:bg-gray-100">
@@ -143,6 +151,12 @@ const Navbar: React.FC = () => {
                               text-gray-700 hover:text-emerald-600 hover:bg-gray-100">
                 <FileText className="h-4 w-4 mr-2" />
                 <span>Medical Records</span>
+              </div>
+            </Link>
+            <Link href="/messages">
+              <div className="flex items-center px-3 py-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100">
+                <MessageCircle className="h-4 w-4 mr-2" />
+                <span>Messages</span>
               </div>
             </Link>
             <Link href="/profile">

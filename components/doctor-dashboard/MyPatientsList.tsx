@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchDoctorPatients, DoctorPatient } from "@/actions/patients";
 import { MEDICAL_RECORDS_PAGE_SIZE } from "@/lib/constants";
 import Card from "../ui/Card";
-import { User, Mail, Phone } from "lucide-react";
+import { User, Mail, Phone, MessageCircle } from "lucide-react";
 import PaginationControls from "../ui/PaginationControls";
 import Button from "../ui/Button";
 import Link from "next/link";
@@ -61,6 +61,11 @@ const MyPatientsList: React.FC<Props> = ({ doctorId }) => {
                   <Link href={`/patients/${patient.id}/records`}>
                     <Button size="sm" variant="outline">
                       View Records
+                    </Button>
+                  </Link>
+                  <Link href={`/messages?userId=${patient.user.id}`}>
+                    <Button size="sm" variant="outline" className="hover:bg-emerald-100" title="Message Patient">
+                      <MessageCircle className="h-5 w-5 text-emerald-600" />
                     </Button>
                   </Link>
                 </div>

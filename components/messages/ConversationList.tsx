@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 import type { ChatSession } from "@/actions/chat";
 import { getUserInfo } from "@/actions/user";
 
-export default function ConversationList({ chatSessions, userInfo, onSelectChatSession }: { chatSessions?: ChatSession[], userInfo: Awaited<ReturnType<typeof getUserInfo>>, onSelectChatSession: (chatSession: ChatSession) => void }) {
+export default function ConversationList({ chatSessions, userInfo, onSelectChatSession, showMobileHeader, selectedChatSessionId }: { chatSessions?: ChatSession[], userInfo: Awaited<ReturnType<typeof getUserInfo>>, onSelectChatSession: (chatSession: ChatSession) => void, showMobileHeader?: boolean, selectedChatSessionId?: number }) {
     const [searchQuery, setSearchQuery] = useState("");
     const userType = userInfo.role;
     const otherUserType = userType === "DOCTOR" ? "patient" : "doctor";
@@ -31,29 +31,33 @@ export default function ConversationList({ chatSessions, userInfo, onSelectChatS
             <div className="flex-1 overflow-y-auto">
                 {searchResults && searchResults.length > 0 ? (
                     <div className="divide-y divide-gray-200">
-                        {searchResults.map((conversation) => (
-                            <button
-                                key={conversation.id}
-                                className="w-full p-4 hover:bg-gray-50 flex items-start space-x-3 text-left"
-                                onClick={() => onSelectChatSession(conversation)}
+                        {searchResults.map((conversation) => {
+                            const isActive = conversation.id === selectedChatSessionId;
+                            return (
+                                <button
+                                    key={conversation.id}
+                                    className={`w-full p-4 flex items-start space-x-3 text-left hover:bg-gray-50 focus:outline-none transition-colors duration-150 ${isActive ? 'bg-emerald-50 border-l-4 border-emerald-500 font-semibold' : ''}`}
+                                    onClick={() => onSelectChatSession(conversation)}
+                                    aria-current={isActive ? 'true' : undefined}
                                 >
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate">
-                                        {userType === "DOCTOR" ? conversation.patient.user.fullName : conversation.doctor.user.fullName}
-                                    </p>
-                                    <p className="text-sm text-gray-500 truncate">
-                                        {conversation.messages[conversation.messages.length - 1]?.content}
-                                    </p>
-                                </div>
-                                <div className="flex flex-col items-end">
-                                    <p className="text-xs text-gray-500">
-                                        {conversation.messages[conversation.messages.length - 1]?.createdAt.toLocaleTimeString()}
-                                    </p>
-                                    {/* Unread indicator */}
-                                    <div className="mt-1 h-2 w-2 bg-emerald-500 rounded-full hidden"></div>
-                                </div>
-                            </button>
-                        ))}
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-medium text-gray-900 truncate">
+                                            {userType === "DOCTOR" ? conversation.patient.user.fullName : conversation.doctor.user.fullName}
+                                        </p>
+                                        <p className="text-sm text-gray-500 truncate">
+                                            {conversation.messages[conversation.messages.length - 1]?.content}
+                                        </p>
+                                    </div>
+                                    <div className="flex flex-col items-end">
+                                        <p className="text-xs text-gray-500">
+                                            {conversation.messages[conversation.messages.length - 1]?.createdAt.toLocaleTimeString()}
+                                        </p>
+                                        {/* Unread indicator */}
+                                        <div className="mt-1 h-2 w-2 bg-emerald-500 rounded-full hidden"></div>
+                                    </div>
+                                </button>
+                            );
+                        })}
                     </div>
                 ) : (
                     <div className="p-4 text-center text-gray-500">

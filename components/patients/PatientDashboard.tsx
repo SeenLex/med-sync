@@ -8,6 +8,7 @@ import {
   Video,
   Search,
   Clock,
+  MessageCircle,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
@@ -53,10 +54,10 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
       desc: "View and manage your health information",
     },
     {
-      href: "/telemedicine",
-      Icon: Video,
-      title: "Telemedicine",
-      desc: "Connect via video consultation",
+      href: "/messages",
+      Icon: MessageCircle,
+      title: "Messages",
+      desc: "Chat with your doctor or care team",
     },
     {
       href: "/doctors",
@@ -123,7 +124,7 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
 
             <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
               {appointments.length > 0 ? (
-                appointments.map((appt: Appointment) => (
+                appointments.map((appt) => (
                   <Card
                     key={appt.id}
                     className="p-3 sm:p-4 hover:shadow-md transition-shadow"

@@ -1,13 +1,27 @@
 import React from "react";
-import { MapPin, Video } from "lucide-react";
+import { MapPin, Video, MessageCircle } from "lucide-react";
 import type { FindDoctor } from "@/actions/user";
 import Card from "@/components/ui/Card";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Button from "@/components/ui/Button";
 
-type DoctorCardProps = {
-  doctor: FindDoctor[number];
-};
+const DoctorCard: React.FC<{ doctor: FindDoctor[number] }> = ({ doctor }) => {
+  const router = useRouter();
 
-const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
+  const handleMessage = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const res = await fetch("/api/chat/start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ doctorId: doctor.id }),
+    });
+    const data = await res.json();
+    if (data.chatId) {
+      router.push(`/messages?chatId=${data.chatId}`);
+    }
+  };
+
   return (
     <Card className="p-6 hover:shadow-lg transition-shadow">
       <div className="flex flex-col md:flex-row">
@@ -22,13 +36,24 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
             height={96}
             className="h-24 w-24 rounded-full object-cover mb-4 md:mb-0 md:mr-6"
           />
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900">
-              {doctor.fullName}
-            </h2>
-            <p className="text-gray-600">
-              {doctor.doctor?.specialization || "Unknown"}
-            </p>
+          <div className="flex-1">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  {doctor.fullName}
+                </h2>
+                <p className="text-gray-600">
+                  {doctor.doctor?.specialization || "Unknown"}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 mt-8">
+                <Link href={`/appointments/new/${doctor.id}?step=3&doctorId=${doctor.id}`}>
+                  <Button size="sm" variant="primary">
+                    Book Appointment
+                  </Button>
+                </Link>
+              </div>
+            </div>
             <div className="mt-8 flex flex-between gap-2">
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
                 <MapPin className="h-3 w-3 mr-1" />

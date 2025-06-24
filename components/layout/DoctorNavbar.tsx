@@ -44,35 +44,6 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-2 lg:space-x-4 ml-6">
-            
-            <Link href="/doctor/appointments">
-              <div
-                className="flex items-center  lg:px-3 py-2 rounded-md
-                           text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
-              >
-                <Calendar
-                  className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2"
-                />
-                <span className="text-s lg:text-base">
-                  Appointments
-                </span>
-              </div>
-            </Link>
-
-            <Link href="/doctor/my-patients">
-              <div
-                className="flex items-center px-2 lg:px-3 py-2 rounded-md
-                           text-gray-700 hover:text-emerald-600 hover:bg-gray-100"
-              >
-                <FileText
-                  className="h-5 w-5 lg:h-4 lg:w-4 mr-1 lg:mr-2"
-                />
-                <span className="text-s lg:text-base">
-                  My Patients
-                </span>
-              </div>
-            </Link>
-
             <div
               className="flex items-center  lg:ml-4 pl-2 lg:pl-4
                          border-l border-gray-300 gap-1 lg:gap-4"
@@ -94,64 +65,8 @@ const Navbar: React.FC = () => {
               </form>
             </div>
           </div>
-
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center
-                         p-2 rounded-md text-gray-700
-                         hover:text-emerald-600 hover:bg-gray-100
-                         focus:outline-none"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
         </div>
       </div>
-
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link href="/">
-              <div className="flex items-center px-3 py-2 rounded-md
-                              text-gray-700 hover:text-emerald-600 hover:bg-gray-100">
-                <Home className="h-4 w-4 mr-2" />
-                <span>Home</span>
-              </div>
-            </Link>
-            <Link href="/doctor/appointments">
-              <div className="flex items-center px-3 py-2 rounded-md
-                              text-gray-700 hover:text-emerald-600 hover:bg-gray-100">
-                <Calendar className="h-4 w-4 mr-2" />
-                <span>Appointments</span>
-              </div>
-            </Link>
-            <Link href="/doctor/my-patients">
-              <div className="flex items-center px-3 py-2 rounded-md
-                              text-gray-700 hover:text-emerald-600 hover:bg-gray-100">
-                <FileText className="h-4 w-4 mr-2" />
-                <span>My Patients</span>
-              </div>
-            </Link>
-            <Link href="/profile">
-              <div className="flex items-center px-3 py-2 rounded-md
-                              text-gray-700 hover:text-emerald-600 hover:bg-gray-100">
-                <User className="h-4 w-4 mr-2" />
-                <span>Profile</span>
-              </div>
-            </Link>
-            <form action={logout}>
-              <Button className="flex w-full items-center px-3 py-2
-                                 rounded-md text-gray-700
-                                 hover:text-red-600 hover:bg-gray-100"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                <span>Logout</span>
-              </Button>
-            </form>
-          </div>
-        </div>
-      )}
     </nav>
   );
 };

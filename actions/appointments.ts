@@ -21,6 +21,11 @@ export async function fetchPaginatedAppointments({
             user: true,
           },
         },
+        patient: {
+          include: {
+            user: true,
+          },
+        },
       },
       orderBy: { startTime: "desc" },
       take: APPOINTMENTS_PAGE_SIZE,
