@@ -15,6 +15,7 @@ import Step2 from "@/components/book-appointment/Step2";
 import Step3 from "@/components/book-appointment/Step3";
 import Step4 from "@/components/book-appointment/Step4";
 import NavigationButtons from "@/components/book-appointment/NavigationButtons";
+import { useRouter } from "next/navigation";
 
 type Props = {
   userInfo: UserInfo;
@@ -31,6 +32,7 @@ const NewAppointment: React.FC<Props> = ({
   initialType,
   specialties,
 }) => {
+  const router = useRouter();
   const [step, setStep] = useState(doctorToReschedule ? 3 : 1);
   const [appointmentType, setAppointmentType] = useState(initialType);
   const [selectedDoctor, setSelectedDoctor] = useState(doctorToReschedule);
@@ -64,6 +66,7 @@ const NewAppointment: React.FC<Props> = ({
     mutationFn: bookAppointment,
     onSuccess: () => {
       alert("Appointment booked successfully!");
+      router.push("/");
       setStep(1);
       setAppointmentType(null);
       setSelectedDoctor(null);

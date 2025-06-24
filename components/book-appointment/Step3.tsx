@@ -1,5 +1,6 @@
 import React from "react";
 import { Calendar } from "@/components/shadcn/calendar";
+import { Loader2 } from "lucide-react";
 
 interface Appointment {
   status: string;
@@ -45,7 +46,7 @@ const Step3: React.FC<Step3Props> = ({
             const appointmentTimeMinute = new Date(
               appointment.startTime
             ).getMinutes();
-            const formattedTime = `${appointmentTimeHour}:${
+            const formattedTime = `${appointmentTimeHour}:$${
               appointmentTimeMinute < 10
                 ? "0" + appointmentTimeMinute
                 : appointmentTimeMinute
@@ -57,50 +58,81 @@ const Step3: React.FC<Step3Props> = ({
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-6 text-gray-900">
-        Select Date and Time
+      <h2 className="text-2xl font-bold mb-6 text-gray-900">
+        Select Date & Time
       </h2>
-      <Calendar
-        mode="single"
-        className="rounded-md border"
-        selected={selectedDate}
-        onSelect={setSelectedDate}
-        disabled={(date) => {
-          const today = new Date();
-          const futureDate = new Date();
-          const yesterday = new Date();
-          yesterday.setDate(today.getDate() - 1);
-          futureDate.setDate(today.getDate() + 14);
-          return (
-            date < yesterday ||
-            date > futureDate ||
-            date.getDay() === 0 ||
-            date.getDay() === 6
-          );
-        }}
-      />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h3 className="text-lg font-medium mb-4 text-gray-900">
-            Select Time
-          </h3>
-          <div className="grid grid-cols-3 gap-2">
-            {selectedDate &&
-              !appointmentsLoading &&
-              availableTimeSlots.map((time) => (
-                <div
-                  key={time}
-                  onClick={() => setSelectedTime(time)}
-                  className={`border rounded-md py-2 px-1 text-center cursor-pointer transition-all ${
-                    selectedTime === time
-                      ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                      : "border-gray-300 hover:border-emerald-300 hover:bg-gray-50 text-gray-400"
-                  }`}
-                >
-                  <div className="text-sm font-medium">{time}</div>
-                </div>
-              ))}
-          </div>
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Calendar Section */}
+        <div className="md:w-1/2">
+          <h3 className="text-lg font-semibold mb-2 text-gray-800">Choose a Date</h3>
+          <Calendar
+            mode="single"
+            className="rounded-md border"
+            selected={selectedDate}
+            onSelect={setSelectedDate}
+            disabled={(date) => {
+              const today = new Date();
+              const futureDate = new Date();
+              const yesterday = new Date();
+              yesterday.setDate(today.getDate() - 1);
+              futureDate.setDate(today.getDate() + 14);
+              return (
+                date < yesterday ||
+                date > futureDate ||
+                date.getDay() === 0 ||
+                date.getDay() === 6
+              );
+            }}
+          />
+          <p className="text-xs text-gray-500 mt-2">
+            * Only weekdays within the next 2 weeks are available.
+          </p>
+        </div>
+
+        {/* Time Slots Section */}
+        <div className="md:w-1/2">
+          <h3 className="text-lg font-semibold mb-2 text-gray-800">Choose a Time</h3>
+          {appointmentsLoading ? (
+            <div className="flex items-center justify-center h-32">
+              <Loader2 className="animate-spin h-6 w-6 text-emerald-500" />
+              <span className="ml-2 text-emerald-700">Loading available times...</span>
+            </div>
+          ) : selectedDate ? (
+            availableTimeSlots.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {allTimeSlots.map((time) => {
+                  const isAvailable = availableTimeSlots.includes(time);
+                  return (
+                    <button
+                      key={time}
+                      onClick={() => isAvailable && setSelectedTime(time)}
+                      className={`px-4 py-2 rounded-full border text-sm font-medium transition
+                        ${
+                          selectedTime === time
+                            ? "bg-emerald-600 text-white border-emerald-600 shadow"
+                            : isAvailable
+                            ? "bg-white text-emerald-700 border-emerald-300 hover:bg-emerald-50"
+                            : "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                        }
+                      `}
+                      disabled={!isAvailable}
+                      aria-selected={selectedTime === time}
+                    >
+                      {time}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center text-gray-500 mt-8">
+                No available time slots for this date.
+              </div>
+            )
+          ) : (
+            <div className="text-center text-gray-400 mt-8">
+              Please select a date to see available times.
+            </div>
+          )}
         </div>
       </div>
     </div>

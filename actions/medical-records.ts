@@ -33,6 +33,7 @@ export async function fetchPaginatedMedicalRecords({
         doctor: {
           include: {
             user: true,
+            specialty: true,
           },
         },
       },

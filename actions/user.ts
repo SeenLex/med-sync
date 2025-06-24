@@ -135,7 +135,9 @@ export async function getUserInfo(email: string) {
     where: { email },
     include: {
       patient: true,
-      doctor: true,
+      doctor: {
+        include: { specialty: true },
+      },
     },
   });
 

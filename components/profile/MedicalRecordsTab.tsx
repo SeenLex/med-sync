@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import {
   MedicalRecord,
   fetchPaginatedMedicalRecords,
+  downloadMedicalRecord,
 } from "@/actions/medical-records";
 import { useQuery } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
@@ -104,10 +105,29 @@ const MedicalRecordsTab: React.FC<Props> = ({ initialData, patientId }) => {
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-                    <Button size="sm" variant="outline">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => rec.fileUrl && window.open(rec.fileUrl, "_blank")}
+                      disabled={!rec.fileUrl}
+                    >
                       View
                     </Button>
-                    <Button size="sm" variant="secondary">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={async () => {
+                        if (!rec.fileUrl) return;
+                        const blob = await downloadMedicalRecord(rec.fileUrl);
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = rec.title || "medical-record";
+                        a.click();
+                        URL.revokeObjectURL(url);
+                      }}
+                      disabled={!rec.fileUrl}
+                    >
                       Download
                     </Button>
                   </div>

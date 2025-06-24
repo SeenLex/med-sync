@@ -192,7 +192,7 @@ const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             ["License Number", userInfo.doctor?.licenseNumber],
-            ["Specialization", userInfo.doctor?.specialization],
+            ["Specialization", userInfo.doctor?.specialty?.name],
             ["Biography", userInfo.doctor?.biography],
           ].map(([label, val]) => (
             <div key={label}>

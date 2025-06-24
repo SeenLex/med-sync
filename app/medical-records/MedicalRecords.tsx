@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   FileText,
   Download,
@@ -9,13 +9,22 @@ import {
   Search,
   Calendar,
   User,
+  Loader2,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Layout from "@/components/layout/Layout";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/shadcn/dialog";
+import {
   MedicalRecord,
   fetchPaginatedMedicalRecords,
+  downloadMedicalRecord,
+  uploadMedicalRecord,
 } from "@/actions/medical-records";
 import { useQuery } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
@@ -33,6 +42,18 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [showUpload, setShowUpload] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewFile, setPreviewFile] = useState<{ url: string; title: string } | null>(null);
+  const [isLoading, setIsLoading] = useState<{
+    upload: boolean,
+    download: Record<string, boolean>,
+  }>({
+    upload: false,
+    download: {},
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data, isFetching } = useQuery({
     queryKey: ["medical-records", page],
@@ -149,6 +170,13 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
           {filteredRecords.length > 0 ? (
             filteredRecords.map((record: MedicalRecord) => {
               const typeInfo = getRecordTypeInfo(record.type);
+              console.log('Rendering record:', {
+                id: record.id,
+                fileUrl: record.fileUrl,
+                hasFileUrl: !!record.fileUrl,
+                loadingState: isLoading.download[record.id.toString()],
+                title: record.title
+              });
               return (
                 <Card
                   key={record.id}
@@ -175,7 +203,10 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
                         <div className="mt-1 flex items-center text-sm text-gray-500">
                           <User className="h-4 w-4 mr-1" />
                           <span>
-                            {record.doctor.user.fullName} - {record.doctor.specialization}
+                            {(() => {
+                              const doctor = record.doctor as typeof record.doctor & { specialty?: { name: string } | null };
+                              return `${doctor.user.fullName} - ${doctor.specialty?.name || "Unknown"}`;
+                            })()}
                           </span>
                         </div>
                         <div className="mt-2 flex flex-wrap gap-2">
@@ -188,22 +219,43 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-4 md:mt-0 justify-end">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex items-center hover:bg-emerald-50 focus:ring-2 focus:ring-emerald-400"
-                      >
-                        <Eye className="h-4 w-4 mr-1" />
-                        View
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="flex items-center shadow hover:shadow-md focus:ring-2 focus:ring-blue-400"
-                      >
-                        <Download className="h-4 w-4 mr-1" />
-                        Download
-                      </Button>
+                      {record.fileUrl && (
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            console.log('Download button clicked for record:', record.id, 'fileUrl:', record.fileUrl);
+                            setIsLoading(prev => ({ ...prev, download: { ...prev.download, [record.id.toString()]: true } }));
+                            try {
+                              console.log('Calling downloadMedicalRecord with fileUrl:', record.fileUrl);
+                              const blob = await downloadMedicalRecord(record.fileUrl!);
+                              console.log('Download successful, blob received:', blob, 'blob size:', blob.size);
+                              const url = URL.createObjectURL(blob);
+                              console.log('Created URL:', url);
+                              // Actually download the file
+                              const a = document.createElement("a");
+                              a.href = url;
+                              a.download = record.title || "medical-record";
+                              a.click();
+                              URL.revokeObjectURL(url);
+                              console.log('Download completed');
+                            } catch (e) {
+                              console.error('Download failed:', e);
+                              console.error('Error details:', {
+                                message: (e as Error).message,
+                                stack: (e as Error).stack,
+                                name: (e as Error).name
+                              });
+                              alert("Failed to download file: " + (e as Error).message);
+                            } finally {
+                              setIsLoading(prev => ({ ...prev, download: { ...prev.download, [record.id.toString()]: false } }));
+                            }
+                          }}
+                          className="p-2 text-gray-600 hover:text-emerald-600 transition-colors"
+                          disabled={isLoading.download[record.id.toString()]}
+                        >
+                          {isLoading.download[record.id.toString()] ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-5 h-5" />}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </Card>

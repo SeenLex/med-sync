@@ -38,10 +38,10 @@ export interface Patient {
 export interface Doctor {
   id: number;
   userId: number;
-  specialization: string;
   licenseNumber?: string | null;
   biography?: string | null;
   user: User;
+  specialty?: { name: string; id: number } | null;
   appointments?: Appointment[];
   medicalRecords?: MedicalRecord[];
   availability?: Availability[];

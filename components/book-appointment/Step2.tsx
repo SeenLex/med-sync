@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Search } from "lucide-react";
 import type { FindDoctor } from "@/actions/user";
+import defaultProfilePic from "@/assets/profile.jpg";
 
 type Step2Props = {
   doctors: FindDoctor;
@@ -91,10 +92,10 @@ const Step2: React.FC<Step2Props> = ({
             >
               <Image
                 src={
-                  doctor.profileImage ||
-                  `https://randomuser.me/api/portraits/lego/${
-                    Number(doctor.id) % 10
-                  }.jpg`
+                  doctor.profileImage &&
+                  (doctor.profileImage.startsWith("http://") || doctor.profileImage.startsWith("https://") || doctor.profileImage.startsWith("/"))
+                    ? doctor.profileImage
+                    : defaultProfilePic
                 }
                 alt={doctor.fullName}
                 width={64}
@@ -106,7 +107,7 @@ const Step2: React.FC<Step2Props> = ({
                   {doctor.fullName}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  {doctor.doctor?.specialization || "N/A"}
+                  {doctor.doctor?.specialty?.name || doctor.doctor?.specialization || "N/A"}
                 </p>
                 <div className="mt-2 flex space-x-2">
                   {appointmentType === "IN_PERSON" && (
