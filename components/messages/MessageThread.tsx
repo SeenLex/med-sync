@@ -123,10 +123,39 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                             className={`max-w-[80vw] md:max-w-[70%] rounded-2xl px-4 py-2 shadow-sm
                                 ${message.senderRole === userInfo.role ? "bg-emerald-500 text-white" : "bg-white text-gray-900 border border-gray-200"}`}
                         >
-                            {message.type === "file" ? (
-                                <a href={message.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                                    {message.fileName || "Download file"}
-                                </a>
+                            {message.type === "file" || (message.content && (message.content.endsWith('.jpg') || message.content.endsWith('.jpeg') || message.content.endsWith('.png') || message.content.endsWith('.gif') || message.content.endsWith('.webp') || message.content.endsWith('.bmp') || message.content.endsWith('.pdf'))) ? (
+                                (() => {
+                                    // Try to get extension from fileName, fallback to content URL
+                                    const ext = (message.fileName || message.content).split('.').pop()?.toLowerCase();
+                                    const fileName = message.fileName || message.content.split('/').pop();
+                                    if (["jpg", "jpeg", "png", "gif", "webp", "bmp"].includes(ext)) {
+                                        // Image preview (no filename)
+                                        return (
+                                            <a href={message.content} target="_blank" rel="noopener noreferrer">
+                                                <img
+                                                    src={message.content}
+                                                    alt={fileName}
+                                                    className="max-w-[200px] max-h-[200px] mb-1"
+                                                />
+                                            </a>
+                                        );
+                                    } else if (ext === "pdf") {
+                                        // PDF preview (icon + filename)
+                                        return (
+                                            <a href={message.content} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-blue-600 underline">
+                                                <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.828A2 2 0 0 0 19.414 7.414l-5.828-5.828A2 2 0 0 0 12.172 1H6zm7 1.414L18.586 7H15a2 2 0 0 1-2-2V3.414z"/></svg>
+                                                {fileName}
+                                            </a>
+                                        );
+                                    } else {
+                                        // Fallback for other files
+                                        return (
+                                            <a href={message.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                                                {fileName || "Download file"}
+                                            </a>
+                                        );
+                                    }
+                                })()
                             ) : (
                                 <p className="text-sm break-words">{message.content}</p>
                             )}
