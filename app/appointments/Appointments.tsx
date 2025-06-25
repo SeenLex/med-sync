@@ -250,8 +250,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                         </Button>
                       </>
                     )}
-                    {(appointment.status === "COMPLETED" ||
-                      appointment.status === "CANCELED") && (
+                    {(appointment.status === "CANCELED") && (
                       <Link
                         href={`/appointments/new/reschedule/${appointment.doctorId}?type=${appointment.type}`}
                       >

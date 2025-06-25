@@ -184,7 +184,6 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
                       </div>
                       <div className="mt-3 sm:mt-0 flex space-x-2">
                         {(appt.status === "PENDING" ||
-                          appt.status === "COMPLETED" ||
                           appt.status === "CANCELED") && (
                           <Link
                             href={`/appointments/new/reschedule/${appt.doctorId ?? appt.doctor?.id}?type=${appt.type}`}
