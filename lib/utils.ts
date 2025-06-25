@@ -12,3 +12,8 @@ export function formatDateDDMMYYYY(date: Date | string | number) {
   const year = d.getFullYear();
   return `${day}/${month}/${year}`;
 }
+
+export function formatTimeHHMM(date: Date | string | number) {
+  const d = new Date(date);
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+}

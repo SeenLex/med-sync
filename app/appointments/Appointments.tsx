@@ -22,6 +22,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
 import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
+import { formatTimeHHMM } from "@/lib/utils";
 
 type Props = {
   initialData: {
@@ -44,6 +45,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
     queryFn: () => fetchPaginatedAppointments({ patientId, page }),
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
+    keepPreviousData: true,
   });
 
   const cancelAppointmentMutation = useMutation({
@@ -151,8 +153,6 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
 
         <hr className="mb-6 border-gray-200" />
 
-        {isFetching && <div className="text-center p-4">Loading...</div>}
-
         <div className={`grid gap-4 ${isFetching ? "opacity-50" : ""} grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3`}> 
           {filteredAppointments.length > 0 ? (
             filteredAppointments.map((appointment) => (
@@ -191,13 +191,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                       <div className="mt-1 flex items-center text-sm text-gray-500">
                         <Clock className="h-4 w-4 mr-1" />
                         <span suppressHydrationWarning>
-                          {new Date(appointment.startTime).toLocaleTimeString(
-                            [],
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
+                          {formatTimeHHMM(appointment.startTime)}
                         </span>
                       </div>
                       <div className="mt-2 flex flex-wrap gap-2">
@@ -246,15 +240,13 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                           </Button>
                         </Link>
                         <Button
-                          variant="danger"
+                          variant="outline"
                           size="sm"
                           onClick={() => handleCancel(appointment.id)}
                           disabled={cancelingId === appointment.id}
-                          className="hover:bg-red-200 focus:ring-2 focus:ring-red-400"
+                          className="bg-red-400 text-white border-red-400 hover:bg-red-600 focus:ring-2 focus:ring-red-200"
                         >
-                          {cancelingId === appointment.id
-                            ? "Canceling..."
-                            : "Cancel"}
+                          {cancelingId === appointment.id ? "Canceling..." : "Cancel"}
                         </Button>
                       </>
                     )}

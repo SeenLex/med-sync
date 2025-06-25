@@ -23,6 +23,7 @@ const MyPatientsList: React.FC<Props> = ({ doctorId }) => {
     queryKey: ["doctor-patients", doctorId, page],
     queryFn: () => fetchDoctorPatients({ doctorId, page }),
     placeholderData: (previousData) => previousData,
+    keepPreviousData: true,
   });
 
   const patients = data?.patients || [];
@@ -33,7 +34,6 @@ const MyPatientsList: React.FC<Props> = ({ doctorId }) => {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-900">My Patients</h2>
-      {isFetching && <div className="text-center p-2">Loading...</div>}
       <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
         {patients.length > 0 ? (
           patients.map((patient: DoctorPatient) => (

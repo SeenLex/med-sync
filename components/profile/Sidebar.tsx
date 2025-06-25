@@ -7,6 +7,7 @@ import Card from "@/components/ui/Card";
 import defaultProfilePic from "@/assets/profile.jpg";
 import Link from "next/link";
 import { uploadProfilePicture, getProfilePictureUrl, updateUserProfileImage } from "@/actions/user";
+import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/profile", icon: <User />, label: "Personal Information" },
@@ -21,6 +22,7 @@ const Sidebar = ({ userInfo }: { userInfo: any }) => {
   const [showPreview, setShowPreview] = useState(false);
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pathname = usePathname();
 
   const validateFile = (file: File): boolean => {
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
@@ -173,16 +175,20 @@ const Sidebar = ({ userInfo }: { userInfo: any }) => {
 
       <Card className="p-4">
         <nav className="space-y-1">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="w-full  flex items-center px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap text-gray-600"
-            >
-              {link.icon}
-              <span className="ml-2">{link.label}</span>
-            </Link>
-          ))}
+          {links.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors
+                  ${isActive ? "bg-emerald-100 text-emerald-800" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"}`}
+              >
+                {link.icon}
+                <span className="ml-2">{link.label}</span>
+              </Link>
+            );
+          })}
         </nav>
       </Card>
     </div>

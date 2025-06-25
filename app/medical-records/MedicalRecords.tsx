@@ -29,6 +29,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
 import { MEDICAL_RECORDS_PAGE_SIZE } from "@/lib/constants";
+import { formatDateDDMMYYYY } from "@/lib/utils";
 
 type Props = {
   initialData: {
@@ -61,6 +62,7 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
     enabled: patientId > 0,
+    keepPreviousData: true,
   });
 
   const totalPages = Math.ceil(
@@ -164,8 +166,6 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
 
         <hr className="mb-6 border-gray-200" />
 
-        {isFetching && <div className="text-center p-4">Loading...</div>}
-
         <div className={`grid gap-4 ${isFetching ? "opacity-50" : ""} grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3`}>
           {filteredRecords.length > 0 ? (
             filteredRecords.map((record: MedicalRecord) => {
@@ -197,7 +197,7 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
                         <div className="mt-2 flex items-center text-sm text-gray-500">
                           <Calendar className="h-4 w-4 mr-1" />
                           <span suppressHydrationWarning>
-                            {new Date(record.createdAt).toLocaleDateString()}
+                            {formatDateDDMMYYYY(record.createdAt)}
                           </span>
                         </div>
                         <div className="mt-1 flex items-center text-sm text-gray-500">

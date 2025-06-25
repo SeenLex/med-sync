@@ -12,6 +12,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
 import { MEDICAL_RECORDS_PAGE_SIZE } from "@/lib/constants";
+import { formatDateDDMMYYYY } from "@/lib/utils";
 
 type Props = {
   initialData: {
@@ -25,11 +26,12 @@ const MedicalRecordsTab: React.FC<Props> = ({ initialData, patientId }) => {
   const [page, setPage] = useState(1);
 
   const { data, isFetching } = useQuery({
-    queryKey: ["profile-medical-records", page],
+    queryKey: ["medical-records", page],
     queryFn: () => fetchPaginatedMedicalRecords({ patientId, page }),
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
     enabled: patientId > 0,
+    keepPreviousData: true,
   });
 
   const totalPages = Math.ceil(
@@ -65,8 +67,6 @@ const MedicalRecordsTab: React.FC<Props> = ({ initialData, patientId }) => {
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-900">Medical Records</h2>
 
-      {isFetching && <div className="text-center p-2">Loading...</div>}
-
       <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
         {medicalRecords.length > 0 ? (
           medicalRecords.map((rec) => {
@@ -92,7 +92,7 @@ const MedicalRecordsTab: React.FC<Props> = ({ initialData, patientId }) => {
                       <div className="mt-1 flex items-center text-sm text-gray-500">
                         <Calendar className="h-4 w-4 mr-1" />
                         <span suppressHydrationWarning>
-                          {rec.createdAt.toLocaleDateString()}
+                          {formatDateDDMMYYYY(rec.createdAt)}
                         </span>
                       </div>
                       <div className="mt-2">

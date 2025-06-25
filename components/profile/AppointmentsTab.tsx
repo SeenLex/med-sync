@@ -12,6 +12,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
 import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
+import { formatDateDDMMYYYY, formatTimeHHMM } from "@/lib/utils";
 
 type Props = {
   initialData: {
@@ -42,8 +43,6 @@ const AppointmentsTab: React.FC<Props> = ({ initialData, patientId }) => {
       <h2 className="text-xl font-semibold text-gray-900">
         My Appointments
       </h2>
-
-      {isFetching && <div className="text-center p-2">Loading...</div>}
 
       <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
         {appointments.length > 0 ? (
@@ -77,64 +76,19 @@ const AppointmentsTab: React.FC<Props> = ({ initialData, patientId }) => {
                     <div className="mt-2 flex items-center text-sm text-gray-500">
                       <Calendar className="h-4 w-4 mr-1" />
                       <span suppressHydrationWarning>
-                        {new Date(appt.startTime).toLocaleDateString()}
+                        {formatDateDDMMYYYY(appt.startTime)}
                       </span>
                     </div>
                     <div className="mt-1 flex items-center text-sm text-gray-500">
                       <Clock className="h-4 w-4 mr-1" />
                       <span suppressHydrationWarning>
-                        {new Date(appt.startTime).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                        {formatTimeHHMM(appt.startTime)}
                       </span>
                     </div>
                     <div className="mt-2">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          appt.status === "CONFIRMED"
-                            ? "bg-green-100 text-green-800"
-                            : appt.status === "PENDING"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : appt.status === "CANCELED"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {appt.status}
-                      </span>
-                      <span
-                        className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          appt.type === "VIRTUAL"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-emerald-100 text-emerald-800"
-                        }`}
-                      >
-                        {appt.type === "VIRTUAL" ? "Virtual" : "In-Person"}
-                      </span>
+                      {/* Additional appointment status or type tags can go here if needed */}
                     </div>
                   </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-                  {appt.status === "CONFIRMED" && appt.type === "VIRTUAL" && appt.meetingLink && (
-                    <Link target="_blank" href={appt.meetingLink}>
-                      <Button variant="primary" size="sm">
-                        Join Meeting
-                      </Button>
-                    </Link>
-                  )}
-                  {(appt.status === "PENDING" ||
-                    appt.status === "COMPLETED" ||
-                    appt.status === "CANCELED") && (
-                    <Link
-                      href={`/appointments/new/reschedule/${appt.doctorId}?type=${appt.type}`}
-                    >
-                      <Button variant="outline" size="sm">
-                        Reschedule
-                      </Button>
-                    </Link>
-                  )}
                 </div>
               </div>
             </Card>

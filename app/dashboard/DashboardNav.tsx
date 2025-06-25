@@ -48,7 +48,7 @@ export function DashboardNav() {
               className={`
                 group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors
                 ${isActive 
-                  ? "bg-gray-100 text-gray-900"
+                  ? "bg-emerald-100 text-emerald-800"
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"}
               `}
             >
@@ -56,7 +56,7 @@ export function DashboardNav() {
                 className={`
                   flex-shrink-0 -ml-1 mr-3 h-6 w-6 transition-colors
                   ${isActive 
-                    ? "text-gray-900"
+                    ? "text-emerald-800"
                     : "text-gray-400 group-hover:text-gray-500"}
                 `}
                 aria-hidden="true"

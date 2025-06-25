@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import type { ChatSession } from "@/actions/chat";
 import { getUserInfo } from "@/actions/user";
+import { formatTimeHHMM } from "@/lib/utils";
 
 export default function ConversationList({ chatSessions, userInfo, onSelectChatSession, showMobileHeader, selectedChatSessionId }: { chatSessions?: ChatSession[], userInfo: Awaited<ReturnType<typeof getUserInfo>>, onSelectChatSession: (chatSession: ChatSession) => void, showMobileHeader?: boolean, selectedChatSessionId?: number }) {
     const [searchQuery, setSearchQuery] = useState("");
@@ -50,7 +51,8 @@ export default function ConversationList({ chatSessions, userInfo, onSelectChatS
                                     </div>
                                     <div className="flex flex-col items-end">
                                         <p className="text-xs text-gray-500">
-                                            {conversation.messages[conversation.messages.length - 1]?.createdAt.toLocaleTimeString()}
+                                            {conversation.messages[conversation.messages.length - 1]?.createdAt &&
+                                                formatTimeHHMM(conversation.messages[conversation.messages.length - 1].createdAt)}
                                         </p>
                                         {/* Unread indicator */}
                                         <div className="mt-1 h-2 w-2 bg-emerald-500 rounded-full hidden"></div>

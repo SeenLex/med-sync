@@ -36,7 +36,7 @@ const NewAppointmentFlowPage = async ({
   }
 
   const [action, doctorId] = params.slug || [];
-  const type = searchParams?.type;
+  const { type } = await searchParams;
 
   let doctorToReschedule: FindDoctor[number] | null = null;
 

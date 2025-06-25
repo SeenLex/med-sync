@@ -7,6 +7,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   bookAppointment,
   fetchDoctorAppointmentsForDate,
+  fetchAppointments,
 } from "@/actions/appointments";
 import { UserInfo, type FindDoctor } from "@/actions/user";
 import Steps from "@/components/book-appointment/Steps";
@@ -62,6 +63,25 @@ const NewAppointment: React.FC<Props> = ({
     enabled: !!selectedDoctor?.doctor?.id && !!selectedDate,
   });
 
+  const { data: patientAppointments } = useQuery({
+    queryKey: ["fetchPatientAppointmentsForDate", userInfo.patient?.id, selectedDate],
+    queryFn: async () => {
+      if (!userInfo.patient?.id || !selectedDate) return [];
+      const all = await fetchAppointments(userInfo.patient.id);
+      // Filter for the selected date
+      return all.filter((appt) => {
+        const apptDate = new Date(appt.startTime);
+        return (
+          apptDate.getFullYear() === selectedDate.getFullYear() &&
+          apptDate.getMonth() === selectedDate.getMonth() &&
+          apptDate.getDate() === selectedDate.getDate() &&
+          appt.status !== "CANCELED"
+        );
+      });
+    },
+    enabled: !!userInfo.patient?.id && !!selectedDate,
+  });
+
   const submitAppointment = useMutation({
     mutationFn: bookAppointment,
     onSuccess: () => {
@@ -77,11 +97,14 @@ const NewAppointment: React.FC<Props> = ({
       setNotes("");
     },
     onError: (error: Error) => {
-      console.error("Booking error:", error);
-      alert(
-        "Failed to book appointment: " +
-          (error.message || "An unknown error occurred.")
-      );
+      if (error.message.includes("already have an appointment")) {
+        alert("You already have an appointment at this time. Please choose another slot.");
+      } else {
+        alert(
+          "Failed to book appointment: " +
+            (error.message || "An unknown error occurred.")
+        );
+      }
     },
   });
 
@@ -209,6 +232,7 @@ const NewAppointment: React.FC<Props> = ({
                 setSelectedTime={setSelectedTime}
                 appointmentsLoading={appointmentsLoading}
                 appointments={appointments || []}
+                patientAppointments={patientAppointments || []}
               />
             )}
 

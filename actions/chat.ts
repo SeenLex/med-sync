@@ -86,7 +86,7 @@ export type Revalidate = {
     path: string;
 } | null;
 
-export async function sendMessage(chatSessionId: number, content: string, userInfo: Awaited<ReturnType<typeof getUserInfo>>, revalidate : Revalidate = null) {
+export async function sendMessage(chatSessionId: number, content: string, userInfo: Awaited<ReturnType<typeof getUserInfo>>, options: { path?: string, fileName?: string, type?: string } = {}) {
     const chatSession = await prisma.chatSession.findUniqueOrThrow({
         where: {
             id: chatSessionId,
@@ -97,6 +97,32 @@ export async function sendMessage(chatSessionId: number, content: string, userIn
     }
     if (chatSession.doctorId !== userInfo.doctor?.id && chatSession.patientId !== userInfo.patient?.id) {
         throw new Error("You are not allowed to send messages to this chat session.");
+    }
+    if (options.type === "file") {
+        // Only allow images and PDFs
+        const allowed = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".pdf"];
+        const fileName = options.fileName || "";
+        const ext = fileName.slice(fileName.lastIndexOf(".")).toLowerCase();
+        if (!allowed.includes(ext)) {
+            throw new Error("Only image files and PDFs are allowed.");
+        }
+        if (!content.startsWith("http")) {
+            throw new Error("Invalid file URL.");
+        }
+        const message = await prisma.message.create({
+            data: {
+                chatSessionId,
+                content, // file URL
+                fileUrl: content,
+                fileName: fileName,
+                senderRole: userInfo.role,
+                senderId: userInfo.id,
+            },
+        });
+        if (options.path) {
+            revalidatePath(options.path);
+        }
+        return message;
     }
     if (content.length === 0) {
         throw new Error("Message content cannot be empty.");
@@ -109,8 +135,8 @@ export async function sendMessage(chatSessionId: number, content: string, userIn
             senderId: userInfo.id,
         },
     });
-    if (revalidate) {
-        revalidatePath(revalidate.path);
+    if (options.path) {
+        revalidatePath(options.path);
     }
     return message;
 }

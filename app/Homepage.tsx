@@ -19,6 +19,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
 import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
+import { formatDateDDMMYYYY, formatTimeHHMM } from "@/lib/utils";
 
 type Props = {
   initialData: {
@@ -37,6 +38,7 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
     enabled: patientId > 0,
+    keepPreviousData: true,
   });
 
   const quickActions = [
@@ -119,8 +121,6 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
               </Link>
             </div>
 
-            {isFetching && <div className="text-center p-2">Loading...</div>}
-
             <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
               {appointments.length > 0 ? (
                 appointments.map((appt) => (
@@ -148,16 +148,9 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
                             <Clock className="h-4 w-4 mr-1" />
                             <span suppressHydrationWarning className="truncate">
                               {appt.startTime
-                                ? new Date(
-                                    appt.startTime
-                                  ).toLocaleDateString() +
+                                ? formatDateDDMMYYYY(appt.startTime) +
                                   " at " +
-                                  new Date(
-                                    appt.startTime
-                                  ).toLocaleTimeString([], {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })
+                                  formatTimeHHMM(appt.startTime)
                                 : "Date/Time not available"}
                             </span>
                           </div>
@@ -198,6 +191,13 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
                           >
                             <Button variant="outline" size="sm">
                               Reschedule
+                            </Button>
+                          </Link>
+                        )}
+                        {appt.status === "CONFIRMED" && appt.type === "VIRTUAL" && appt.meetingLink && (
+                          <Link target="_blank" href={appt.meetingLink}>
+                            <Button variant="primary" size="sm">
+                              Join Meeting
                             </Button>
                           </Link>
                         )}

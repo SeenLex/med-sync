@@ -14,6 +14,7 @@ interface Step3Props {
   setSelectedTime: (time: string | null) => void;
   appointmentsLoading: boolean;
   appointments: Appointment[] | undefined;
+  patientAppointments?: Appointment[];
 }
 
 const Step3: React.FC<Step3Props> = ({
@@ -23,6 +24,7 @@ const Step3: React.FC<Step3Props> = ({
   setSelectedTime,
   appointmentsLoading,
   appointments,
+  patientAppointments = [],
 }) => {
   const allTimeSlots = [];
   for (let startingHour = 9; startingHour <= 17; startingHour++) {
@@ -31,6 +33,13 @@ const Step3: React.FC<Step3Props> = ({
       allTimeSlots.push(`${startingHour}:30`);
     }
   }
+
+  // Find times already booked by the patient
+  const patientBookedTimes = patientAppointments.map((appt) => {
+    const hour = new Date(appt.startTime).getHours();
+    const minute = new Date(appt.startTime).getMinutes();
+    return `${hour}:${minute < 10 ? "0" + minute : minute}`;
+  });
 
   const reservedAppointments = appointments?.filter(
     (appointment) => appointment.status !== "CANCELED"
@@ -52,9 +61,9 @@ const Step3: React.FC<Step3Props> = ({
                 : appointmentTimeMinute
             }`;
             return formattedTime === time;
-          })
+          }) && !patientBookedTimes.includes(time)
       )
-    : allTimeSlots;
+    : allTimeSlots.filter((time) => !patientBookedTimes.includes(time));
 
   return (
     <div>
@@ -109,13 +118,13 @@ const Step3: React.FC<Step3Props> = ({
                       className={`px-4 py-2 rounded-full border text-sm font-medium transition
                         ${
                           selectedTime === time
-                            ? "bg-emerald-600 text-white border-emerald-600 shadow"
+                            ? "bg-emerald-600 text-white border-emerald-600 shadow cursor-default"
                             : isAvailable
-                            ? "bg-white text-emerald-700 border-emerald-300 hover:bg-emerald-50"
+                            ? "bg-white text-emerald-700 border-emerald-300 hover:bg-emerald-50 cursor-pointer"
                             : "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
                         }
                       `}
-                      disabled={!isAvailable}
+                      disabled={!isAvailable || selectedTime === time}
                       aria-selected={selectedTime === time}
                     >
                       {time}

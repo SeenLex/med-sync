@@ -6,12 +6,15 @@ import Button from "@/components/ui/Button";
 import { sendMessage, type ChatSession } from "@/actions/chat";
 import { getUserInfo } from "@/actions/user";
 import { Message } from "@/prisma/generated/prisma";
+import { formatTimeHHMM } from "@/lib/utils";
+import { createClient } from "@/utils/supabase/client";
 
 export default function MessageThread({ chatSession, chatSessions, userInfo, showMobileHeader = false, onBackMobile }: { chatSession: ChatSession, chatSessions: ChatSession[], userInfo: Awaited<ReturnType<typeof getUserInfo>>, showMobileHeader?: boolean, onBackMobile?: () => void }) {
     const [messages, setMessages] = useState<Message[]>(chatSession?.messages || []);
     const [isLoading, setIsLoading] = useState(false);
     const [newMessage, setNewMessage] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
@@ -36,6 +39,30 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
             setMessages([...messages, message]);
         }
         setNewMessage("");
+        setIsLoading(false);
+    };
+
+    const handleFileUpload = async (file: File) => {
+        setIsLoading(true);
+        try {
+            const supabase = createClient();
+            const fileName = `chat-files/${chatSession.id}/${Date.now()}-${file.name}`;
+            const { data, error } = await supabase.storage.from("chat-files").upload(fileName, file);
+            if (error) {
+                alert("File upload failed");
+                setIsLoading(false);
+                return;
+            }
+            const { data: urlData } = supabase.storage.from("chat-files").getPublicUrl(fileName);
+            const fileUrl = urlData.publicUrl;
+            // Send a message with the file URL and file name
+            const message = await sendMessage(chatSession.id, fileUrl, userInfo, { path: "/messages", fileName: file.name, type: "file" });
+            if (message) {
+                setMessages([...messages, message]);
+            }
+        } catch (err) {
+            alert("File upload failed");
+        }
         setIsLoading(false);
     };
 
@@ -96,12 +123,15 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                             className={`max-w-[80vw] md:max-w-[70%] rounded-2xl px-4 py-2 shadow-sm
                                 ${message.senderRole === userInfo.role ? "bg-emerald-500 text-white" : "bg-white text-gray-900 border border-gray-200"}`}
                         >
-                            <p className="text-sm break-words">{message.content}</p>
+                            {message.type === "file" ? (
+                                <a href={message.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                                    {message.fileName || "Download file"}
+                                </a>
+                            ) : (
+                                <p className="text-sm break-words">{message.content}</p>
+                            )}
                             <p className="text-xs mt-1 opacity-70 text-right">
-                                {new Date(message.createdAt).toLocaleTimeString([], {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                })}
+                                {formatTimeHHMM(message.createdAt)}
                             </p>
                         </div>
                     </div>
@@ -111,12 +141,34 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
             {/* Message Input */}
             <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0 z-20">
                 <div className="flex items-center space-x-2">
+                    <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="p-2 rounded hover:bg-gray-100 flex-shrink-0"
+                        title="Attach file"
+                        disabled={isLoading}
+                        style={{ minWidth: 40, minHeight: 40 }}
+                    >
+                        <Paperclip className="h-5 w-5" />
+                    </button>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                                await handleFileUpload(file);
+                                e.target.value = "";
+                            }
+                        }}
+                    />
                     <input
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm min-w-0"
                         onKeyPress={(e) => {
                             if (e.key === "Enter" && !e.shiftKey) {
                                 e.preventDefault();
@@ -127,7 +179,8 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                     <Button
                         onClick={handleSendMessage}
                         disabled={!newMessage.trim() || isLoading}
-                        className="flex items-center space-x-1 px-4 py-2 rounded-full text-sm"
+                        className="flex items-center space-x-1 px-4 py-2 rounded-full text-sm flex-shrink-0"
+                        style={{ minWidth: 40, minHeight: 40 }}
                     >
                         <Send className="h-4 w-4" />
                         <span>Send</span>

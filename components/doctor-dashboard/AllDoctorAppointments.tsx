@@ -7,9 +7,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { APPOINTMENTS_PAGE_SIZE } from "@/lib/constants";
 import Card from "../ui/Card";
-import { Calendar, Clock } from "lucide-react";
+import { Calendar, Clock, Video, MapPin } from "lucide-react";
 import PaginationControls from "../ui/PaginationControls";
 import Link from "next/link";
+import { formatDateDDMMYYYY, formatTimeHHMM } from "@/lib/utils";
+import Button from "../ui/Button";
 
 type Props = {
   doctorId: number;
@@ -22,6 +24,7 @@ const AllDoctorAppointmentsList: React.FC<Props> = ({ doctorId }) => {
     queryKey: ["doctor-all-appointments", doctorId, page],
     queryFn: () => fetchPaginatedDoctorAppointments({ doctorId, page }),
     placeholderData: (previousData) => previousData,
+    keepPreviousData: true,
   });
 
   const appointments = data?.appointments || [];
@@ -32,30 +35,35 @@ const AllDoctorAppointmentsList: React.FC<Props> = ({ doctorId }) => {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-900">All Appointments</h2>
-      {isFetching && <div className="text-center p-2">Loading...</div>}
       <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
         {appointments.length > 0 ? (
           appointments.map((appt) => (
             <Card key={appt.id} className="p-4">
               <div className="flex flex-col sm:flex-row justify-between">
-                <div>
-                  <p className="font-semibold text-gray-800">
-                    {appt.patient.user.fullName}
-                  </p>
-                  <div className="mt-2 flex items-center text-sm text-gray-500">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    <span suppressHydrationWarning>
-                      {new Date(appt.startTime).toLocaleDateString()}
-                    </span>
+                <div className="flex items-start space-x-4">
+                  <div className={`p-2 rounded-full ${appt.type === "VIRTUAL" ? "bg-blue-100" : "bg-green-100"}`}>
+                    {appt.type === "VIRTUAL" ? (
+                      <Video className="h-6 w-6 text-blue-600" />
+                    ) : (
+                      <MapPin className="h-6 w-6 text-green-600" />
+                    )}
                   </div>
-                  <div className="mt-1 flex items-center text-sm text-gray-500">
-                    <Clock className="h-4 w-4 mr-2" />
-                    <span suppressHydrationWarning>
-                      {new Date(appt.startTime).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
+                  <div>
+                    <p className="font-semibold text-gray-800">
+                      {appt.patient.user.fullName}
+                    </p>
+                    <div className="mt-2 flex items-center text-sm text-gray-500">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      <span suppressHydrationWarning>
+                        {formatDateDDMMYYYY(appt.startTime)}
+                      </span>
+                    </div>
+                    <div className="mt-1 flex items-center text-sm text-gray-500">
+                      <Clock className="h-4 w-4 mr-2" />
+                      <span suppressHydrationWarning>
+                        {formatTimeHHMM(appt.startTime)}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center mt-4 sm:mt-0 gap-4">
@@ -72,9 +80,11 @@ const AllDoctorAppointmentsList: React.FC<Props> = ({ doctorId }) => {
                   >
                     {appt.status}
                   </span>
-                  {appt.meetingLink && (
-                    <Link target="_blank" href={appt.meetingLink} className="px-3 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600">
-                      Join Meeting
+                  {appt.type === "VIRTUAL" && appt.meetingLink && (
+                    <Link target="_blank" href={appt.meetingLink}>
+                      <Button variant="primary" size="sm">
+                        Join Meeting
+                      </Button>
                     </Link>
                   )}
                 </div>

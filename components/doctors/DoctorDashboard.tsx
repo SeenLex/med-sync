@@ -47,7 +47,6 @@ export const MyPatientsList: React.FC<MyPatientsListProps> = ({ doctorId }) => {
 
   return (
     <div className="space-y-6">
-      {isFetching && <div className="text-center p-2">Loading...</div>}
       <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
         {patients.length > 0 ? (
           patients.map((patient: DoctorPatient) => (

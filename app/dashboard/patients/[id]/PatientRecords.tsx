@@ -14,6 +14,7 @@ import { useState, useRef, useEffect } from "react";
 import { Upload, FileIcon, Download, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { uploadMedicalRecord, deleteMedicalRecord, downloadMedicalRecord } from "@/actions/medical-records";
+import { formatDateDDMMYYYY } from "@/lib/utils";
 
 export default function PatientRecords({ doctor, patient, medicalRecords }: { doctor: Doctor, patient: Patient, medicalRecords: MedicalRecord[] }) {
     const [isDragging, setIsDragging] = useState(false);
@@ -108,7 +109,7 @@ export default function PatientRecords({ doctor, patient, medicalRecords }: { do
                         <FileIcon className="w-6 h-6 text-emerald-600" />
                         <div>
                             <h3 className="font-medium">{record.title}</h3>
-                            <p className="text-sm text-gray-500">{new Date(record.createdAt).toLocaleDateString()}</p>
+                            <p className="text-sm text-gray-500">{formatDateDDMMYYYY(record.createdAt)}</p>
                         </div>
                     </div>
                     <div className="flex gap-2">

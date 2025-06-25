@@ -1,6 +1,7 @@
 import type { FindDoctor } from "@/actions/user";
 import React from "react";
 import Image from "next/image";
+import { formatDateDDMMYYYY } from "@/lib/utils";
 
 type Step4Props = {
   selectedDoctor: FindDoctor[number] | null;
@@ -57,11 +58,7 @@ const Step4: React.FC<Step4Props> = ({
               <div>
                 <p className="text-sm font-medium text-gray-500">Date</p>
                 <p className="text-base text-gray-900">
-                  {selectedDate.toLocaleDateString(undefined, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
+                  {formatDateDDMMYYYY(selectedDate)}
                 </p>
               </div>
               <div>

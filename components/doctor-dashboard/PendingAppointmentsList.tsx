@@ -12,6 +12,7 @@ import Card from "../ui/Card";
 import { Calendar, Clock } from "lucide-react";
 import Button from "../ui/Button";
 import PaginationControls from "../ui/PaginationControls";
+import { formatDateDDMMYYYY, formatTimeHHMM } from "@/lib/utils";
 
 type Props = {
   doctorId: number;
@@ -25,6 +26,7 @@ const PendingAppointmentsList: React.FC<Props> = ({ doctorId }) => {
     queryKey: ["doctor-pending-appointments", doctorId, page],
     queryFn: () => fetchPendingDoctorAppointments({ doctorId, page }),
     placeholderData: (previousData) => previousData,
+    keepPreviousData: true,
   });
 
   const handleSuccess = () => {
@@ -54,7 +56,6 @@ const PendingAppointmentsList: React.FC<Props> = ({ doctorId }) => {
       <h2 className="text-xl font-semibold text-gray-900">
         Pending Appointment Requests
       </h2>
-      {isFetching && <div className="text-center p-2">Loading...</div>}
       <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
         {appointments.length > 0 ? (
           appointments.map((appt) => (
@@ -67,16 +68,13 @@ const PendingAppointmentsList: React.FC<Props> = ({ doctorId }) => {
                   <div className="mt-2 flex items-center text-sm text-gray-500">
                     <Calendar className="h-4 w-4 mr-2" />
                     <span suppressHydrationWarning>
-                      {new Date(appt.startTime).toLocaleDateString()}
+                      {formatDateDDMMYYYY(appt.startTime)}
                     </span>
                   </div>
                   <div className="mt-1 flex items-center text-sm text-gray-500">
                     <Clock className="h-4 w-4 mr-2" />
                     <span suppressHydrationWarning>
-                      {new Date(appt.startTime).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {formatTimeHHMM(appt.startTime)}
                     </span>
                   </div>
                   {appt.notes && (
