@@ -1,37 +1,31 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Button from "@/components/ui/Button";
 import InputField from "@/components/auth-components/InputField";
-import ForgotPasswordModal from "@/components/auth-components/ForgotPasswordModal";
 import { login } from "@/actions/auth";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handlePasswordReset = async () => {
-    //password reset logic
-  };
-
   const handleLogin = async (e: React.FormEvent) => {
-      e.preventDefault();
-      setErrorMessage(null);
-      setIsLoading(true);
-  
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
-  
-      await login(formData);
-      setIsLoading(false);
-    };
+    e.preventDefault();
+    setErrorMessage(null);
+    setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+
+    await login(formData);
+    setIsLoading(false);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -64,9 +58,6 @@ const Login: React.FC = () => {
             />
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium">
-                Password
-              </label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <InputField
                   id="password"
@@ -92,28 +83,11 @@ const Login: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="text-sm">
-                <button
-                  className="text-emerald-600 hover:text-emerald-500"
-                  onClick={() => setShowForgotPasswordModal(true)}
-                >
-                  Forgot Password?
-                </button>
-
-                <ForgotPasswordModal
-                  isOpen={showForgotPasswordModal}
-                  onClose={() => setShowForgotPasswordModal(false)}
-                  onSubmit={handlePasswordReset}
-                />
-              </div>
-            </div>
-              
-              <div>
-                <Button type="submit" fullWidth disabled={isLoading}>
+            <div>
+              <Button type="submit" fullWidth disabled={isLoading}>
                 {isLoading ? "Logging in..." : "Login"}
-                </Button>
-              </div>
+              </Button>
+            </div>
           </form>
           {errorMessage && (
             <div className="mt-4 text-center text-red-500 text-sm font-medium">

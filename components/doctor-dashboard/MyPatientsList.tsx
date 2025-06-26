@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchDoctorPatients, DoctorPatient } from "@/actions/patients";
 import { MEDICAL_RECORDS_PAGE_SIZE } from "@/lib/constants";
 import Card from "../ui/Card";
-import { User, Mail, Phone, MessageCircle } from "lucide-react";
+import { Mail, Phone, MessageCircle } from "lucide-react";
 import PaginationControls from "../ui/PaginationControls";
 import Button from "../ui/Button";
 import Link from "next/link";
@@ -23,7 +23,6 @@ const MyPatientsList: React.FC<Props> = ({ doctorId }) => {
     queryKey: ["doctor-patients", doctorId, page],
     queryFn: () => fetchDoctorPatients({ doctorId, page }),
     placeholderData: (previousData) => previousData,
-    keepPreviousData: true,
   });
 
   const patients = data?.patients || [];

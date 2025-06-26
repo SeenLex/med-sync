@@ -1,30 +1,23 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState} from "react";
 import {
   FileText,
   Download,
-  Eye,
   Filter,
   Search,
   Calendar,
   User,
   Loader2,
 } from "lucide-react";
-import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Layout from "@/components/layout/Layout";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/shadcn/dialog";
 import {
   MedicalRecord,
   fetchPaginatedMedicalRecords,
   downloadMedicalRecord,
-  uploadMedicalRecord,
 } from "@/actions/medical-records";
 import { useQuery } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
@@ -43,10 +36,6 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [showUpload, setShowUpload] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
-  const [previewFile, setPreviewFile] = useState<{ url: string; title: string } | null>(null);
   const [isLoading, setIsLoading] = useState<{
     upload: boolean,
     download: Record<string, boolean>,
@@ -54,7 +43,6 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
     upload: false,
     download: {},
   });
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data, isFetching } = useQuery({
     queryKey: ["medical-records", page],
@@ -62,7 +50,6 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
     enabled: patientId > 0,
-    keepPreviousData: true,
   });
 
   const totalPages = Math.ceil(
@@ -123,7 +110,6 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
           My Medical Records
         </h1>
 
-        {/* Enhanced Filter/Search Section */}
         <div className="sticky top-0 z-10 bg-white rounded-lg shadow-lg p-4 mb-6 border border-gray-100 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <Filter className="h-5 w-5 text-emerald-500" />
@@ -231,7 +217,6 @@ const MedicalRecords: React.FC<Props> = ({ initialData, patientId }) => {
                               console.log('Download successful, blob received:', blob, 'blob size:', blob.size);
                               const url = URL.createObjectURL(blob);
                               console.log('Created URL:', url);
-                              // Actually download the file
                               const a = document.createElement("a");
                               a.href = url;
                               a.download = record.title || "medical-record";

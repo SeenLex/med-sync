@@ -99,7 +99,6 @@ export async function sendMessage(chatSessionId: number, content: string, userIn
         throw new Error("You are not allowed to send messages to this chat session.");
     }
     if (options.type === "file") {
-        // Only allow images and PDFs
         const allowed = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".pdf"];
         const fileName = options.fileName || "";
         const ext = fileName.slice(fileName.lastIndexOf(".")).toLowerCase();
@@ -112,7 +111,7 @@ export async function sendMessage(chatSessionId: number, content: string, userIn
         const message = await prisma.message.create({
             data: {
                 chatSessionId,
-                content, // file URL
+                content,
                 fileUrl: content,
                 fileName: fileName,
                 senderRole: userInfo.role,

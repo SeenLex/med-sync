@@ -58,7 +58,7 @@ const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
       setShowPreview(false);
       setPreviewFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (err) {
+    } catch {
       setError("Failed to upload profile picture. Please try again.");
     } finally {
       setIsUploading(false);
@@ -110,7 +110,6 @@ const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
         <p className="text-gray-500">{userInfo.email}</p>
       </div>
 
-      {/* Preview Modal */}
       {showPreview && previewFile && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">

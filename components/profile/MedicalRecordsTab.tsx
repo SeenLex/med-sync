@@ -107,14 +107,6 @@ const MedicalRecordsTab: React.FC<Props> = ({ initialData, patientId }) => {
                   <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
                     <Button
                       size="sm"
-                      variant="outline"
-                      onClick={() => rec.fileUrl && window.open(rec.fileUrl, "_blank")}
-                      disabled={!rec.fileUrl}
-                    >
-                      View
-                    </Button>
-                    <Button
-                      size="sm"
                       variant="secondary"
                       onClick={async () => {
                         if (!rec.fileUrl) return;

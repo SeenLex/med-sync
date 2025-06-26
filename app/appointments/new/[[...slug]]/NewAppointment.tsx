@@ -68,7 +68,6 @@ const NewAppointment: React.FC<Props> = ({
     queryFn: async () => {
       if (!userInfo.patient?.id || !selectedDate) return [];
       const all = await fetchAppointments(userInfo.patient.id);
-      // Filter for the selected date
       return all.filter((appt) => {
         const apptDate = new Date(appt.startTime);
         return (

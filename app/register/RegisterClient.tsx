@@ -24,7 +24,9 @@ import Checkbox from "@/components/auth-components/Checkbox";
 import SelectField from "@/components/auth-components/SelectField";
 import { uploadProfilePicture } from "@/actions/user";
 
-const Register: React.FC<{ specialties: { value: string, label: string }[] }> = ({ specialties }) => {
+const Register: React.FC<{
+  specialties: { value: string; label: string }[];
+}> = ({ specialties }) => {
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -161,7 +163,7 @@ const Register: React.FC<{ specialties: { value: string, label: string }[] }> = 
             Create your account {step > 0 && `- Step ${step} of ${maxSteps}`}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link href="/login">
               <span className="font-medium text-emerald-600 hover:text-emerald-500 cursor-pointer">
                 Sign in
@@ -295,11 +297,15 @@ const Register: React.FC<{ specialties: { value: string, label: string }[] }> = 
                 <input
                   type="file"
                   accept="image/jpeg,image/jpg,image/png"
-                  onChange={e => setProfilePicture(e.target.files?.[0] || null)}
+                  onChange={(e) =>
+                    setProfilePicture(e.target.files?.[0] || null)
+                  }
                   required
                 />
                 {errorMessage && !profilePicture && (
-                  <div className="text-red-500 text-sm mt-1">Profile picture is required.</div>
+                  <div className="text-red-500 text-sm mt-1">
+                    Profile picture is required.
+                  </div>
                 )}
               </>
             )}
@@ -372,4 +378,4 @@ const Register: React.FC<{ specialties: { value: string, label: string }[] }> = 
   );
 };
 
-export default Register; 
+export default Register;

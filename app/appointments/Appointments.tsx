@@ -45,7 +45,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
     queryFn: () => fetchPaginatedAppointments({ patientId, page }),
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
-    keepPreviousData: true,
+    staleTime: 5000,
   });
 
   const cancelAppointmentMutation = useMutation({

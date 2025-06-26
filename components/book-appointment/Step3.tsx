@@ -34,7 +34,6 @@ const Step3: React.FC<Step3Props> = ({
     }
   }
 
-  // Find times already booked by the patient
   const patientBookedTimes = patientAppointments.map((appt) => {
     const hour = new Date(appt.startTime).getHours();
     const minute = new Date(appt.startTime).getMinutes();

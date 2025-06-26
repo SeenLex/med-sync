@@ -204,7 +204,6 @@ interface BookAppointment {
 }
 
 export async function bookAppointment(input: BookAppointment) {
-  // Prevent double-booking for the same patient at the same time (excluding canceled appointments)
   const existing = await prisma.appointment.findFirst({
     where: {
       patientId: input.patientId,

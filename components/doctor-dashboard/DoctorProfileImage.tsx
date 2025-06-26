@@ -58,7 +58,7 @@ const DoctorProfileImage: React.FC<Props> = ({ userInfo }) => {
       setShowPreview(false);
       setPreviewFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (err) {
+    } catch {
       setError("Failed to upload profile picture. Please try again.");
     } finally {
       setIsUploading(false);

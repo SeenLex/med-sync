@@ -26,7 +26,7 @@ const PendingAppointmentsList: React.FC<Props> = ({ doctorId }) => {
     queryKey: ["doctor-pending-appointments", doctorId, page],
     queryFn: () => fetchPendingDoctorAppointments({ doctorId, page }),
     placeholderData: (previousData) => previousData,
-    keepPreviousData: true,
+    staleTime: 5000,
   });
 
   const handleSuccess = () => {

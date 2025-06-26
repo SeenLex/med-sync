@@ -24,7 +24,6 @@ const AllDoctorAppointmentsList: React.FC<Props> = ({ doctorId }) => {
     queryKey: ["doctor-all-appointments", doctorId, page],
     queryFn: () => fetchPaginatedDoctorAppointments({ doctorId, page }),
     placeholderData: (previousData) => previousData,
-    keepPreviousData: true,
   });
 
   const appointments = data?.appointments || [];

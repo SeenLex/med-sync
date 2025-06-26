@@ -38,7 +38,6 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
     enabled: patientId > 0,
-    keepPreviousData: true,
   });
 
   const quickActions = [
@@ -142,7 +141,7 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
                             {appt.doctor?.user?.fullName}
                           </h3>
                           <p className="text-xs sm:text-sm text-gray-500 truncate">
-                            {appt.doctor?.specialization}
+                            {appt.doctor.specialtyId ? `Specialty #${appt.doctor.specialtyId}` : "General Practitioner"}
                           </p>
                           <div className="mt-1 flex items-center text-xs sm:text-sm text-gray-500">
                             <Clock className="h-4 w-4 mr-1" />

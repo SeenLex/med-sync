@@ -33,7 +33,6 @@ import { Calendar } from "@/components/shadcn/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/shadcn/popover";
 import { cn } from "@/lib/utils";
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -59,7 +58,6 @@ const AdminDashboard: React.FC<{ allUsers: User[], stats: StatsType, appointment
   const [customStartDate, setCustomStartDate] = useState<string>('');
   const [customEndDate, setCustomEndDate] = useState<string>('');
 
-  // Get date range based on selected period
   const getDateRange = useMemo(() => {
     const today = new Date();
     
@@ -96,7 +94,6 @@ const AdminDashboard: React.FC<{ allUsers: User[], stats: StatsType, appointment
     }
   }, [selectedPeriod, customStartDate, customEndDate, appointments]);
 
-  // Process appointments data for the chart
   const chartData = useMemo(() => {
     if (!appointments || appointments.length === 0) {
       return {
@@ -114,7 +111,6 @@ const AdminDashboard: React.FC<{ allUsers: User[], stats: StatsType, appointment
 
     const { start, end } = getDateRange;
     
-    // Generate all months in the range
     const months: string[] = [];
     const currentDate = new Date(start);
     
@@ -123,7 +119,6 @@ const AdminDashboard: React.FC<{ allUsers: User[], stats: StatsType, appointment
       currentDate.setMonth(currentDate.getMonth() + 1);
     }
 
-    // Filter and group appointments by month for the selected period
     const appointmentsByMonth = appointments.reduce((acc, appointment) => {
       const appointmentDate = new Date(appointment.startTime);
       if (!isBefore(appointmentDate, start) && !isAfter(appointmentDate, end)) {
@@ -247,7 +242,6 @@ const AdminDashboard: React.FC<{ allUsers: User[], stats: StatsType, appointment
           ))}
         </div>
 
-        {/* Appointments Chart */}
         <div className="bg-white shadow rounded-lg p-6 w-full">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h2 className="text-lg font-medium text-gray-900">
