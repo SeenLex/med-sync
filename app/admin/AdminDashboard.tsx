@@ -9,6 +9,7 @@ import {
   Trash2 as TrashIcon,
   Loader2,
   CalendarIcon as CalendarLucide,
+  LogOut,
 } from "lucide-react";
 import {
   Chart as ChartJS,
@@ -24,7 +25,6 @@ import {
 import { Bar } from 'react-chartjs-2';
 import { format, parseISO, subMonths, isBefore, isAfter, subYears } from 'date-fns';
 import Button from "@/components/ui/Button";
-import Layout from "@/components/layout/Layout";
 import { User } from "@/prisma/generated/prisma";
 import { deleteUser } from "@/actions/user";
 import { Stats as StatsType } from "@/actions/stats";
@@ -32,6 +32,7 @@ import { Appointment } from "@/prisma/generated/prisma";
 import { Calendar } from "@/components/shadcn/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/shadcn/popover";
 import { cn } from "@/lib/utils";
+import { logout } from "@/actions/auth";
 
 ChartJS.register(
   CategoryScale,
@@ -196,7 +197,20 @@ const AdminDashboard: React.FC<{ allUsers: User[], stats: StatsType, appointment
   };
 
   return (
-    <Layout>
+    <>
+      <nav className="bg-white shadow-md sticky top-0 z-200">
+        <div className="max-w mx-auto px-4 sm:px-6 lg:px-8 h-16">
+          <div className="flex justify-between h-16 items-center">
+            <span className="text-emerald-600 font-bold text-2xl select-none cursor-default">MedSync</span>
+            <form action={logout}>
+              <button type="submit" className="flex items-center px-3 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700">
+                <LogOut className="h-5 w-5 mr-2" />
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
+      </nav>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-12">
         <h1 className="text-2xl font-semibold text-gray-900">
           Admin Dashboard
@@ -311,7 +325,9 @@ const AdminDashboard: React.FC<{ allUsers: User[], stats: StatsType, appointment
                         mode="single"
                         selected={customEndDate ? new Date(customEndDate) : undefined}
                         onSelect={(date) => {
-                          date && setCustomEndDate(format(date, 'yyyy-MM-dd'));
+                          if (date) {
+                            setCustomEndDate(format(date, 'yyyy-MM-dd'));
+                          }
                         }}
                         disabled={(date) => 
                           customStartDate ? isBefore(date, new Date(customStartDate)) : false
@@ -443,7 +459,7 @@ const AdminDashboard: React.FC<{ allUsers: User[], stats: StatsType, appointment
         </div>
 
       </div>
-    </Layout>
+    </>
   );
 };
 

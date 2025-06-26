@@ -17,6 +17,12 @@ const Homepage = async () => {
 
   const userInfo = await getUserInfo(user?.email);
 
+
+  if (userInfo.role === "ADMIN") {
+    redirect("/admin");
+  }
+
+  
   if (userInfo.role === "DOCTOR") {
     redirect("/dashboard/pending");
   }
