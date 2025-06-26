@@ -22,5 +22,5 @@ export default async function AdminPage() {
         getStats(),
         getAllAppointments()
     ])
-    return <AdminDashboard allUsers={users} stats={stats} appointments={appointments} userInfo={userInfo}/>;
+    return <AdminDashboard allUsers={users} stats={stats} appointments={appointments} />;
 }

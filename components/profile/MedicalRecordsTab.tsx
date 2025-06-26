@@ -31,7 +31,6 @@ const MedicalRecordsTab: React.FC<Props> = ({ initialData, patientId }) => {
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
     enabled: patientId > 0,
-    keepPreviousData: true,
   });
 
   const totalPages = Math.ceil(

@@ -5,9 +5,15 @@ import { Send, Paperclip } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { sendMessage, type ChatSession } from "@/actions/chat";
 import { getUserInfo } from "@/actions/user";
-import { Message } from "@/prisma/generated/prisma";
+import { Message as PrismaMessage } from "@/prisma/generated/prisma";
+
+// Extend the Message type to include 'type'
+type Message = PrismaMessage & {
+    type?: string; // 'file' or undefined for backward compatibility
+};
 import { formatTimeHHMM } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/client";
+import Image from "next/image";
 
 export default function MessageThread({ chatSession, chatSessions, userInfo, showMobileHeader = false, onBackMobile }: { chatSession: ChatSession, chatSessions: ChatSession[], userInfo: Awaited<ReturnType<typeof getUserInfo>>, showMobileHeader?: boolean, onBackMobile?: () => void }) {
     const [messages, setMessages] = useState<Message[]>(chatSession?.messages || []);
@@ -47,12 +53,7 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
         try {
             const supabase = createClient();
             const fileName = `chat-files/${chatSession.id}/${Date.now()}-${file.name}`;
-            const { data, error } = await supabase.storage.from("chat-files").upload(fileName, file);
-            if (error) {
-                alert("File upload failed");
-                setIsLoading(false);
-                return;
-            }
+            await supabase.storage.from("chat-files").upload(fileName, file);
             const { data: urlData } = supabase.storage.from("chat-files").getPublicUrl(fileName);
             const fileUrl = urlData.publicUrl;
             // Send a message with the file URL and file name
@@ -60,7 +61,7 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
             if (message) {
                 setMessages([...messages, message]);
             }
-        } catch (err) {
+        } catch {
             alert("File upload failed");
         }
         setIsLoading(false);
@@ -126,15 +127,17 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                             {message.type === "file" || (message.content && (message.content.endsWith('.jpg') || message.content.endsWith('.jpeg') || message.content.endsWith('.png') || message.content.endsWith('.gif') || message.content.endsWith('.webp') || message.content.endsWith('.bmp') || message.content.endsWith('.pdf'))) ? (
                                 (() => {
                                     // Try to get extension from fileName, fallback to content URL
-                                    const ext = (message.fileName || message.content).split('.').pop()?.toLowerCase();
+                                    const ext = ((message.fileName || message.content).split('.').pop() || '').toLowerCase();
                                     const fileName = message.fileName || message.content.split('/').pop();
                                     if (["jpg", "jpeg", "png", "gif", "webp", "bmp"].includes(ext)) {
                                         // Image preview (no filename)
                                         return (
                                             <a href={message.content} target="_blank" rel="noopener noreferrer">
-                                                <img
+                                                <Image
                                                     src={message.content}
-                                                    alt={fileName}
+                                                    alt={fileName || "Image"}
+                                                    width={200}
+                                                    height={200}
                                                     className="max-w-[200px] max-h-[200px] mb-1"
                                                 />
                                             </a>

@@ -10,7 +10,7 @@ import {
     DialogTrigger,
     DialogFooter,
 } from "@/components/shadcn/dialog"
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Upload, FileIcon, Download, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { uploadMedicalRecord, deleteMedicalRecord, downloadMedicalRecord } from "@/actions/medical-records";
@@ -92,10 +92,8 @@ export default function PatientRecords({ doctor, patient, medicalRecords }: { do
         setSelectedFile(null);
         setSelectedRecordType(null);
         setIsLoading({ ...isLoading, upload: false });
-    };
-    useEffect(() => {
         setOpen(false);
-    }, [medicalRecords]);
+    };
     return <div className="bg-white p-4 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold">{patient.user.fullName}</h1>
         <div className="text-sm text-gray-500 mb-4">

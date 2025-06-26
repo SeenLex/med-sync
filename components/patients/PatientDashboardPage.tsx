@@ -20,7 +20,7 @@ const PatientDashboardPage = async () => {
   }
 
   const userInfo = await getUserInfo(user.email);
-  const patientId = userInfo.patient?.id;
+  const patientId = userInfo?.patient?.id;
   if (!patientId) {
     return (
       <Homepage
@@ -35,7 +35,7 @@ const PatientDashboardPage = async () => {
     page: 1,
   });
 
-  return <Homepage initialData={initialData} patientId={patientId} />;
+  return userInfo && <Homepage initialData={initialData} patientId={patientId} />;
 };
 
 export default PatientDashboardPage;

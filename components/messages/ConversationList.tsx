@@ -6,7 +6,7 @@ import type { ChatSession } from "@/actions/chat";
 import { getUserInfo } from "@/actions/user";
 import { formatTimeHHMM } from "@/lib/utils";
 
-export default function ConversationList({ chatSessions, userInfo, onSelectChatSession, showMobileHeader, selectedChatSessionId }: { chatSessions?: ChatSession[], userInfo: Awaited<ReturnType<typeof getUserInfo>>, onSelectChatSession: (chatSession: ChatSession) => void, showMobileHeader?: boolean, selectedChatSessionId?: number }) {
+export default function ConversationList({ chatSessions, userInfo, onSelectChatSession, selectedChatSessionId }: { chatSessions?: ChatSession[], userInfo: Awaited<ReturnType<typeof getUserInfo>>, onSelectChatSession: (chatSession: ChatSession) => void, selectedChatSessionId?: number }) {
     const [searchQuery, setSearchQuery] = useState("");
     const userType = userInfo.role;
     const otherUserType = userType === "DOCTOR" ? "patient" : "doctor";

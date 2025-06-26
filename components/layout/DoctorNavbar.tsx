@@ -2,20 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Menu,
-  X,
-  User,
-  Calendar,
-  FileText,
-  Home,
-  LogOut
-} from "lucide-react";
+import { LogOut } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { logout } from "@/actions/auth";
 
 const Navbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {

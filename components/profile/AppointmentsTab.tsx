@@ -46,53 +46,54 @@ const AppointmentsTab: React.FC<Props> = ({ initialData, patientId }) => {
 
       <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
         {appointments.length > 0 ? (
-          appointments.map((appt) => (
-            <Card
-              key={appt.id}
-              className="p-4 hover:shadow-md transition-shadow"
-            >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div className="flex items-start space-x-4">
-                  <div
-                    className={`p-2 rounded-full ${
-                      appt.type === "VIRTUAL"
-                        ? "bg-blue-100"
-                        : "bg-green-100"
-                    }`}
-                  >
-                    {appt.type === "VIRTUAL" ? (
-                      <Video className="h-6 w-6 text-blue-600" />
-                    ) : (
-                      <MapPin className="h-6 w-6 text-green-600" />
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">
-                      {appt.doctor.user.fullName}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {appt.doctor.specialization}
-                    </p>
-                    <div className="mt-2 flex items-center text-sm text-gray-500">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      <span suppressHydrationWarning>
-                        {formatDateDDMMYYYY(appt.startTime)}
-                      </span>
+          appointments.map((appt) => {
+            const specialtyName = appt.doctor && appt.doctor.specialty ? appt.doctor.specialty.name : "Unknown";
+            return (
+              <Card
+                key={appt.id}
+                className="p-4 hover:shadow-md transition-shadow"
+              >
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                  <div className="flex items-start space-x-4">
+                    <div
+                      className={`p-2 rounded-full ${
+                        appt.type === "VIRTUAL"
+                          ? "bg-blue-100"
+                          : "bg-green-100"
+                      }`}
+                    >
+                      {appt.type === "VIRTUAL" ? (
+                        <Video className="h-6 w-6 text-blue-600" />
+                      ) : (
+                        <MapPin className="h-6 w-6 text-green-600" />
+                      )}
                     </div>
-                    <div className="mt-1 flex items-center text-sm text-gray-500">
-                      <Clock className="h-4 w-4 mr-1" />
-                      <span suppressHydrationWarning>
-                        {formatTimeHHMM(appt.startTime)}
-                      </span>
-                    </div>
-                    <div className="mt-2">
-                      {/* Additional appointment status or type tags can go here if needed */}
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {appt.doctor.user.fullName}
+                      </h3>
+                      <p className="text-sm text-gray-500">{specialtyName}</p>
+                      <div className="mt-2 flex items-center text-sm text-gray-500">
+                        <Calendar className="h-4 w-4 mr-1" />
+                        <span suppressHydrationWarning>
+                          {formatDateDDMMYYYY(appt.startTime)}
+                        </span>
+                      </div>
+                      <div className="mt-1 flex items-center text-sm text-gray-500">
+                        <Clock className="h-4 w-4 mr-1" />
+                        <span suppressHydrationWarning>
+                          {formatTimeHHMM(appt.startTime)}
+                        </span>
+                      </div>
+                      <div className="mt-2">
+                        {/* Additional appointment status or type tags can go here if needed */}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Card>
-          ))
+              </Card>
+            );
+          })
         ) : (
           <Card className="p-6 text-center">
             <p className="text-gray-500">You have no appointments.</p>

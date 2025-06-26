@@ -19,6 +19,7 @@ export async function fetchPaginatedAppointments({
         doctor: {
           include: {
             user: true,
+            specialty: true,
           },
         },
         patient: {
@@ -105,7 +106,7 @@ export async function confirmAppointment(appointmentId: number) {
   const zoomMeeting = await createZoomMeeting();
   console.log({ zoomMeeting })
 
-  const appointment = await prisma.appointment.update({
+  await prisma.appointment.update({
     where: { id: appointmentId },
     data: { status: "CONFIRMED", meetingLink: zoomMeeting },
     include: {
@@ -155,6 +156,7 @@ export async function fetchPaginatedUpcomingAppointments({
         doctor: {
           include: {
             user: true,
+            specialty: true,
           },
         },
       },

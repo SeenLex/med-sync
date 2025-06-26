@@ -85,14 +85,16 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
         (filter === "virtual" && appointment.type === "VIRTUAL") ||
         (filter === "in-person" && appointment.type === "IN_PERSON");
 
+      const specialtyName =
+        appointment.doctor && appointment.doctor.specialty
+          ? appointment.doctor.specialty.name
+          : "Unknown";
       const matchesSearch =
         searchQuery === "" ||
-        appointment.doctor.user.fullName
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        appointment.doctor.specialization
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase());
+        (appointment.doctor && appointment.doctor.user.fullName
+          ? appointment.doctor.user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+          : false) ||
+        specialtyName.toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchesFilter && matchesSearch;
     }) || [];
@@ -180,7 +182,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
                         {appointment.doctor.user.fullName}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {appointment.doctor.specialization}
+                        {appointment.doctor && appointment.doctor.specialty ? appointment.doctor.specialty.name : "Unknown"}
                       </p>
                       <div className="mt-2 flex items-center text-sm text-gray-500">
                         <Calendar className="h-4 w-4 mr-1" />

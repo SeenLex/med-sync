@@ -52,7 +52,7 @@ const Step4: React.FC<Step4Props> = ({
               {selectedDoctor.fullName}
             </h3>
             <p className="text-sm text-gray-500">
-              {selectedDoctor.doctor?.specialization || "N/A"}
+              {selectedDoctor.doctor?.specialty?.name || "N/A"}
             </p>
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>

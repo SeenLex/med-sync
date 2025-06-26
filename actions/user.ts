@@ -83,7 +83,9 @@ export async function deleteUser(id: string, withRevalidate: boolean = false, pa
     where: { id: Number(id) },
   });
 
-  withRevalidate && revalidatePath(pathName);
+  if (withRevalidate) {
+    revalidatePath(pathName);
+  }
 }
 
 export async function getUserById(id: string) {
@@ -101,13 +103,17 @@ export async function getDoctorUserByDoctorId(doctorId: string) {
     where: {
       id: Number(doctorId),
     },
+    include: {
+      specialty: true,
+      user: true,
+    },
   });
 
   if (!doctorProfile) {
     return null;
   }
 
-  return getUserById(String(doctorProfile.userId));
+  return doctorProfile;
 }
 
 export async function getUserByEmail(email: string) {
@@ -167,7 +173,7 @@ export type FindDoctor = Awaited<ReturnType<typeof getAllDoctors>>;
 export type UserInfo = Awaited<ReturnType<typeof getUserInfo>>;
 
 // Fetch all specialties from the Specialty table
-export async function getAllSpecializations() {
+export async function getAllSpecialties() {
   const specialties: { name: string }[] = await prisma.specialty.findMany({
     orderBy: { name: "asc" },
   });

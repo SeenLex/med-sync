@@ -124,7 +124,6 @@ const Step3: React.FC<Step3Props> = ({
                         }
                       `}
                       disabled={!isAvailable || selectedTime === time}
-                      aria-selected={selectedTime === time}
                     >
                       {time}
                     </button>

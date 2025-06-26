@@ -8,6 +8,7 @@ import defaultProfilePic from "@/assets/profile.jpg";
 import Link from "next/link";
 import { uploadProfilePicture, getProfilePictureUrl, updateUserProfileImage } from "@/actions/user";
 import { usePathname } from "next/navigation";
+import type { UserInfo } from "@/actions/user";
 
 const links = [
   { href: "/profile", icon: <User />, label: "Personal Information" },
@@ -15,7 +16,7 @@ const links = [
   { href: "/profile/medical-records", icon: <FileText />, label: "Medical Records" },
 ];
 
-const Sidebar = ({ userInfo }: { userInfo: any }) => {
+const Sidebar = ({ userInfo }: { userInfo: UserInfo }) => {
   const [profileImageUrl, setProfileImageUrl] = useState(userInfo.profileImage || null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);

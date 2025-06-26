@@ -39,7 +39,6 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
     enabled: patientId > 0,
-    keepPreviousData: true,
   });
 
   const quickActions = [
@@ -124,87 +123,88 @@ const Homepage: React.FC<Props> = ({ initialData, patientId }) => {
 
             <div className={`space-y-4 ${isFetching ? "opacity-50" : ""}`}>
               {appointments.length > 0 ? (
-                appointments.map((appt) => (
-                  <Card
-                    key={appt.id}
-                    className="p-3 sm:p-4 hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
-                      <div className="flex items-start space-x-3">
-                        <div className="bg-emerald-100 p-2 rounded-full">
-                          {appt.type === "VIRTUAL" ? (
-                            <Video className="h-6 w-6 text-emerald-600" />
-                          ) : (
-                            <Calendar className="h-6 w-6 text-emerald-600" />
+                appointments.map((appt) => {
+                  const specialtyName = appt.doctor && appt.doctor.specialty ? appt.doctor.specialty.name : "Unknown";
+                  return (
+                    <Card
+                      key={appt.id}
+                      className="p-3 sm:p-4 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                        <div className="flex items-start space-x-3">
+                          <div className="bg-emerald-100 p-2 rounded-full">
+                            {appt.type === "VIRTUAL" ? (
+                              <Video className="h-6 w-6 text-emerald-600" />
+                            ) : (
+                              <Calendar className="h-6 w-6 text-emerald-600" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm sm:text-lg font-medium text-gray-900 truncate">
+                              {appt.doctor.user.fullName}
+                            </h3>
+                            <p className="text-xs sm:text-sm text-gray-500 truncate">{specialtyName}</p>
+                            <div className="mt-1 flex items-center text-xs sm:text-sm text-gray-500">
+                              <Clock className="h-4 w-4 mr-1" />
+                              <span suppressHydrationWarning className="truncate">
+                                {appt.startTime
+                                  ? formatDateDDMMYYYY(appt.startTime) +
+                                    " at " +
+                                    formatTimeHHMM(appt.startTime)
+                                  : "Date/Time not available"}
+                              </span>
+                            </div>
+                            <div className="mt-2 space-x-2">
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${
+                                  appt.status === "CONFIRMED"
+                                    ? "bg-green-100 text-green-800"
+                                    : appt.status === "PENDING"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : appt.status === "CANCELED"
+                                    ? "bg-red-100 text-red-800"
+                                    : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {appt.status}
+                              </span>
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${
+                                  appt.type === "VIRTUAL"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-emerald-100 text-emerald-800"
+                                }`}
+                              >
+                                {appt.type === "VIRTUAL"
+                                  ? "Virtual"
+                                  : "In-Person"}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mt-3 sm:mt-0 flex space-x-2">
+                          {(appt.status === "PENDING" ||
+                            appt.status === "CANCELED") && (
+                            <Link
+                              href={`/appointments/new/reschedule/${appt.doctorId}?type=${appt.type}`}
+                            >
+                              <Button variant="outline" size="sm">
+                                Reschedule
+                              </Button>
+                            </Link>
+                          )}
+                          {appt.status === "CONFIRMED" && appt.type === "VIRTUAL" && appt.meetingLink && (
+                            <Link target="_blank" href={appt.meetingLink}>
+                              <Button variant="primary" size="sm">
+                                Join Meeting
+                              </Button>
+                            </Link>
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-sm sm:text-lg font-medium text-gray-900 truncate">
-                            {appt.doctor.user.fullName}
-                          </h3>
-                          <p className="text-xs sm:text-sm text-gray-500 truncate">
-                            {appt.doctor.specialization}
-                          </p>
-                          <div className="mt-1 flex items-center text-xs sm:text-sm text-gray-500">
-                            <Clock className="h-4 w-4 mr-1" />
-                            <span suppressHydrationWarning className="truncate">
-                              {appt.startTime
-                                ? formatDateDDMMYYYY(appt.startTime) +
-                                  " at " +
-                                  formatTimeHHMM(appt.startTime)
-                                : "Date/Time not available"}
-                            </span>
-                          </div>
-                          <div className="mt-2 space-x-2">
-                            <span
-                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${
-                                appt.status === "CONFIRMED"
-                                  ? "bg-green-100 text-green-800"
-                                  : appt.status === "PENDING"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : appt.status === "CANCELED"
-                                  ? "bg-red-100 text-red-800"
-                                  : "bg-gray-100 text-gray-800"
-                              }`}
-                            >
-                              {appt.status}
-                            </span>
-                            <span
-                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${
-                                appt.type === "VIRTUAL"
-                                  ? "bg-blue-100 text-blue-800"
-                                  : "bg-emerald-100 text-emerald-800"
-                              }`}
-                            >
-                              {appt.type === "VIRTUAL"
-                                ? "Virtual"
-                                : "In-Person"}
-                            </span>
-                          </div>
-                        </div>
                       </div>
-                      <div className="mt-3 sm:mt-0 flex space-x-2">
-                        {(appt.status === "PENDING" ||
-                          appt.status === "CANCELED") && (
-                          <Link
-                            href={`/appointments/new/reschedule/${appt.doctorId}?type=${appt.type}`}
-                          >
-                            <Button variant="outline" size="sm">
-                              Reschedule
-                            </Button>
-                          </Link>
-                        )}
-                        {appt.status === "CONFIRMED" && appt.type === "VIRTUAL" && appt.meetingLink && (
-                          <Link target="_blank" href={appt.meetingLink}>
-                            <Button variant="primary" size="sm">
-                              Join Meeting
-                            </Button>
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  </Card>
-                ))
+                    </Card>
+                  );
+                })
               ) : (
                 <Card className="p-4 text-center">
                   <p className="text-gray-500">

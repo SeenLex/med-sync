@@ -3,8 +3,8 @@ import Button from "../ui/Button";
 
 interface DoctorDialogProps {
   open: boolean;
-  specialization: string;
-  setSpecialization: (val: string) => void;
+  specialty: string;
+  setSpecialty: (val: string) => void;
   licenseNumber: string;
   setLicenseNumber: (val: string) => void;
   onSave: () => void;
@@ -13,8 +13,8 @@ interface DoctorDialogProps {
 
 const DoctorDialog: React.FC<DoctorDialogProps> = ({
   open,
-  specialization,
-  setSpecialization,
+  specialty,
+  setSpecialty,
   licenseNumber,
   setLicenseNumber,
   onSave,
@@ -26,12 +26,12 @@ const DoctorDialog: React.FC<DoctorDialogProps> = ({
       <div className="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg">
         <h3 className="text-lg font-bold mb-4 text-gray-700">Doctor Details</h3>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1 text-gray-700">Specialization</label>
+          <label className="block text-sm font-medium mb-1 text-gray-700">Specialty</label>
           <input
             type="text"
             className="w-full border rounded px-3 py-2 text-gray-700"
-            value={specialization}
-            onChange={(e) => setSpecialization(e.target.value)}
+            value={specialty}
+            onChange={(e) => setSpecialty(e.target.value)}
             placeholder="e.g. Cardiologist"
             required
           />
@@ -59,7 +59,7 @@ const DoctorDialog: React.FC<DoctorDialogProps> = ({
             variant="primary"
             size="md"
             onClick={onSave}
-            disabled={!specialization || !licenseNumber}
+            disabled={!specialty || !licenseNumber}
           >
             Save
           </Button>

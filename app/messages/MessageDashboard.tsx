@@ -47,7 +47,6 @@ export default function MessageDashboard({ userInfo }: { userInfo: Awaited<Retur
                         setSelectedChatSession(session);
                         setShowListMobile(false);
                     }}
-                    showMobileHeader={isMobile && !showListMobile}
                     selectedChatSessionId={selectedChatSession ? selectedChatSession.id : undefined}
                 />
             </div>
@@ -61,7 +60,6 @@ export default function MessageDashboard({ userInfo }: { userInfo: Awaited<Retur
                         chatSession={selectedChatSession}
                         chatSessions={chatSessions}
                         userInfo={userInfo}
-                        showMobileHeader={isMobile}
                         onBackMobile={() => setShowListMobile(true)}
                     />
                 )}

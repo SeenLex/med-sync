@@ -95,7 +95,6 @@ async function seedAppointments() {
         address: 'Medical Center, 100 Health Blvd, Boston, MA 02101',
         doctor: {
           create: {
-            specialization: 'Cardiology',
             licenseNumber: 'MD123456',
             biography: 'Board-certified cardiologist with 15 years of experience in cardiovascular medicine.'
           }
@@ -112,7 +111,6 @@ async function seedAppointments() {
         address: 'Medical Center, 100 Health Blvd, Boston, MA 02101',
         doctor: {
           create: {
-            specialization: 'Internal Medicine',
             licenseNumber: 'MD789012',
             biography: 'Internal medicine specialist focused on preventive care and chronic disease management.'
           }
@@ -129,7 +127,6 @@ async function seedAppointments() {
         address: 'Medical Center, 100 Health Blvd, Boston, MA 02101',
         doctor: {
           create: {
-            specialization: 'Dermatology',
             licenseNumber: 'MD345678',
             biography: 'Dermatologist specializing in skin cancer prevention and cosmetic dermatology.'
           }
@@ -146,7 +143,6 @@ async function seedAppointments() {
         address: 'Medical Center, 100 Health Blvd, Boston, MA 02101',
         doctor: {
           create: {
-            specialization: 'Orthopedic Surgery',
             licenseNumber: 'MD567890',
             biography: 'Orthopedic surgeon with expertise in sports medicine and joint replacement.'
           }

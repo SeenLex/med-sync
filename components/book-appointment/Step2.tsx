@@ -31,18 +31,17 @@ const Step2: React.FC<Step2Props> = ({
 }) => {
   const filteredDoctors = doctors.filter((doctor) => {
     const name = doctor.fullName.toLowerCase();
-    const docSpecialization =
-      doctor.doctor?.specialization?.toLowerCase() || "";
+    const docSpecialty = doctor.doctor?.specialty?.name?.toLowerCase() || "";
 
     const matchesSearch =
       searchQuery === "" ||
       name.includes(searchQuery.toLowerCase()) ||
-      (docSpecialization &&
-        docSpecialization.includes(searchQuery.toLowerCase()));
+      (docSpecialty &&
+        docSpecialty.includes(searchQuery.toLowerCase()));
 
     const matchesSpecialty =
       specialty === "" ||
-      (docSpecialization && docSpecialization === specialty.toLowerCase());
+      (docSpecialty && docSpecialty === specialty.toLowerCase());
 
     return matchesSearch && matchesSpecialty;
   });
@@ -107,7 +106,7 @@ const Step2: React.FC<Step2Props> = ({
                   {doctor.fullName}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  {doctor.doctor?.specialty?.name || doctor.doctor?.specialization || "N/A"}
+                  {doctor.doctor?.specialty?.name || "N/A"}
                 </p>
                 <div className="mt-2 flex space-x-2">
                   {appointmentType === "IN_PERSON" && (
