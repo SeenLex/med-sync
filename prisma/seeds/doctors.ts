@@ -2,12 +2,9 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  // Fetch all specialties from the database
   const specialties = await prisma.specialty.findMany();
-  // @ts-ignore
-  const specialtyMap = Object.fromEntries(specialties.map((s) => [s.name, s.id]));
+  const specialtyMap = Object.fromEntries(specialties.map((s: any) => [s.name, s.id]));
 
-  // Define doctors to create, mapping each to a specialty by name
   const doctorsToCreate = [
     {
       email: 'dr.cardiology@example.com',

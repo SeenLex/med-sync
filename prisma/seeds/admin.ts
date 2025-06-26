@@ -6,7 +6,6 @@ async function main() {
       email: 'admin@example.com',
       role: 'ADMIN',
       fullName: 'Admin User',
-      // ...other fields
     },
   });
 }

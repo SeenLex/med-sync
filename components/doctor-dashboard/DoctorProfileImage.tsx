@@ -22,7 +22,7 @@ const DoctorProfileImage: React.FC<Props> = ({ userInfo }) => {
 
   const validateFile = (file: File): boolean => {
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (!allowedTypes.includes(file.type)) {
       setError("Please select a valid image file (JPEG, JPG, or PNG)");
       return false;
@@ -106,7 +106,6 @@ const DoctorProfileImage: React.FC<Props> = ({ userInfo }) => {
         </div>
       </Card>
 
-      {/* Preview Modal */}
       {showPreview && previewFile && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">

@@ -70,7 +70,6 @@ const Step3: React.FC<Step3Props> = ({
         Select Date & Time
       </h2>
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Calendar Section */}
         <div className="md:w-1/2">
           <h3 className="text-lg font-semibold mb-2 text-gray-800">Choose a Date</h3>
           <Calendar
@@ -97,7 +96,6 @@ const Step3: React.FC<Step3Props> = ({
           </p>
         </div>
 
-        {/* Time Slots Section */}
         <div className="md:w-1/2">
           <h3 className="text-lg font-semibold mb-2 text-gray-800">Choose a Time</h3>
           {appointmentsLoading ? (

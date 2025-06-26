@@ -22,7 +22,7 @@ const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
 
   const validateFile = (file: File): boolean => {
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (!allowedTypes.includes(file.type)) {
       setError("Please select a valid image file (JPEG, JPG, or PNG)");
       return false;
@@ -166,7 +166,6 @@ const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
         </div>
       )}
 
-      {/* Personal and Professional Info (read-only) */}
       <div className="pt-6 space-y-6">
         <h2 className="text-xl font-semibold text-gray-900 ">Personal Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

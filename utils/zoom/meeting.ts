@@ -7,7 +7,6 @@ export async function createZoomMeeting(): Promise<string> {
     throw new Error('Missing required environment variables');
   }
 
-  // Get OAuth token
   const authResponse = await fetch('https://zoom.us/oauth/token?' + new URLSearchParams({
     grant_type: 'account_credentials',
     account_id: accountId,
@@ -21,7 +20,6 @@ export async function createZoomMeeting(): Promise<string> {
   const authData = await authResponse.json();
   const accessToken = authData.access_token;
 
-  // Create a meeting
   try {
     const meetingResponse = await fetch(
       'https://api.zoom.us/v2/users/draghicideenisdaniel@gmail.com/meetings',
@@ -33,9 +31,9 @@ export async function createZoomMeeting(): Promise<string> {
         },
         body: JSON.stringify({
           topic: 'Test Meeting',
-          type: 2, // Scheduled meeting
-          start_time: new Date(Date.now() + 3600000).toISOString(), // 1 hour from now
-          duration: 60, // 60 minutes
+          type: 2,
+          start_time: new Date(Date.now() + 3600000).toISOString(),
+          duration: 60,
           timezone: 'UTC',
           settings: {
             host_video: true,

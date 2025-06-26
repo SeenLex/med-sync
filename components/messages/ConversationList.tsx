@@ -14,7 +14,6 @@ export default function ConversationList({ chatSessions, userInfo, onSelectChatS
     console.log("searchResults", searchResults);
     return (
         <div className="h-full flex flex-col">
-            {/* Search Bar */}
             <div className="p-4 border-b border-gray-200">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -28,7 +27,6 @@ export default function ConversationList({ chatSessions, userInfo, onSelectChatS
                 </div>
             </div>
 
-            {/* Conversations List */}
             <div className="flex-1 overflow-y-auto">
                 {searchResults && searchResults.length > 0 ? (
                     <div className="divide-y divide-gray-200">
@@ -54,7 +52,6 @@ export default function ConversationList({ chatSessions, userInfo, onSelectChatS
                                             {conversation.messages[conversation.messages.length - 1]?.createdAt &&
                                                 formatTimeHHMM(conversation.messages[conversation.messages.length - 1].createdAt)}
                                         </p>
-                                        {/* Unread indicator */}
                                         <div className="mt-1 h-2 w-2 bg-emerald-500 rounded-full hidden"></div>
                                     </div>
                                 </button>

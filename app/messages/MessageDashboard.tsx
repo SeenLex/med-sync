@@ -27,15 +27,12 @@ export default function MessageDashboard({ userInfo }: { userInfo: Awaited<Retur
         return () => clearInterval(intervalId);
     }, [userInfo]);
 
-    // Responsive logic
-    // Use a media query to determine if we're on mobile
     const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
     const showList = isMobile ? showListMobile : true;
     const showThread = isMobile ? !showListMobile : true;
 
     return (
         <div className="flex h-[calc(100vh-4rem)] w-full max-w-full bg-white">
-            {/* Conversation List */}
             <div
                 className={`transition-all duration-300 h-full w-full md:w-80 border-r border-gray-200 flex-shrink-0 z-20 bg-white
                 ${showList ? 'block' : 'hidden'} md:block`}
@@ -50,7 +47,6 @@ export default function MessageDashboard({ userInfo }: { userInfo: Awaited<Retur
                     selectedChatSessionId={selectedChatSession ? selectedChatSession.id : undefined}
                 />
             </div>
-            {/* Message Thread */}
             <div
                 className={`flex-1 h-full w-full transition-all duration-300 bg-gray-50
                 ${showThread && selectedChatSession ? 'block' : 'hidden'} md:block`}

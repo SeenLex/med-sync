@@ -4,7 +4,6 @@ import { Role, AppointmentStatus, AppointmentType } from '../generated/prisma';
 async function seedAppointments() {
   console.log('🌱 Starting appointments seeding...');
 
-  // First, create some sample users (patients and doctors)
   const patients = await Promise.all([
     prisma.user.create({
       data: {
@@ -84,7 +83,6 @@ async function seedAppointments() {
     })
   ]);
 
-  // Create some sample doctors
   const doctors = await Promise.all([
     prisma.user.create({
       data: {
@@ -154,7 +152,6 @@ async function seedAppointments() {
 
   console.log(`✅ Created ${patients.length} patients and ${doctors.length} doctors`);
 
-  // Create 20 appointments spanning from 2020 to 2025
   const appointmentStatuses = [AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED, AppointmentStatus.CANCELED, AppointmentStatus.COMPLETED];
   const appointmentTypes = [AppointmentType.IN_PERSON, AppointmentType.VIRTUAL];
   
@@ -179,68 +176,63 @@ async function seedAppointments() {
   const appointments = [];
   
   for (let i = 0; i < 20; i++) {
-    // Generate random dates between 2020 and 2025
     const startYear = 2020;
     const endYear = 2025;
     const randomYear = Math.floor(Math.random() * (endYear - startYear + 1)) + startYear;
     const randomMonth = Math.floor(Math.random() * 12);
-    const randomDay = Math.floor(Math.random() * 28) + 1; // Using 28 to avoid month-end issues
-    const randomHour = Math.floor(Math.random() * 8) + 9; // 9 AM to 4 PM
-    const randomMinute = Math.floor(Math.random() * 4) * 15; // 0, 15, 30, or 45 minutes
+    const randomDay = Math.floor(Math.random() * 28) + 1;
+    const randomHour = Math.floor(Math.random() * 8) + 9;
+    const randomMinute = Math.floor(Math.random() * 4) * 15;
     
     const startTime = new Date(randomYear, randomMonth, randomDay, randomHour, randomMinute);
     const endTime = new Date(startTime);
-    endTime.setHours(startTime.getHours() + 1); // 1-hour appointments
+    endTime.setHours(startTime.getHours() + 1);
     
-    // Randomly assign patient and doctor
     const randomPatient = patients[Math.floor(Math.random() * patients.length)];
     const randomDoctor = doctors[Math.floor(Math.random() * doctors.length)];
     
-    // Choose status based on date (past appointments are more likely to be completed)
     let status: AppointmentStatus;
     const now = new Date();
     if (startTime < now) {
-      // Past appointments: 70% completed, 20% canceled, 10% other
       const rand = Math.random();
       if (rand < 0.7) status = AppointmentStatus.COMPLETED;
       else if (rand < 0.9) status = AppointmentStatus.CANCELED;
       else status = appointmentStatuses[Math.floor(Math.random() * appointmentStatuses.length)];
     } else {
-      // Future appointments: 60% confirmed, 30% pending, 10% canceled
       const rand = Math.random();
       if (rand < 0.6) status = AppointmentStatus.CONFIRMED;
       else if (rand < 0.9) status = AppointmentStatus.PENDING;
       else status = AppointmentStatus.CANCELED;
     }
-    
-    const appointment = await prisma.appointment.create({
-      data: {
-        patientId: randomPatient.patient!.id,
-        doctorId: randomDoctor.doctor!.id,
-        startTime,
-        endTime,
-        status,
-        type: appointmentTypes[Math.floor(Math.random() * appointmentTypes.length)],
-        notes: appointmentNotes[Math.floor(Math.random() * appointmentNotes.length)]
-      }
+
+    const type = appointmentTypes[Math.floor(Math.random() * appointmentTypes.length)];
+    const note = appointmentNotes[Math.floor(Math.random() * appointmentNotes.length)];
+
+    appointments.push({
+      startTime,
+      endTime,
+      status,
+      type,
+      note,
+      patientId: randomPatient.patient!.id,
+      doctorId: randomDoctor.doctor!.id,
     });
-    
-    appointments.push(appointment);
   }
 
-  console.log(`✅ Created ${appointments.length} appointments from 2020 to 2025`);
-  console.log('🎉 Appointments seeding completed successfully!');
-  
-  return { patients, doctors, appointments };
+  for (const appointment of appointments) {
+    await prisma.appointment.create({
+      data: appointment,
+    });
+  }
+
+  console.log('✅ Seeded 20 appointments');
 }
 
-(async () => {
-  try {
-    await seedAppointments();
-  } catch (error) {
-    console.error('❌ Error seeding appointments:', error);
-    throw error;
-  } finally {
+seedAppointments()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
     await prisma.$disconnect();
-  }
-})();
+  });

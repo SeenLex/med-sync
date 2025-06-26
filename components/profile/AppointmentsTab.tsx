@@ -86,7 +86,6 @@ const AppointmentsTab: React.FC<Props> = ({ initialData, patientId }) => {
                         </span>
                       </div>
                       <div className="mt-2">
-                        {/* Additional appointment status or type tags can go here if needed */}
                       </div>
                     </div>
                   </div>
