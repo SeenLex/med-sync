@@ -98,6 +98,24 @@ async function main() {
     }
   ];
 
+  // Collect specialties already covered by the static list
+  const coveredSpecialties = new Set(doctorsToCreate.map(doc => doc.specialty));
+
+  // For any specialty not covered, add a default doctor
+  for (const specialty of specialties) {
+    if (!coveredSpecialties.has(specialty.name)) {
+      doctorsToCreate.push({
+        email: `dr.${specialty.name.toLowerCase().replace(/\s+/g, '')}@example.com`,
+        fullName: `Dr. ${specialty.name} Specialist`,
+        phone: '+10000009999',
+        address: `${specialty.name} Clinic, Health City`,
+        specialty: specialty.name,
+        licenseNumber: `MD9${specialty.id.toString().padStart(3, '0')}`,
+        biography: `Specialist in ${specialty.name}.`
+      });
+    }
+  }
+
   for (const doc of doctorsToCreate) {
     const specialtyId = specialtyMap[doc.specialty];
     if (!specialtyId) {
