@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
-import { User, Calendar, FileText, Camera, Upload, X, Loader2 } from "lucide-react";
+import { User, Calendar, FileText, Camera, Upload, Loader2 } from "lucide-react";
 import Card from "@/components/ui/Card";
 import defaultProfilePic from "@/assets/profile.jpg";
 import Link from "next/link";

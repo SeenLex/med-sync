@@ -6,7 +6,7 @@ import { Calendar, Clock, Video, MapPin } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import {
-  Appointment,
+  AppointmentWithDoctor,
   fetchPaginatedAppointments,
 } from "@/actions/appointments";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +16,7 @@ import { formatDateDDMMYYYY, formatTimeHHMM } from "@/lib/utils";
 
 type Props = {
   initialData: {
-    appointments: Appointment[];
+    appointments: AppointmentWithDoctor[];
     totalCount: number;
   };
   patientId: number;

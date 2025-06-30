@@ -15,9 +15,9 @@ import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import {
-  Appointment,
   cancelAppointment,
   fetchPaginatedAppointments,
+  AppointmentWithDoctor,
 } from "@/actions/appointments";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
@@ -26,7 +26,7 @@ import { formatTimeHHMM } from "@/lib/utils";
 
 type Props = {
   initialData: {
-    appointments: Appointment[];
+    appointments: AppointmentWithDoctor[];
     totalCount: number;
   };
   patientId: number;
@@ -75,7 +75,7 @@ const Appointments: React.FC<Props> = ({ initialData, patientId }) => {
   );
 
   const filteredAppointments =
-    data?.appointments.filter((appointment: Appointment) => {
+    data?.appointments.filter((appointment: AppointmentWithDoctor) => {
       const matchesFilter =
         filter === "all" ||
         (filter === "upcoming" &&

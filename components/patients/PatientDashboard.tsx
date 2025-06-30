@@ -14,8 +14,8 @@ import Layout from "@/components/layout/Layout";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import {
-  Appointment,
   fetchPaginatedUpcomingAppointments,
+  UpcomingAppointment,
 } from "@/actions/appointments";
 import { useQuery } from "@tanstack/react-query";
 import PaginationControls from "@/components/ui/PaginationControls";
@@ -24,7 +24,7 @@ import { formatDateDDMMYYYY, formatTimeHHMM } from "@/lib/utils";
 
 type Props = {
   initialData: {
-    appointments: Appointment[];
+    appointments: UpcomingAppointment[];
     totalCount: number;
   };
   patientId: number;
