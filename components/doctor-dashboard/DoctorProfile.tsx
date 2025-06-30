@@ -6,7 +6,7 @@ import { UserInfo, updateUserProfileImage } from "@/actions/user";
 import Image from "next/image";
 import defaultProfilePic from "@/assets/profile.jpg";
 import { uploadProfilePicture, getProfilePictureUrl } from "@/actions/user";
-import { Camera, Loader2, Upload, X } from "lucide-react";
+import { Camera, Loader2, Upload } from "lucide-react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/shadcn/dialog";
 
 type Props = {

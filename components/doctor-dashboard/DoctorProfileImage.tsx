@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import defaultProfilePic from "@/assets/profile.jpg";
 import { uploadProfilePicture, getProfilePictureUrl, updateUserProfileImage } from "@/actions/user";
-import { Camera, Loader2, Upload, X } from "lucide-react";
+import { Camera, Loader2, Upload} from "lucide-react";
 import { UserInfo } from "@/actions/user";
 import Card from "@/components/ui/Card";
 import {
