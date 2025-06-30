@@ -105,15 +105,15 @@ const Sidebar = ({ userInfo }: { userInfo: UserInfo }) => {
             />
             <Dialog open={showPreview} onOpenChange={setShowPreview}>
               <DialogTrigger asChild>
-                <button
-                  type="button"
-                  onClick={handleCameraClick}
-                  disabled={isUploading}
+            <button
+              type="button"
+              onClick={handleCameraClick}
+              disabled={isUploading}
                   className="absolute bottom-0 right-0 bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg"
                   aria-label="Change profile picture"
-                >
-                  {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-                </button>
+            >
+              {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+            </button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -140,55 +140,55 @@ const Sidebar = ({ userInfo }: { userInfo: UserInfo }) => {
                   <div className="text-xs text-gray-500 mt-2">
                     Supported formats: JPEG, PNG (max 5MB)
                   </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/jpeg,image/jpg,image/png"
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/jpg,image/png"
                     className="hidden"
-                    onChange={handleFileSelect}
-                  />
-                </div>
+              onChange={handleFileSelect}
+            />
+          </div>
                 {previewFile && (
                   <div className="flex flex-col items-center mt-4">
-                    <Image
-                      src={URL.createObjectURL(previewFile)}
-                      alt="Preview"
+              <Image
+                src={URL.createObjectURL(previewFile)}
+                alt="Preview"
                       width={160}
                       height={160}
                       className="w-40 h-40 object-cover rounded-full border border-gray-200"
-                    />
-                  </div>
+              />
+            </div>
                 )}
-                {error && (
-                  <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
-                    {error}
-                  </div>
-                )}
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
+                {error}
+              </div>
+            )}
                 <DialogFooter>
-                  <button
-                    onClick={handleUpload}
+              <button
+                onClick={handleUpload}
                     disabled={isUploading || !previewFile}
-                    className="flex-1 flex items-center justify-center bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 disabled:opacity-50"
-                  >
-                    {isUploading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        Uploading...
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="h-4 w-4 mr-2" />
-                        Upload
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={handleCancel}
-                    disabled={isUploading}
-                    className="flex-1 flex items-center justify-center border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-100"
-                  >
-                    Cancel
-                  </button>
+                className="flex-1 flex items-center justify-center bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 disabled:opacity-50"
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Uploading...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload
+                  </>
+                )}
+              </button>
+              <button
+                onClick={handleCancel}
+                disabled={isUploading}
+                className="flex-1 flex items-center justify-center border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-100"
+              >
+                Cancel
+              </button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

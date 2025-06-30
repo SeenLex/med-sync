@@ -79,7 +79,7 @@ const AllDoctorAppointmentsList: React.FC<Props> = ({ doctorId }) => {
                   >
                     {appt.status}
                   </span>
-                  {appt.type === "VIRTUAL" && appt.meetingLink && (
+                  {appt.type === "VIRTUAL" && appt.meetingLink && appt.status === "CONFIRMED" && (
                     <Link target="_blank" href={appt.meetingLink}>
                       <Button variant="primary" size="sm">
                         Join Meeting

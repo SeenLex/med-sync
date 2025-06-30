@@ -48,7 +48,10 @@ export async function fetchPaginatedDoctorAppointments({
   doctorId: number;
   page: number;
 }) {
-  const whereClause = { doctorId };
+  const whereClause = {
+    doctorId,
+    startTime: { gt: new Date() },
+  };
 
   const [totalCount, appointments] = await prisma.$transaction([
     prisma.appointment.count({ where: whereClause }),
@@ -61,7 +64,7 @@ export async function fetchPaginatedDoctorAppointments({
           },
         },
       },
-      orderBy: { startTime: "desc" },
+      orderBy: { startTime: "asc" },
       take: APPOINTMENTS_PAGE_SIZE,
       skip: (page - 1) * APPOINTMENTS_PAGE_SIZE,
     }),

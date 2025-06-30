@@ -7,6 +7,7 @@ import Image from "next/image";
 import defaultProfilePic from "@/assets/profile.jpg";
 import { uploadProfilePicture, getProfilePictureUrl } from "@/actions/user";
 import { Camera, Loader2, Upload, X } from "lucide-react";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/shadcn/dialog";
 
 type Props = {
   userInfo: UserInfo;
@@ -19,6 +20,7 @@ const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
   const [showPreview, setShowPreview] = useState(false);
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const validateFile = (file: File): boolean => {
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
@@ -50,10 +52,10 @@ const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
     try {
       await uploadProfilePicture(previewFile, userInfo.id.toString());
       const newUrl = await getProfilePictureUrl(userInfo.id.toString());
-      setProfileImageUrl(newUrl);
-      if (newUrl) {
-        await updateUserProfileImage(userInfo.id.toString(), newUrl);
-        window.location.reload();
+      const cacheBustedUrl = newUrl ? `${newUrl}?t=${Date.now()}` : null;
+      setProfileImageUrl(cacheBustedUrl);
+      if (cacheBustedUrl) {
+        await updateUserProfileImage(userInfo.id.toString(), cacheBustedUrl);
       }
       setShowPreview(false);
       setPreviewFile(null);
@@ -88,83 +90,101 @@ const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
             className="h-32 w-32 rounded-full object-cover"
             unoptimized
           />
-          <button
-            type="button"
-            onClick={handleCameraClick}
-            disabled={isUploading}
-            className="absolute bottom-0 right-0 bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg,image/jpg,image/png"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
+          <Dialog open={showPreview} onOpenChange={setShowPreview}>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                onClick={handleCameraClick}
+                disabled={isUploading}
+                className="absolute bottom-0 right-0 bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg"
+                aria-label="Change profile picture"
+              >
+                {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Upload Profile Picture</DialogTitle>
+              </DialogHeader>
+              <div
+                className={`mt-2 border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${isDragging ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 hover:border-emerald-400'}`}
+                onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={e => { e.preventDefault(); setIsDragging(false); }}
+                onDrop={e => {
+                  e.preventDefault(); setIsDragging(false);
+                  const files = e.dataTransfer.files;
+                  if (files.length > 0 && validateFile(files[0])) {
+                    setError(null);
+                    setPreviewFile(files[0]);
+                  }
+                }}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="w-10 h-10 mx-auto text-gray-400 mb-4" />
+                <div className="text-sm text-gray-600">
+                  {previewFile ? previewFile.name : 'Drag and drop your image here, or click to select'}
+                </div>
+                <div className="text-xs text-gray-500 mt-2">
+                  Supported formats: JPEG, PNG (max 5MB)
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png"
+                  className="hidden"
+                  onChange={handleFileSelect}
+                />
+              </div>
+              {previewFile && (
+                <div className="flex flex-col items-center mt-4">
+                  <Image
+                    src={URL.createObjectURL(previewFile)}
+                    alt="Preview"
+                    width={160}
+                    height={160}
+                    className="w-40 h-40 object-cover rounded-full border border-gray-200"
+                  />
+                </div>
+              )}
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
+                  {error}
+                </div>
+              )}
+              <DialogFooter>
+                <button
+                  onClick={handleUpload}
+                  disabled={isUploading || !previewFile}
+                  className="flex-1 flex items-center justify-center bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 disabled:opacity-50"
+                >
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={handleCancel}
+                  disabled={isUploading}
+                  className="flex-1 flex items-center justify-center border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
         <h2 className="mt-4 text-xl font-semibold text-gray-900">
           {userInfo.fullName}
         </h2>
         <p className="text-gray-500">{userInfo.email}</p>
       </div>
-
-      {showPreview && previewFile && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Preview Profile Picture</h3>
-              <button
-                onClick={handleCancel}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="mb-4">
-              <Image
-                src={URL.createObjectURL(previewFile)}
-                alt="Preview"
-                width={200}
-                height={200}
-                className="w-full h-48 object-cover rounded-lg"
-              />
-            </div>
-            {error && (
-              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
-                {error}
-              </div>
-            )}
-            <div className="flex space-x-3">
-              <button
-                onClick={handleUpload}
-                disabled={isUploading}
-                className="flex-1 flex items-center justify-center bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 disabled:opacity-50"
-              >
-                {isUploading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Uploading...
-                  </>
-                ) : (
-                  <>
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload
-                  </>
-                )}
-              </button>
-              <button
-                onClick={handleCancel}
-                disabled={isUploading}
-                className="flex-1 flex items-center justify-center border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="pt-6 space-y-6">
         <h2 className="text-xl font-semibold text-gray-900 ">Personal Information</h2>
