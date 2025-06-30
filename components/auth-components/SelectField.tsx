@@ -2,6 +2,7 @@ import React from "react";
 
 interface SelectFieldProps {
   id: string;
+  label?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   icon?: React.ReactNode;
@@ -14,6 +15,7 @@ interface SelectFieldProps {
 
 const SelectField: React.FC<SelectFieldProps> = ({
   id,
+  label,
   value,
   onChange,
   icon,
@@ -24,7 +26,11 @@ const SelectField: React.FC<SelectFieldProps> = ({
   extraClasses = "",
 }) => (
   <div>
-    <label htmlFor={id} className="block text-sm font-medium text-gray-700" />
+    {label && (
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+        {label}{required}
+      </label>
+    )}
     <div className="mt-1 relative rounded-md shadow-sm">
       {icon && (
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

@@ -48,6 +48,7 @@ const Login: React.FC = () => {
         <div className="mt-8 bg-white text-gray-800 py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleLogin}>
             <InputField
+              label="Email"
               id="email"
               type="email"
               placeholder="Enter your mail"
@@ -58,20 +59,20 @@ const Login: React.FC = () => {
             />
 
             <div>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <InputField
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  icon={<Lock className="h-5 w-5 text-gray-400" />}
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <InputField
+                id="password"
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                icon={<Lock className="h-5 w-5 text-gray-400" />}
+                rightIcon={
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="text-gray-600 hover:text-gray-500 focus:outline-none"
+                    tabIndex={-1}
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -79,8 +80,8 @@ const Login: React.FC = () => {
                       <Eye className="h-5 w-5" />
                     )}
                   </button>
-                </div>
-              </div>
+                }
+              />
             </div>
 
             <div>

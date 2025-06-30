@@ -177,6 +177,7 @@ const Register: React.FC<{
               <>
                 <InputField
                   id="email"
+                  label="Email"
                   type="email"
                   placeholder="Enter your mail"
                   value={email}
@@ -188,26 +189,28 @@ const Register: React.FC<{
                   <div className="mt-1 relative rounded-md shadow-sm">
                     <InputField
                       id="password"
+                      label="Password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       icon={<Lock className="h-5 w-5 text-gray-400" />}
                       required
+                      rightIcon={
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="text-gray-600 hover:text-gray-500 focus:outline-none"
+                          tabIndex={-1}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-5 w-5" />
+                          ) : (
+                            <Eye className="h-5 w-5" />
+                          )}
+                        </button>
+                      }
                     />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="text-gray-400 hover:text-gray-500 focus:outline-none"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-5 w-5" />
-                        ) : (
-                          <Eye className="h-5 w-5" />
-                        )}
-                      </button>
-                    </div>
                   </div>
                 </div>
                 <div>
@@ -222,6 +225,7 @@ const Register: React.FC<{
               <>
                 <InputField
                   id="fullName"
+                  label="Full Name"
                   placeholder="Enter your full name"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
@@ -230,6 +234,7 @@ const Register: React.FC<{
                 />
                 <InputField
                   id="pnc"
+                  label="PNC"
                   placeholder="Enter your PNC"
                   value={pnc}
                   onChange={(e) => setPnc(e.target.value)}
@@ -238,6 +243,7 @@ const Register: React.FC<{
                 />
                 <SelectField
                   id="gender"
+                  label="Gender"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
                   icon={<VenusAndMars className="h-5 w-5 text-gray-400" />}
@@ -250,6 +256,7 @@ const Register: React.FC<{
                 />
                 <InputField
                   id="address"
+                  label="Address"
                   placeholder="Enter your address"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
@@ -258,6 +265,7 @@ const Register: React.FC<{
                 />
                 <InputField
                   id="dateOfBirth"
+                  label="Date of Birth"
                   type="date"
                   placeholder="Date of Birth"
                   value={dateOfBirth}
@@ -267,6 +275,7 @@ const Register: React.FC<{
                 />
                 <InputField
                   id="phone"
+                  label="Phone Number"
                   placeholder="Enter your phone number"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -279,6 +288,7 @@ const Register: React.FC<{
               <>
                 <SelectField
                   id="specialtyId"
+                  label="Specialty"
                   value={specialtyId}
                   onChange={(e) => setSpecialtyId(e.target.value)}
                   icon={<Stethoscope className="h-5 w-5 text-gray-400" />}
@@ -288,6 +298,7 @@ const Register: React.FC<{
                 />
                 <InputField
                   id="licenseNumber"
+                  label="License Number"
                   placeholder="Enter your license number"
                   value={licenseNumber}
                   onChange={(e) => setLicenseNumber(e.target.value)}
