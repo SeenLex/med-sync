@@ -191,7 +191,6 @@ const DoctorProfile: React.FC<Props> = ({ userInfo }) => {
           {[
             ["License Number", userInfo.doctor?.licenseNumber],
             ["Specialization", userInfo.doctor?.specialty?.name],
-            ["Biography", userInfo.doctor?.biography],
           ].map(([label, val]) => (
             <div key={label}>
               <h3 className="text-sm font-medium text-gray-500 mb-1">{label}</h3>

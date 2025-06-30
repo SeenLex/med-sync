@@ -5,6 +5,7 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { Edit } from "lucide-react";
 import { updateUser, UserInfo } from "@/actions/user";
+import { formatDateDDMMYYYY } from "@/lib/utils";
 
 export type EditVals = {
   phone: string;
@@ -99,7 +100,7 @@ const ProfileTab: React.FC<Props> = ({userInfo}) => {
         },
         {
           label: "Date of Birth",
-          value: user.dateOfBirth?.toLocaleDateString(),
+          value: user.dateOfBirth ? formatDateDDMMYYYY(user.dateOfBirth) : undefined,
           key: "dob",
           type: "static",
         },
@@ -137,25 +138,6 @@ const ProfileTab: React.FC<Props> = ({userInfo}) => {
           )}
         </div>
       ))}
-    </div>
-
-    <div className="pt-6 border-t border-gray-200 space-y-6">
-      <h2 className="text-xl font-semibold text-gray-900">
-        Medical Information
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {[
-          ["Insurance Information", user.patient?.insuranceInfo],
-          ["Emergency Contact", user.patient?.emergencyContact],
-        ].map(([label, val]) => (
-          <div key={label}>
-            <h3 className="text-sm font-medium text-gray-500 mb-1">
-              {label}
-            </h3>
-            <p className="text-gray-900">{val}</p>
-          </div>
-        ))}
-      </div>
     </div>
   </Card>
   )

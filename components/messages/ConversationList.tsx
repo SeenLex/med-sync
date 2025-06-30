@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import type { ChatSession } from "@/actions/chat";
 import { getUserInfo } from "@/actions/user";
-import { formatTimeHHMM, formatChatTimestamp } from "@/lib/utils";
+import { formatChatTimestamp } from "@/lib/utils";
 
 export default function ConversationList({ chatSessions, userInfo, onSelectChatSession, selectedChatSessionId }: { chatSessions?: ChatSession[], userInfo: Awaited<ReturnType<typeof getUserInfo>>, onSelectChatSession: (chatSession: ChatSession) => void, selectedChatSessionId?: number }) {
     const [searchQuery, setSearchQuery] = useState("");

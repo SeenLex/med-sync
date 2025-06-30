@@ -22,11 +22,28 @@ export async function fetchUser() {
 }
 
 export async function updateUser(id: string, formData: FormData) {
+  const currentUser = await prisma.user.findUnique({
+    where: { id: Number(id) },
+    select: { fullName: true, email: true },
+  });
+
+  if (!currentUser) throw new Error('User not found');
+
+  const fullNameFromForm = formData.get("fullName");
+  const fullName = (typeof fullNameFromForm === 'string' && fullNameFromForm.trim() !== '')
+    ? fullNameFromForm
+    : currentUser.fullName;
+
+  const emailFromForm = formData.get("email");
+  const email = (typeof emailFromForm === 'string' && emailFromForm.trim() !== '')
+    ? emailFromForm
+    : currentUser.email;
+
   await prisma.user.update({
     where: { id: Number(id) },
     data: {
-      fullName: formData.get("fullName") as string,
-      email: formData.get("email") as string,
+      fullName,
+      email,
       phone: formData.get("phone") as string | null,
       dateOfBirth: formData.get("dateOfBirth")
         ? new Date(formData.get("dateOfBirth") as string)
@@ -190,24 +207,31 @@ export async function getAllSpecialtyOptions() {
 
 export async function uploadProfilePicture(file: File, userId: string) {
   const supabase = await createClient();
+  const { data: existingFiles } = await supabase.storage
+    .from('profile-pictures')
+    .list(userId);
+  if (existingFiles && existingFiles.length > 0) {
+    const filesToDelete = existingFiles
+      .filter(file => file.name.startsWith('profile.'))
+      .map(file => `${userId}/${file.name}`);
+    if (filesToDelete.length > 0) {
+      await supabase.storage.from('profile-pictures').remove(filesToDelete);
+    }
+  }
   const fileExtension = file.name.split('.').pop();
   const fileName = `${userId}/profile.${fileExtension}`;
-  
   const { data, error } = await supabase.storage
     .from('profile-pictures')
     .upload(fileName, file, {
       upsert: true
     });
-  
   if (error) {
     console.error('Profile picture upload error:', error);
     throw new Error(`Failed to upload profile picture: ${error.message}`);
   }
-  
   if (!data?.path) {
     throw new Error('Upload succeeded but no file path returned');
   }
-
   return data.path;
 }
 
