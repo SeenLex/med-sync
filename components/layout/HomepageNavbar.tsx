@@ -5,8 +5,6 @@ import {
   Menu,
   X,
   Star,
-  MessageSquare,
-  DollarSign,
   LogIn,
   UserPlus,
   Wrench,
@@ -146,32 +144,6 @@ const Navbar: React.FC = () => {
             >
               <Wrench className="h-4 w-4 mr-2 flex-shrink-0" />
               How It Works
-            </ScrollLink>
-            <ScrollLink
-              to="testimonials"
-              smooth
-              duration={500}
-              offset={-30}
-              className="flex items-center px-3 py-2 rounded-md
-                         text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100"
-              onClick={handleLinkClick}
-            >
-              <MessageSquare className="h-4 w-4 mr-2 flex-shrink-0" />
-              Testimonials
-            </ScrollLink>
-            <ScrollLink
-              to="pricing"
-              smooth
-              duration={500}
-              offset={-30}
-              className="flex items-center px-3 py-2 rounded-md
-                         text-gray-700 hover:text-emerald-600
-                         hover:bg-gray-100"
-              onClick={handleLinkClick}
-            >
-              <DollarSign className="h-4 w-4 mr-2 flex-shrink-0" />
-              Pricing
             </ScrollLink>
             <Link
               href="/login"
