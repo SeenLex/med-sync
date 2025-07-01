@@ -18,16 +18,9 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
     const [messages, setMessages] = useState<Message[]>(chatSession?.messages || []);
     const [isLoading, setIsLoading] = useState(false);
     const [newMessage, setNewMessage] = useState("");
-    const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
-    };
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+    // Removed automatic scrolling functionality
 
     useEffect(() => {
         const updatedSession = chatSessions.find(session => session.id === chatSession.id);
@@ -158,7 +151,6 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                         </div>
                     </div>
                 ))}
-                <div ref={messagesEndRef} />
             </div>
             <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0 z-20">
                 <div className="flex items-center space-x-2">
