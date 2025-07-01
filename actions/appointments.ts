@@ -37,6 +37,8 @@ export async function fetchPaginatedAppointments({
   return { appointments, totalCount };
 }
 
+export type AppointmentWithDoctor = Awaited<ReturnType<typeof fetchPaginatedAppointments>>['appointments'][number];
+
 export async function getAllAppointments() {
   return await prisma.appointment.findMany();
 }
@@ -171,6 +173,8 @@ export async function fetchPaginatedUpcomingAppointments({
 
   return { appointments, totalCount };
 }
+
+export type UpcomingAppointment = Awaited<ReturnType<typeof fetchPaginatedUpcomingAppointments>>['appointments'][number];
 
 export async function fetchAppointments(patientId: number) {
   return await prisma.appointment.findMany({

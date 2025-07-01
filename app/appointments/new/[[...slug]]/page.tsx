@@ -15,8 +15,8 @@ const NewAppointmentFlowPage = async ({
   params,
   searchParams,
 }: {
-  params: { slug?: string[] };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ slug?: string[] }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
   const supabase = await createClient();
   const {
@@ -35,13 +35,22 @@ const NewAppointmentFlowPage = async ({
     return <div>Error loading page data.</div>;
   }
 
-  const [action, doctorId] = params.slug || [];
+  const [action, doctorId] = (await params).slug || [];
   const { type } = await searchParams;
-
+  
   let doctorToReschedule: FindDoctor[number] | null = null;
 
   if (action === "reschedule" && doctorId) {
-    doctorToReschedule = await getDoctorUserByDoctorId(doctorId);
+    const doctorProfile = await getDoctorUserByDoctorId(doctorId);
+    if (doctorProfile) {
+      const { user, ...doctorWithoutUser } = doctorProfile;
+      doctorToReschedule = {
+        ...user,
+        doctor: {
+          ...doctorWithoutUser,
+        },
+      };
+    }
   }
 
   const initialType: "IN_PERSON" | "VIRTUAL" | null =

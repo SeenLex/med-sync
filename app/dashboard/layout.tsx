@@ -30,7 +30,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <Layout>
+    <Layout withFooter={false}>
       <div className="max-w mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col md:flex-row gap-8">
           <DashboardNav />

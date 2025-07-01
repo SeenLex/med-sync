@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const CallToAction: React.FC = () => {
   return (
-    <div className="py-12 bg-emerald-600 text-white text-center rounded-lg shadow-lg">
+    <div className="py-12 bg-emerald-600 text-white text-center rounded-t-lg shadow-lg">
       <h2 className="text-3xl font-extrabold mb-4">
         Ready to take control of your health?
       </h2>
