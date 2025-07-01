@@ -109,8 +109,6 @@ export async function fetchPendingDoctorAppointments({
 
 export async function confirmAppointment(appointmentId: number) {
   const zoomMeeting = await createZoomMeeting();
-  console.log({ zoomMeeting })
-
   await prisma.appointment.update({
     where: { id: appointmentId },
     data: { status: "CONFIRMED", meetingLink: zoomMeeting },

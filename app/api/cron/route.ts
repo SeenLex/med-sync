@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
+import prisma from '@/prisma/db';
 
 export async function GET() {
     const appointments = await prisma.appointment.findMany({
         where: {
-            status: "confirmed",
-            date: {
+            status: "CONFIRMED",
+            endTime: {
                 lt: new Date()
             }
         }
@@ -13,7 +14,7 @@ export async function GET() {
     for (const appointment of appointments) {
         await prisma.appointment.update({
             where: { id: appointment.id },
-            data: { status: "completed" }
+            data: { status: "COMPLETED" }
         })
     }
 

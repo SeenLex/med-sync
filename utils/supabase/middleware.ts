@@ -42,6 +42,7 @@ export async function updateSession(request: NextRequest) {
     '/auth',
     '/login',
     '/',
+    '/api/cron',
   ]
 
   if (
