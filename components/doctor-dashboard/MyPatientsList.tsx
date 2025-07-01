@@ -39,16 +39,14 @@ const MyPatientsList: React.FC<Props> = ({ doctorId }) => {
             <Card key={patient.id} className="p-4">
               <div className="flex flex-col sm:flex-row justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="bg-gray-100 p-3 rounded-full">
-                    <Image
-                      src={patient.user.profileImage || defaultProfilePic}
-                      alt={patient.user.fullName}
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-full object-cover"
-                      unoptimized
-                    />
-                  </div>
+                  <Image
+                    src={patient.user.profileImage || defaultProfilePic}
+                    alt={patient.user.fullName}
+                    width={48}
+                    height={48}
+                    className="h-12 w-12 rounded-full object-cover"
+                    unoptimized
+                  />
                   <div>
                     <p className="text-lg font-semibold text-gray-900">
                       {patient.user.fullName}

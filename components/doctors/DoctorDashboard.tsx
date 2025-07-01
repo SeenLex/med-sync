@@ -7,7 +7,6 @@ import {
   Users,
   FileText,
   Bell,
-  User,
   Mail,
   Phone,
   MessageSquare,
@@ -26,6 +25,8 @@ import Link from "next/link";
 import Sidebar from "@/components/doctor-dashboard/Sidebar";
 import DoctorProfile from "@/components/doctor-dashboard/DoctorProfile";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import defaultProfilePic from "@/assets/profile.jpg";
 
 type MyPatientsListProps = {
   doctorId: number;
@@ -53,9 +54,14 @@ export const MyPatientsList: React.FC<MyPatientsListProps> = ({ doctorId }) => {
             <Card key={patient.id} className="p-4">
               <div className="flex flex-col sm:flex-row justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="bg-gray-100 p-3 rounded-full">
-                    <User className="h-6 w-6 text-gray-600" />
-                  </div>
+                  <Image
+                    src={patient.user.profileImage || defaultProfilePic}
+                    alt={patient.user.fullName}
+                    width={48}
+                    height={48}
+                    className="h-12 w-12 rounded-full object-cover"
+                    unoptimized
+                  />
                   <div>
                     <p className="text-lg font-semibold text-gray-900">
                       {patient.user.fullName}
