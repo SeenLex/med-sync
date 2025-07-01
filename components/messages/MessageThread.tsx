@@ -7,9 +7,8 @@ import { sendMessage, type ChatSession } from "@/actions/chat";
 import { getUserInfo } from "@/actions/user";
 import { Message as PrismaMessage } from "@/prisma/generated/prisma";
 
-// Extend the Message type to include 'type'
 type Message = PrismaMessage & {
-    type?: string; // 'file' or undefined for backward compatibility
+    type?: string;
 };
 import { formatTimeHHMM } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/client";
@@ -56,7 +55,6 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
             await supabase.storage.from("chat-files").upload(fileName, file);
             const { data: urlData } = supabase.storage.from("chat-files").getPublicUrl(fileName);
             const fileUrl = urlData.publicUrl;
-            // Send a message with the file URL and file name
             const message = await sendMessage(chatSession.id, fileUrl, userInfo, { path: "/messages", fileName: file.name, type: "file" });
             if (message) {
                 setMessages([...messages, message]);
@@ -69,7 +67,6 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
 
     return (
         <div className="h-full flex flex-col">
-            {/* Mobile Sticky Header */}
             {showMobileHeader && (
                 <div className="sticky top-0 z-30 bg-white border-b border-gray-200 flex items-center px-4 py-3 shadow-sm">
                     {onBackMobile && (
@@ -82,7 +79,6 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                     </div>
                 </div>
             )}
-            {/* Contact Header (desktop) */}
             {!showMobileHeader && (
                 <div className="px-4 py-3 border-b border-gray-200 flex items-center">
                     {chatSession ? (
@@ -91,7 +87,6 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                                 <h2 className="text-base font-semibold text-gray-900 mb-1">
                                     {userInfo.role === "DOCTOR" ? chatSession.patient.user.fullName : chatSession.doctor.user.fullName}
                                 </h2>
-                                {/* if doctor more info about patient if patient more info about doctor */}
                                 {userInfo.role === "DOCTOR" ? (
                                     <p className="text-xs text-gray-500 flex flex-col space-y-1">
                                         <span> <span className="font-bold">Email:</span> {chatSession.patient.user.email}</span>
@@ -112,9 +107,8 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                     )}
                 </div>
             )}
-            {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 flex flex-col space-y-4 bg-gray-50">
-                <div className="flex-1" /> {/* Spacer to push messages to bottom */}
+                <div className="flex-1" />
                 {messages.map((message) => (
                     <div
                         key={message.id}
@@ -126,11 +120,9 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                         >
                             {message.type === "file" || (message.content && (message.content.endsWith('.jpg') || message.content.endsWith('.jpeg') || message.content.endsWith('.png') || message.content.endsWith('.gif') || message.content.endsWith('.webp') || message.content.endsWith('.bmp') || message.content.endsWith('.pdf'))) ? (
                                 (() => {
-                                    // Try to get extension from fileName, fallback to content URL
                                     const ext = ((message.fileName || message.content).split('.').pop() || '').toLowerCase();
                                     const fileName = message.fileName || message.content.split('/').pop();
                                     if (["jpg", "jpeg", "png", "gif", "webp", "bmp"].includes(ext)) {
-                                        // Image preview (no filename)
                                         return (
                                             <a href={message.content} target="_blank" rel="noopener noreferrer">
                                                 <Image
@@ -143,7 +135,6 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                                             </a>
                                         );
                                     } else if (ext === "pdf") {
-                                        // PDF preview (icon + filename)
                                         return (
                                             <a href={message.content} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-blue-600 underline">
                                                 <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.828A2 2 0 0 0 19.414 7.414l-5.828-5.828A2 2 0 0 0 12.172 1H6zm7 1.414L18.586 7H15a2 2 0 0 1-2-2V3.414z"/></svg>
@@ -151,7 +142,6 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                                             </a>
                                         );
                                     } else {
-                                        // Fallback for other files
                                         return (
                                             <a href={message.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
                                                 {fileName || "Download file"}
@@ -168,9 +158,8 @@ export default function MessageThread({ chatSession, chatSessions, userInfo, sho
                         </div>
                     </div>
                 ))}
-                <div ref={messagesEndRef} /> {/* Scroll anchor */}
+                <div ref={messagesEndRef} />
             </div>
-            {/* Message Input */}
             <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0 z-20">
                 <div className="flex items-center space-x-2">
                     <button

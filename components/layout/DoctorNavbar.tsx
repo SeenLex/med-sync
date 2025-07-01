@@ -63,7 +63,6 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Desktop nav */}
           <div className="hidden md:flex items-center space-x-2 lg:space-x-4 ml-6">
             <div
               className="flex items-center  lg:ml-4 pl-2 lg:pl-4 border-l border-gray-300 gap-1 lg:gap-4"
@@ -81,7 +80,6 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Hamburger menu for mobile */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setMenuOpen(!menuOpen)}

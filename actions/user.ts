@@ -189,7 +189,6 @@ export async function getAllDoctors() {
 export type FindDoctor = Awaited<ReturnType<typeof getAllDoctors>>;
 export type UserInfo = Awaited<ReturnType<typeof getUserInfo>>;
 
-// Fetch all specialties from the Specialty table
 export async function getAllSpecialties() {
   const specialties: { name: string }[] = await prisma.specialty.findMany({
     orderBy: { name: "asc" },
@@ -197,7 +196,6 @@ export async function getAllSpecialties() {
   return specialties.map((s) => s.name);
 }
 
-// Fetch all specialties as { value, label } for dropdowns
 export async function getAllSpecialtyOptions() {
   const specialties: { id: number, name: string }[] = await prisma.specialty.findMany({
     orderBy: { name: "asc" },
