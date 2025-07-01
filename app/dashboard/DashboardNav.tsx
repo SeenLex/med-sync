@@ -36,7 +36,7 @@ export function DashboardNav() {
   const pathname = usePathname();
 
   return (
-    <div className="w-full md:w-64 flex-shrink-0">
+    <div className="hidden md:block w-full md:w-64 flex-shrink-0">
       <nav className="space-y-1">
         {navItems.map((item) => {
           const Icon = item.icon;
