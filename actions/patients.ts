@@ -1,6 +1,7 @@
 'use server';
 import prisma from "@/prisma/db";
 import { MEDICAL_RECORDS_PAGE_SIZE } from "@/lib/constants";
+import { getProfilePictureUrl } from "./user";
 
 export async function getPatient(id: number) {
   const patient = await prisma.patient.findUnique({
@@ -56,7 +57,20 @@ export async function fetchDoctorPatients({
     }),
   });
 
-  return { patients, totalCount };
+  const patientsWithProfilePictures = await Promise.all(
+    patients.map(async (patient) => {
+      const profileImageUrl = await getProfilePictureUrl(patient.user.id.toString());
+      return {
+        ...patient,
+        user: {
+          ...patient.user,
+          profileImage: profileImageUrl || patient.user.profileImage,
+        },
+      };
+    })
+  );
+
+  return { patients: patientsWithProfilePictures, totalCount };
 }
 
 export async function fetchPatientDoctors({ patientId }: { patientId: number}) {
